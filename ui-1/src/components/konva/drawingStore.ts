@@ -1,26 +1,31 @@
 import { create } from "zustand";
-import { type Stroke } from "@/components/konva/KonvaFreeDrawingTool";
 
 type Document = {
-  strokes: Stroke[];
+  strokes: number[][];
 };
 
-type DrawingStore = {
-  draftStrokes: Stroke[];
+export type DrawingStore = {
+  currentStroke: number[];
+  draftStrokes: number[][];
   document: Document | null;
-  addDraftStroke: (s: Stroke) => void;
+  updateCurrentStroke: (s: number[]) => void;
+  clearCurrentStroke: () => void;
+  updateDraft: (s: number[]) => void;
   clearDraft: () => void;
   applyDraft: () => void;
   loadDocument: (doc: Document) => void;
 };
 
 const useDrawingStore = create<DrawingStore>((set, get) => ({
+  currentStroke: [],
   draftStrokes: [],
   document: null,
-  addDraftStroke: (stroke) =>
+  updateCurrentStroke: (stroke) =>
+    set((s) => ({ currentStroke: [...s.currentStroke, ...stroke] })),
+  clearCurrentStroke: () => set({ currentStroke: [] }),
+  updateDraft: (stroke) =>
     set((s) => ({ draftStrokes: [...s.draftStrokes, stroke] })),
   clearDraft: () => {
-    console.log("clearing draft", get());
     set({ draftStrokes: [] });
   },
   applyDraft: () => {

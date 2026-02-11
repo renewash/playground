@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Konva from "konva";
-import useDrawing from "@/components/konva/useDrawing";
+import useFreeDraw from "@/components/konva/useFreeDraw";
+import { Stage } from "react-konva";
+import KonvaFreeDraw from "./KonvaFreeDraw";
 
 const KonvaDrawable = ({
   className = "",
@@ -13,28 +15,15 @@ const KonvaDrawable = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<Konva.Stage | null>(null);
-  const layerRef = useRef<Konva.Layer | null>(null);
+  useFreeDraw(stageRef);
 
-  useEffect(() => {
-    stageRef.current = new Konva.Stage({
-      container: containerRef.current || undefined,
-      width,
-      height,
-    });
-
-    layerRef.current = new Konva.Layer();
-    stageRef.current.add(layerRef.current);
-
-    return () => {
-      stageRef.current?.destroy();
-      stageRef.current = null;
-      layerRef.current = null;
-    };
-  }, [width, height]);
-
-  useDrawing(stageRef, layerRef);
-
-  return <div className={className + ` z-100`} ref={containerRef} />;
+  return (
+    <div className={className + ` z-100`} ref={containerRef}>
+      <Stage ref={stageRef} width={width} height={height}>
+        <KonvaFreeDraw />
+      </Stage>
+    </div>
+  );
 };
 
 export default KonvaDrawable;
