@@ -1,12 +1,11 @@
 import { type ReactNode } from "react";
 import KonvaDrawable from "@/components/konva/KonvaDrawable";
 import { Zoomable, ZoomControls } from "@/components/Camera";
-import useDrawingStore from "@/components/konva/drawingStore";
+// import useDrawingStore from "@/components/konva/drawingStore";
 import KonvaControls from "@/components/konva/KonvaControls";
 
 const ComB = ({ children }: { children?: ReactNode }) => {
-  const store = useDrawingStore();
-  console.log(store);
+  // const store = useDrawingStore();
   const width = 400;
   const height = 400;
 

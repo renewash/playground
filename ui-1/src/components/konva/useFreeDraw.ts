@@ -1,8 +1,8 @@
 import Konva from "konva";
-import { useEffect, type RefObject } from "react";
 import useDrawingStore from "@/components/konva/drawingStore";
+import { useState } from "react";
 
-export default function useFreeDraw(stageRef: RefObject<Konva.Stage | null>) {
+export default function useFreeDraw() {
   const {
     currentStroke,
     updateCurrentStroke,
@@ -11,37 +11,28 @@ export default function useFreeDraw(stageRef: RefObject<Konva.Stage | null>) {
     applyDraft,
   } = useDrawingStore();
 
-  const handlePointerDown = (e: Konva.KonvaEventObject<PointerEvent>) => {
+  const [isDrawing, setIsDrawing] = useState(false);
+
+  const start = (e: Konva.KonvaEventObject<PointerEvent>) => {
+    setIsDrawing(true);
     const pos = e.target.getStage()?.getPointerPosition();
     if (!pos) return;
     updateCurrentStroke([pos.x, pos.y]);
   };
 
-  const handlePointerMove = (e: Konva.KonvaEventObject<PointerEvent>) => {
-    if (!currentStroke) return;
+  const move = (e: Konva.KonvaEventObject<PointerEvent>) => {
+    if (!currentStroke || !isDrawing) return;
     const pos = e.target.getStage()?.getPointerPosition();
     if (!pos) return;
     updateCurrentStroke([pos.x, pos.y]);
   };
 
-  const handlePointerUp = () => {
+  const end = () => {
+    if (!currentStroke || !isDrawing) return;
+    setIsDrawing(false);
     updateDraft(currentStroke);
-    applyDraft();
     clearCurrentStroke();
   };
 
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-
-    stage.on("mousedown touchstart", handlePointerDown);
-    stage.on("mousemove touchmove", handlePointerMove);
-    stage.on("mouseup touchend", handlePointerUp);
-
-    return () => {
-      stage.off("mousedown touchstart", handlePointerDown);
-      stage.off("mousemove touchmove", handlePointerMove);
-      stage.off("mouseup touchend", handlePointerUp);
-    };
-  }, [stageRef]);
+  return { start, move, end };
 }

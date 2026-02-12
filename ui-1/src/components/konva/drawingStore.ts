@@ -13,6 +13,7 @@ export type DrawingStore = {
   updateDraft: (s: number[]) => void;
   clearDraft: () => void;
   applyDraft: () => void;
+  reset: () => void;
   loadDocument: (doc: Document) => void;
 };
 
@@ -30,13 +31,16 @@ const useDrawingStore = create<DrawingStore>((set, get) => ({
   },
   applyDraft: () => {
     const { draftStrokes, document } = get();
+    const documentStrokes: number[][] = document?.strokes || [];
     set({
       document: {
         ...document,
-        strokes: draftStrokes,
+        strokes: [...documentStrokes, ...draftStrokes],
       },
+      draftStrokes: [],
     });
   },
+  reset: () => set({ currentStroke: [], draftStrokes: [], document: null }),
   loadDocument: (doc) => set({ document: doc, draftStrokes: [] }),
 }));
 
