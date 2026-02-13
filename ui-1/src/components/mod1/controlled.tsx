@@ -8,6 +8,7 @@ const Controlled = ({ value, onChange }) => {
     if (isControlled) {
       onChange?.(newVal);
     }
+    setinitialValue;
   };
   return { update };
 };

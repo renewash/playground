@@ -113,10 +113,6 @@ const TanS = () => {
         header: "Last Name",
         accessorKey: "lastName",
       },
-      //   {
-      //     header: "Age",
-      //     accessorFn: (row: any) => row.info.age,
-      //   },
     ],
     [],
   );
