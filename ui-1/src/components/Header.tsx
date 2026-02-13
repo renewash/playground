@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
 
 const Header = () => {
-  const links = ["Home", "About", "Marketplace", "Features", "Team", "Contact"];
+  const links = ["Home", "About", "Table", "Draw"];
   return (
     <header>
       <nav className="border-gray-200 bg-white px-4 py-2.5 lg:px-6 dark:bg-gray-800">

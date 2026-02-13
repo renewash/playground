@@ -1,7 +1,9 @@
-import useDrawingStore from "./drawingStore";
+import useDrawingStore from "@/components/konva/drawingStore";
 
 const KonvaControls = () => {
-  const { clearDraft, applyDraft, reset } = useDrawingStore();
+  const clearDraft = useDrawingStore((s) => s.clearDraft);
+  const applyDraft = useDrawingStore((s) => s.applyDraft);
+  const reset = useDrawingStore((s) => s.reset);
 
   return (
     <div className="flex h-12 flex-row gap-3">
@@ -18,7 +20,7 @@ const KonvaControls = () => {
         apply
       </button>
       <button
-        className="cursor-pointer rounded-md border px-3 py-1.5 hover:bg-green-500"
+        className="cursor-pointer rounded-md border px-3 py-1.5 hover:bg-blue-500"
         onClick={reset}
       >
         reset

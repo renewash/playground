@@ -3,9 +3,11 @@ import { Layer } from "react-konva";
 
 import useFreeDraw from "@/components/konva/useFreeDraw";
 import { Stage } from "react-konva";
-import KonvaFreeDraw from "./KonvaFreeDraw";
-import KonvaStatic from "./KonvaStatic";
-import KonvaDraft from "./KonvaDraft";
+import {
+  KonvacommittedShapes,
+  KonvaCurrentShape,
+  KonvaDraftShapes,
+} from "./KonvaShapeDisplays";
 
 const KonvaDrawable = ({
   className = "",
@@ -17,8 +19,8 @@ const KonvaDrawable = ({
   height?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { start, move, end } = useFreeDraw();
-
+  const { currentStroke, start, move, end, toFlatPoints } = useFreeDraw();
+  console.log("toFlatPoints():", toFlatPoints());
   return (
     <div className={className + ` z-100`} ref={containerRef}>
       <Stage
@@ -29,14 +31,12 @@ const KonvaDrawable = ({
         onPointerUp={end}
       >
         <Layer>
-          <KonvaFreeDraw />
-        </Layer>
-        <Layer listening={false}>
-          <KonvaDraft />
+          <KonvaCurrentShape stroke={currentStroke} />
+          <KonvaDraftShapes />
         </Layer>
 
         <Layer listening={false}>
-          <KonvaStatic />
+          <KonvacommittedShapes />
         </Layer>
       </Stage>
     </div>

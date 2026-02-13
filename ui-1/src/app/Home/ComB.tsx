@@ -11,7 +11,7 @@ const ComB = ({ children }: { children?: ReactNode }) => {
 
   return (
     <div className="m-2 rounded border border-gray-600 p-2">
-      <div>Component B</div>
+      <div>Component B as</div>
       <div>test</div>
       <div className="flex flex-row gap-2">
         <Zoomable>

@@ -1,11 +1,8 @@
 import Konva from "konva";
-import useDrawingStore from "@/components/konva/drawingStore";
 import { useRef, useState } from "react";
 import type { FlatPoint } from "./types";
 
 export default function useFreeDraw() {
-  const updateDraft = useDrawingStore((s) => s.updateDraft);
-  const committedStrokes = useDrawingStore((s) => s.committedStrokes);
   const isDrawingRef = useRef(false);
   const [currentStroke, setCurrentStroke] = useState<number[]>([]);
 
@@ -21,13 +18,15 @@ export default function useFreeDraw() {
     const pos = e.target.getStage()?.getPointerPosition();
     if (!pos) return;
     setCurrentStroke((prev) => [...prev, pos.x, pos.y]);
+    return currentStroke;
   };
 
   const end = () => {
     if (currentStroke.length === 0 || !isDrawingRef.current) return;
     isDrawingRef.current = false;
-    updateDraft(currentStroke);
+    const res = currentStroke;
     setCurrentStroke([]);
+    return res;
   };
 
   const toPoints = () => {
@@ -35,7 +34,7 @@ export default function useFreeDraw() {
     return points;
   };
 
-  const toFlatPoints = () => {
+  const toFlatPoints = (committedStrokes: number[][]) => {
     const flatPoints: FlatPoint[][] = [];
     for (const stroke of committedStrokes) {
       const flatStroke: FlatPoint[] = [];
