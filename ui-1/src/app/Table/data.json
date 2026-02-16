@@ -1,18 +1,43 @@
-[
-  {
-    "firstName": "Tanner",
-    "lastName": "Linsley",
-    "age": 33,
-    "visits": 100,
-    "progress": 50,
-    "status": "Married"
-  },
-  {
-    "firstName": "Kevin",
-    "lastName": "Vandy",
-    "age": 27,
-    "visits": 200,
-    "progress": 100,
-    "status": "Single"
-  }
-]
+{
+  "documents": [
+    {
+      "id": "doc_001",
+      "file_path": "/uploads/invoice_template_v1.pdf"
+    },
+    {
+      "id": "doc_002",
+      "file_path": "/uploads/purchase_order_template.pdf"
+    },
+    {
+      "id": "doc_003",
+      "file_path": "/uploads/blank_tax_form_2026.pdf"
+    }
+  ],
+  "templates": [
+    {
+      "id": "tpl_001",
+      "document_id": "doc_001",
+      "name": "Invoice Header Fields"
+    },
+    {
+      "id": "tpl_002",
+      "document_id": "doc_001",
+      "name": "Invoice Line Items"
+    },
+    {
+      "id": "tpl_003",
+      "document_id": "doc_002",
+      "name": "PO Supplier Section"
+    },
+    {
+      "id": "tpl_004",
+      "document_id": "doc_002",
+      "name": "PO Totals Section"
+    },
+    {
+      "id": "tpl_005",
+      "document_id": "doc_003",
+      "name": "Tax Form Output Mapping"
+    }
+  ]
+}

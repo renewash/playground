@@ -4,7 +4,7 @@ import { createBrowserRouter } from "react-router";
 import Home from "./Home/Home";
 import About from "./About";
 import Draw from "./Drawing/Draw";
-import TanS from "./Table/TanS";
+import TanS from "./Table/MainTable";
 
 export default createBrowserRouter([
   {
