@@ -1,0 +1,33 @@
+erDiagram
+    DOCUMENTS ||--o{ TEMPLATES : has
+    TEMPLATES ||--|{ BOXES : contains
+    BOXES ||--o{ TEMPLATE_ITEM : includes
+    DOCUMENTS {
+        string document_id PK
+        string name
+        string file_path
+    }
+    TEMPLATES {
+        string template_id PK
+        string document_id FK
+    }
+    BOXES {
+        string boxes_id PK
+        int page_number
+        float x
+        float y
+        float width
+        float height
+        string template_id fk
+    }
+    USER_CREATED_MAPPING {
+        string mapping_id PK
+        string source_template_id FK
+        string target_template_id FK
+    }
+    MAPPING_OF_BOXES {
+        string box_to_box_map_id PK
+        string mapping_id FK
+        string source_boxes_id FK
+        string target_boxes_id FK
+    }

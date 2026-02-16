@@ -1,0 +1,48 @@
+USERS
+-----
+id PK
+email
+created_at
+
+DOCUMENTS
+---------
+id PK
+owner_user_id FK
+file_path
+created_at
+
+TEMPLATES
+---------
+id PK
+document_id FK
+owner_user_id FK
+name
+version
+created_at
+
+BOXES
+-----
+id PK
+template_id FK
+page_number int
+x float
+y float
+width float
+height float
+extracted_text text
+
+TEMPLATE_MAPPINGS
+-----------------
+id PK
+source_template_id FK
+target_template_id FK
+owner_user_id FK
+created_at
+
+BOX_MAPPINGS
+------------
+id PK
+template_mapping_id FK
+source_box_id FK
+target_box_id FK
+transform_rule jsonb NULL
