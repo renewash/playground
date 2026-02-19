@@ -19,8 +19,8 @@ const KonvaDrawable = ({
   height?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { currentStroke, start, move, end, toFlatPoints } = useFreeDraw();
-  console.log("toFlatPoints():", toFlatPoints());
+  const { currentStroke, start, move, end } = useFreeDraw();
+
   return (
     <div className={className + ` z-100`} ref={containerRef}>
       <Stage
