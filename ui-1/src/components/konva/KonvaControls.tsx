@@ -20,7 +20,7 @@ const KonvaControls = () => {
         apply
       </button>
       <button
-        className="cursor-pointer rounded-md border px-3 py-1.5 hover:bg-blue-500"
+        className="-3 cursor-pointer rounded-md border py-1.5 hover:bg-blue-500"
         onClick={reset}
       >
         reset
