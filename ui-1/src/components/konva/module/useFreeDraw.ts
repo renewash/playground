@@ -1,32 +1,32 @@
 import Konva from "konva";
-import { useRef, useState } from "react";
-import type { FlatPoint } from "./types";
+import { useRef } from "react";
+import type { FlatPoint, DrawingStore } from "./types";
 
-export default function useFreeDraw() {
+export function useFreeDraw(session: DrawingStore) {
   const isDrawingRef = useRef(false);
-  const [currentStroke, setCurrentStroke] = useState<number[]>([]);
 
   const start = (e: Konva.KonvaEventObject<PointerEvent>) => {
     isDrawingRef.current = true;
     const pos = e.target.getStage()?.getPointerPosition();
     if (!pos) return;
-    setCurrentStroke([pos.x, pos.y]);
+    session.addStrokePoint([pos.x, pos.y]);
   };
 
   const move = (e: Konva.KonvaEventObject<PointerEvent>) => {
-    if (currentStroke.length === 0 || !isDrawingRef.current) return;
+    if (!isDrawingRef.current) return;
+
     const pos = e.target.getStage()?.getPointerPosition();
     if (!pos) return;
-    setCurrentStroke((prev) => [...prev, pos.x, pos.y]);
-    return currentStroke;
+
+    session.addStrokePoint([pos.x, pos.y]);
   };
 
   const end = () => {
-    if (currentStroke.length === 0 || !isDrawingRef.current) return;
+    if (session.getSnapshot().activeStroke.length <= 4 || !isDrawingRef.current)
+      return;
+
     isDrawingRef.current = false;
-    const res = currentStroke;
-    setCurrentStroke([]);
-    return res;
+    session.addCompletedStroke();
   };
 
   const toPoints = () => {
@@ -46,5 +46,5 @@ export default function useFreeDraw() {
     return flatPoints;
   };
 
-  return { currentStroke, start, move, end, toPoints, toFlatPoints };
+  return { start, move, end, toPoints, toFlatPoints };
 }

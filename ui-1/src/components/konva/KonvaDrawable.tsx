@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { Layer } from "react-konva";
 
-import useFreeDraw from "@/components/konva/useFreeDraw";
+import { useFreeDraw, useKonvaContext } from "@/components/konva/module";
+
 import { Stage } from "react-konva";
 import {
   KonvacommittedShapes,
@@ -19,7 +20,8 @@ const KonvaDrawable = ({
   height?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { currentStroke, start, move, end } = useFreeDraw();
+  const { store, drawingState } = useKonvaContext();
+  const { start, move, end } = useFreeDraw(store);
 
   return (
     <div className={className + ` z-100`} ref={containerRef}>
@@ -31,7 +33,7 @@ const KonvaDrawable = ({
         onPointerUp={end}
       >
         <Layer>
-          <KonvaCurrentShape stroke={currentStroke} />
+          <KonvaCurrentShape stroke={drawingState.activeStroke} />
           <KonvaDraftShapes />
         </Layer>
 

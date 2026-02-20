@@ -1,26 +1,19 @@
 // drawingEngine.ts
-import { useSyncExternalStore } from "react";
-import { type DrawingState } from "./types";
+import { useSyncExternalStore, useMemo } from "react";
+import { type DrawingState, type DrawingStore, type Listener } from "./types";
 
-type Listener = () => void;
-
-export function createDrawingStore(initial?: Partial<DrawingState>) {
+export function createDrawingStore(
+  initial?: Partial<DrawingState>,
+): DrawingStore {
   let state: DrawingState = {
-    draftStrokes: [],
-    committedStrokes: [],
+    document: { strokes: [] },
+    activeStroke: [],
+    mode: "idle",
     ...initial,
   };
 
   const listeners = new Set<Listener>();
   const emitChange = () => listeners.forEach((l) => l());
-
-  const setState = (partial: Partial<DrawingState>) => {
-    state = {
-      ...state,
-      ...partial,
-    };
-    emitChange();
-  };
 
   const getSnapshot = () => state;
 
@@ -32,33 +25,48 @@ export function createDrawingStore(initial?: Partial<DrawingState>) {
   return {
     subscribe,
     getSnapshot,
-
-    addDraftPoint(point: number[]) {
-      setState({
-        draftStrokes: [...state.draftStrokes, point],
-      });
-    },
-
-    clearDraft() {
+    addStrokePoint([x, y]) {
       state = {
         ...state,
-        draftStrokes: [],
+        activeStroke: [...state.activeStroke, x, y],
+        mode: "drawing",
       };
+      emitChange();
     },
 
-    commitDraft() {
+    clearDocument() {
       state = {
-        draftStrokes: [],
-        committedStrokes: [...state.committedStrokes, ...state.draftStrokes],
+        ...state,
+        document: { strokes: [] },
+        activeStroke: [],
+        mode: "idle",
       };
+      emitChange();
+    },
+
+    addCompletedStroke() {
+      const completedStroke = state.activeStroke;
+      state = {
+        ...state,
+        activeStroke: [],
+        document: {
+          ...state.document,
+          strokes: [...state.document.strokes, completedStroke],
+        },
+        mode: "idle",
+      };
+
+      emitChange();
     },
   };
 }
 
-type Store = {
-  subscribe: () => () => void;
-  getSnapshot: () => DrawingState;
-};
-export function useDrawingStore(store: Store) {
-  return useSyncExternalStore(store.subscribe, store.getSnapshot);
+export function useDrawingStore(initial?: Partial<DrawingState>) {
+  // store: DrawingStore
+  // const store = createDrawingStore(initial);
+  const store = useMemo(() => createDrawingStore(initial), [initial]);
+  return {
+    store,
+    drawingState: useSyncExternalStore(store.subscribe, store.getSnapshot),
+  };
 }
