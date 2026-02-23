@@ -7,6 +7,17 @@ export interface Stroke {
   points: number[];
 }
 
+export interface Circle {
+  id: string;
+  center: Point;
+  radius: number;
+}
+
+export interface Shapes {
+  strokes: Stroke[];
+  circles: Circle[];
+}
+
 export interface DrawingState {
   strokes: Stroke[];
   activeStroke: Stroke | null;

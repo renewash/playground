@@ -1,6 +1,6 @@
 // drawing/konva/KonvaDrawingCanvas.tsx
 
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Line } from "react-konva";
 import Konva from "konva";
 
@@ -18,6 +18,7 @@ interface Props {
   height: number;
 }
 
+// this component binds engine and tools to Konva.
 export const KonvaDrawingCanvas: React.FC<Props> = ({
   engine,
   tool,
@@ -30,6 +31,19 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
   const layerRef = useRef<Konva.Layer>(null);
   const activeLineRef = useRef<Konva.Line>(null);
 
+  // subscribe to any changes is engine state.
+  useEffect(() => {
+    const unsubscribe = engine.subscribe(() => {
+      const activeStroke = engine.getActiveStroke();
+      if (!activeStroke || !activeLineRef.current) return;
+      activeLineRef.current.points(activeStroke.points);
+      layerRef.current?.batchDraw();
+    });
+
+    return unsubscribe;
+  }, [engine]);
+
+  // bind react with tool and engine via context object
   const ctx: ToolContext = useMemo(
     () => ({
       engine,
@@ -40,26 +54,15 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
     [engine],
   );
 
-  const handlePointerDown = (e: any) => {
+  const handlePointerDown = (e: Konva.KonvaEventObject<PointerEvent>) => {
     tool.onPointerDown?.(e.evt, ctx);
   };
 
-  const handlePointerMove = (e: any) => {
-    if (state.mode !== "drawing") return;
-
-    const pos = ctx.getPointerPosition();
-    if (!pos || !activeLineRef.current) return;
-
-    // Imperative hot-path update
-    const pts = activeLineRef.current.points();
-    activeLineRef.current.points([...pts, pos.x, pos.y]);
-
-    layerRef.current?.batchDraw();
-
+  const handlePointerMove = (e: Konva.KonvaEventObject<PointerEvent>) => {
     tool.onPointerMove?.(e.evt, ctx);
   };
 
-  const handlePointerUp = (e: any) => {
+  const handlePointerUp = (e: Konva.KonvaEventObject<PointerEvent>) => {
     tool.onPointerUp?.(e.evt, ctx);
   };
 

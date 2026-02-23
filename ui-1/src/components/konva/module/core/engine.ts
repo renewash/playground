@@ -7,9 +7,11 @@ type Listener = () => void;
 export interface DrawingEngine {
   getState(): DrawingState;
   subscribe(listener: Listener): () => void;
-
+  replaceActiveStrokePoints(points: number[]): void;
   startStroke(point: Point): void;
   appendPoint(point: Point): void;
+  getActiveStroke(): Stroke | null;
+  getCommitedStrokes(): Stroke[] | null;
   commitStroke(): void;
   cancelStroke(): void;
 
@@ -43,6 +45,13 @@ export function createDrawingEngine(
       return () => listeners.delete(listener);
     },
 
+    replaceActiveStrokePoints(points) {
+      if (!state.activeStroke) return;
+
+      state.activeStroke.points = points;
+      emit();
+    },
+
     startStroke(point) {
       if (state.mode === "drawing") return;
 
@@ -61,8 +70,29 @@ export function createDrawingEngine(
     appendPoint(point) {
       if (!state.activeStroke) return;
 
+      // this causes a re-render on every point, but is simpler than batching points in the tool
+      // look into how to change drawing state without triggering a re-render for performance-sensitive tools (e.g. free draw)
+
+      // setState({
+      //   ...state,
+      //   activeStroke: {
+      //     ...state.activeStroke,
+      //     points: [...state.activeStroke.points, ...point],
+      //   },
+      //   mode: "drawing",
+      // });
+
+      // Note: This mutates state.activeStroke.points directly for performance.
       state.activeStroke.points.push(...point);
       emit(); // Only for state observers; renderer may optimize
+    },
+
+    getActiveStroke() {
+      return state.activeStroke;
+    },
+
+    getCommitedStrokes() {
+      return state.strokes;
     },
 
     commitStroke() {

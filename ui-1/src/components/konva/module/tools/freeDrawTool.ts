@@ -3,6 +3,7 @@
 import { type DrawingTool } from "./types";
 
 export function createFreeDrawTool(): DrawingTool {
+  // free draw tool doesn't require DOM event e, thus we can ignore it with _
   return {
     onPointerDown(_, ctx) {
       const pos = ctx.getPointerPosition();
