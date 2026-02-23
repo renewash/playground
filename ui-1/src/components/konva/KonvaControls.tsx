@@ -10,14 +10,9 @@ export const KonvaCancelButton = ({
     store.clearDocument();
     onClick?.(e);
   };
-  //   const hasChanges = draftStrokes.length === 0;
-  // disabled={hasChanges}
+
   return (
-    <button
-      className="cursor-pointer rounded-sm border p-2"
-      onClick={handleClick}
-      {...rest}
-    >
+    <button onClick={handleClick} {...rest}>
       Cancel
     </button>
   );
@@ -33,11 +28,7 @@ export const KonvaApplyButton = ({
 
   //   const hasChanges = draftStrokes.length === 0;
   return (
-    <button
-      className="cursor-pointer rounded-sm border p-2"
-      onClick={handleClick}
-      {...rest}
-    >
+    <button onClick={handleClick} {...rest}>
       Apply
     </button>
   );
