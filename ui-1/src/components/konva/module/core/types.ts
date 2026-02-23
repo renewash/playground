@@ -13,9 +13,13 @@ export interface Circle {
   radius: number;
 }
 
+export interface Shape {
+  id: string;
+  type: "stroke" | "circle";
+  data: Stroke | Circle;
+}
 export interface Shapes {
-  strokes: Stroke[];
-  circles: Circle[];
+  shapes: Shape[];
 }
 
 export interface DrawingState {
