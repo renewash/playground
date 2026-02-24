@@ -1,19 +1,28 @@
 // drawing/core/engine.ts
 
-import type { DrawingState, Point, Stroke } from "./types";
+import type {
+  DrawingState,
+  Point,
+  Stroke,
+  Shape,
+  Shapes,
+  ShapeData,
+  Circle,
+} from "./types";
 
 type Listener = () => void;
 
 export interface DrawingEngine {
   getState(): DrawingState;
   subscribe(listener: Listener): () => void;
-  replaceActiveStrokePoints(points: number[]): void;
-  startStroke(point: Point): void;
-  appendPoint(point: Point): void;
-  getActiveStroke(): Stroke | null;
-  getCommitedStrokes(): Stroke[] | null;
-  commitStroke(): void;
-  cancelStroke(): void;
+  replaceActiveShape(data: ShapeData): void;
+  start(point: Point): void;
+  appendStrokeData(point: Point): void;
+  updateCircle(center: Point, radius: number): void;
+  getActiveShape(): DrawingState["activeShape"];
+  getCommitedShapes(): Shapes;
+  end(): void;
+  cancelShape(): void;
 
   undo(): void;
   clear(): void;
@@ -23,9 +32,10 @@ export function createDrawingEngine(
   initial?: Partial<DrawingState>,
 ): DrawingEngine {
   let state: DrawingState = {
-    strokes: [],
-    activeStroke: null,
+    shapes: [],
+    activeShape: null,
     mode: "idle",
+    tool: "freeDraw",
     ...initial,
   };
 
@@ -45,87 +55,97 @@ export function createDrawingEngine(
       return () => listeners.delete(listener);
     },
 
-    replaceActiveStrokePoints(points) {
-      if (!state.activeStroke) return;
+    replaceActiveShape(data) {
+      if (!state.activeShape) return;
 
-      state.activeStroke.points = points;
+      if ("points" in data) {
+        state.activeShape.points = data.points;
+      } else if ("center" in data && "radius" in data) {
+        state.activeShape.center = data.center;
+        state.activeShape.radius = data.radius;
+      }
+
       emit();
     },
 
-    startStroke(point) {
+    start(data) {
       if (state.mode === "drawing") return;
+      const newShape: Partial<Shape> = { id: crypto.randomUUID() };
 
-      const stroke: Stroke = {
-        id: crypto.randomUUID(),
-        points: [...point],
-      };
+      if (state.tool === "twoPointLine") {
+        newShape[type] = "circle";
+        newShape[center] = point;
+        newShape[radius] = 0;
+      } else {
+        // const newShape = {
+        //   id,
+        //   type: "stroke",
+        //   points: [...point],
+        // };
+      }
 
       setState({
         ...state,
-        activeStroke: stroke,
+        activeShape: newShape,
         mode: "drawing",
       });
     },
 
-    appendPoint(point) {
-      if (!state.activeStroke) return;
+    appendStrokeData(point) {
+      if (!state.activeShape || state.activeShape.type !== "stroke") return;
 
-      // this causes a re-render on every point, but is simpler than batching points in the tool
-      // look into how to change drawing state without triggering a re-render for performance-sensitive tools (e.g. free draw)
+      state.activeShape.points.push(...point);
+      emit();
+    },
 
-      // setState({
-      //   ...state,
-      //   activeStroke: {
-      //     ...state.activeStroke,
-      //     points: [...state.activeStroke.points, ...point],
-      //   },
-      //   mode: "drawing",
-      // });
+    updateCircle(center, radius) {
+      if (!state.activeShape || state.activeShape.type !== "circle") return;
 
-      // Note: This mutates state.activeStroke.points directly for performance.
-      state.activeStroke.points.push(...point);
+      state.activeShape.center = center;
+      state.activeShape.radius = radius;
+
       emit(); // Only for state observers; renderer may optimize
     },
 
-    getActiveStroke() {
-      return state.activeStroke;
+    getActiveShape() {
+      return state.activeShape;
     },
 
-    getCommitedStrokes() {
-      return state.strokes;
+    getCommitedShapes() {
+      return state.shapes;
     },
 
-    commitStroke() {
-      if (!state.activeStroke) return;
+    end() {
+      if (!state.activeShape) return;
 
       setState({
-        strokes: [...state.strokes, state.activeStroke],
-        activeStroke: null,
+        shapes: [...state.shapes, state.activeShape],
+        activeShape: null,
         mode: "idle",
       });
     },
 
-    cancelStroke() {
+    cancelShape() {
       setState({
         ...state,
-        activeStroke: null,
+        activeShape: null,
         mode: "idle",
       });
     },
 
     undo() {
-      if (!state.strokes.length) return;
+      if (!state.shapes.length) return;
 
       setState({
         ...state,
-        strokes: state.strokes.slice(0, -1),
+        shapes: state.shapes.slice(0, -1),
       });
     },
 
     clear() {
       setState({
-        strokes: [],
-        activeStroke: null,
+        shapes: [],
+        activeShape: null,
         mode: "idle",
       });
     },

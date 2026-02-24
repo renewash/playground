@@ -1,29 +1,41 @@
 // drawing/core/types.ts
 
 export type Point = [number, number];
+export type ToolType = "freeDraw" | "twoPointLine" | "circle";
+export type DrawingMode = "idle" | "drawing";
 
 export interface Stroke {
   id: string;
+  type: "stroke";
   points: number[];
 }
 
 export interface Circle {
   id: string;
+  type: "circle";
   center: Point;
   radius: number;
 }
 
-export interface Shape {
+export type PrimitiveObject = Stroke | Circle;
+export interface LineWithMarkersObject {
+  type: "lineWithMarkers";
   id: string;
-  type: "stroke" | "circle";
-  data: Stroke | Circle;
-}
-export interface Shapes {
-  shapes: Shape[];
+  points: number[];
+  markerRadius: number;
 }
 
+export type CompositeObject = LineWithMarkersObject;
+
+export type Shape = PrimitiveObject | CompositeObject;
+
+export type DrawableObject = PrimitiveObject | CompositeObject;
+
+export type Shapes = Shape[];
+
 export interface DrawingState {
-  strokes: Stroke[];
-  activeStroke: Stroke | null;
-  mode: "idle" | "drawing";
+  objects: DrawableObject[];
+  activeObject: DrawableObject | null;
+  mode: DrawingMode;
+  tool: ToolType;
 }
