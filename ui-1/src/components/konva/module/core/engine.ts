@@ -4,6 +4,7 @@ import type {
   StrokeModel,
   CircleModel,
   LineModel,
+  TwoPointLineModel,
   Listener,
   DrawingState,
   DrawingEngine,
@@ -29,7 +30,6 @@ export function createDrawingEngine(
   const listeners = new Set<Listener>();
   const emit = () =>
     listeners.forEach((l) => {
-      // console.log("emitting ", l);
       return l();
     });
 
@@ -94,12 +94,14 @@ export function createDrawingEngine(
       emit();
     },
 
-    createTwoPointline(point) {
-      const line: LineModel = {
+    createTwoPointline(point, radius) {
+      const fixedRadius = 3;
+      const line: TwoPointLineModel = {
         id: crypto.randomUUID(),
-        type: "line",
+        type: "twoPointLine",
         start: point,
         end: point,
+        radius: radius ?? fixedRadius,
       };
 
       state.inProgressObject = line;
@@ -107,14 +109,15 @@ export function createDrawingEngine(
       emit();
     },
 
-    endTwoPointline(point) {
+    endTwoPointline(point, radius) {
       if (
         state.inProgressObject === null ||
-        state.inProgressObject.type !== "line"
+        state.inProgressObject.type !== "twoPointLine"
       )
         return;
 
       state.inProgressObject.end = point;
+      state.inProgressObject.radius = radius ?? state.inProgressObject.radius;
       state.mode = "idle";
       emit();
     },
@@ -151,7 +154,6 @@ export function createDrawingEngine(
 
       state.inProgressObject = stroke;
       state.mode = "drawing";
-      console.log("created Stroke");
       emit();
     },
 

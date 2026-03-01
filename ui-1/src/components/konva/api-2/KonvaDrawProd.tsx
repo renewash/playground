@@ -4,10 +4,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Line } from "react-konva";
 import Konva from "konva";
 
-import {
-  type DrawingEngine,
-  type TwoPointLineModel,
-} from "@/components/konva/module/core/types";
+import { type DrawingEngine } from "@/components/konva/module/core/types";
 import { useDrawing, TwoPointLine } from "@/components/konva/module";
 import {
   type DrawingTool,
@@ -104,12 +101,9 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
                 />
               );
             case "twoPointLine":
-              return (
-                <TwoPointLine
-                  key={object.id}
-                  model={(state.inProgressObject as TwoPointLineModel) || null}
-                />
-              );
+              return <TwoPointLine key={object.id} model={object} />;
+            default:
+              console.log("default", object);
           }
         })}
 

@@ -6,9 +6,9 @@ export const TwoPointLine = ({
 }: {
   model: TwoPointLineModel | null;
 }) => {
-  console.log("i am drawing 2 point line");
   if (!model) return;
   const { start, end, radius } = model;
+
   return (
     <>
       <Line

@@ -74,8 +74,8 @@ export interface DrawingEngine {
   createStraightline(point: Point): void;
   endStraightline(point: Point): void;
 
-  createTwoPointline(point: Point): void;
-  endTwoPointline(point: Point): void;
+  createTwoPointline(point: Point, radius?: number): void;
+  endTwoPointline(point: Point, radius?: number): void;
 
   createCircle(center: Point, radius: number): void;
   setCircle(center: Point, radius: number): void;
