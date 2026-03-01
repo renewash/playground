@@ -1,11 +1,11 @@
-import {
-  KonvaCancelButton,
-  KonvaApplyButton,
-} from "@/components/konva/KonvaControls";
-import { KonvaDrawingCanvas } from "@/components/konva/api-1/KonvaDrawProd";
+// import {
+//   KonvaCancelButton,
+//   KonvaApplyButton,
+// } from "@/components/konva/KonvaControls";
+import { KonvaDrawingCanvas } from "@/components/konva/api-2/KonvaDrawProd";
 import { useMemo, useState } from "react";
-import { createFreeDrawTool } from "@/components/konva/module/tools/freeDrawTool";
 import { createDrawingEngine } from "@/components/konva/module/core/engine";
+import { createFreeDrawTool } from "@/components/konva/module/tools/freeDrawTool";
 import { createTwoPointLineTool } from "@/components/konva/module/tools/twoPointLineTool";
 import type { DrawingTool } from "@/components/konva/module/tools/types";
 
@@ -32,8 +32,8 @@ const DrawProdA = () => {
       <div>
         <h3 className="pb-2 text-lg font-semibold">Controls</h3>
         <div className="flex gap-2">
-          <KonvaCancelButton className="cursor-pointer rounded-sm border p-2" />
-          <KonvaApplyButton className="cursor-pointer rounded-sm border p-2" />
+          {/* <KonvaCancelButton className="cursor-pointer rounded-sm border p-2" />
+          <KonvaApplyButton className="cursor-pointer rounded-sm border p-2" /> */}
         </div>
         <div className="flex gap-2 py-3">
           <button

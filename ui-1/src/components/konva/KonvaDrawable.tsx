@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Layer } from "react-konva";
 
-import { useFreeDraw, useKonvaContext } from "@/components/konva/module";
+import { useDrawing, useKonvaContext } from "@/components/konva/module";
 
 import { Stage } from "react-konva";
 import {
@@ -20,8 +20,8 @@ const KonvaDrawable = ({
   height?: number;
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { store, drawingState } = useKonvaContext();
-  const { start, move, end } = useFreeDraw(store);
+  const engine = useKonvaContext();
+  const { start, move, end } = useDrawing(engine);
 
   return (
     <div className={className + ` z-100`} ref={containerRef}>

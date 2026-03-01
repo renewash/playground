@@ -4,8 +4,11 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Line } from "react-konva";
 import Konva from "konva";
 
-import { type DrawingEngine } from "@/components/konva/module/core/engine";
-import { useDrawing } from "@/components/konva/module/react/useDrawing";
+import {
+  type DrawingEngine,
+  type TwoPointLineModel,
+} from "@/components/konva/module/core/types";
+import { useDrawing, TwoPointLine } from "@/components/konva/module";
 import {
   type DrawingTool,
   type ToolContext,
@@ -34,9 +37,18 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
   // subscribe to any changes is engine state.
   useEffect(() => {
     const unsubscribe = engine.subscribe(() => {
-      const activeStroke = engine.getActiveStroke();
-      if (!activeStroke || !activeLineRef.current) return;
-      activeLineRef.current.points(activeStroke.points);
+      const node = activeLineRef.current;
+      if (!node) return;
+
+      const obj = engine.getInProgressObject();
+
+      if (!obj) {
+        node.visible(false);
+      } else if (obj.type === "stroke") {
+        node.visible(true);
+        node.points(obj.points);
+      }
+
       layerRef.current?.batchDraw();
     });
 
@@ -77,28 +89,50 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
     >
       <Layer ref={layerRef}>
         {/* Committed strokes */}
-        {state.strokes.map((stroke) => (
-          <Line
-            key={stroke.id}
-            points={stroke.points}
-            stroke="black"
-            strokeWidth={2}
-            lineCap="round"
-            lineJoin="round"
-          />
-        ))}
+        {Object.values(state.objects).map((object) => {
+          // switch
+          switch (object.type) {
+            case "stroke":
+              return (
+                <Line
+                  key={object.id}
+                  points={object.points}
+                  stroke="black"
+                  strokeWidth={2}
+                  lineCap="round"
+                  lineJoin="round"
+                />
+              );
+            case "twoPointLine":
+              return (
+                <TwoPointLine
+                  key={object.id}
+                  model={(state.inProgressObject as TwoPointLineModel) || null}
+                />
+              );
+          }
+        })}
 
-        {/* Active stroke (imperative) */}
-        {state.activeStroke && (
-          <Line
-            ref={activeLineRef}
-            points={state.activeStroke.points}
-            stroke="red"
-            strokeWidth={2}
-            lineCap="round"
-            lineJoin="round"
-          />
-        )}
+        <Line
+          ref={activeLineRef}
+          points={
+            state?.inProgressObject?.type === "stroke"
+              ? state?.inProgressObject?.points
+              : []
+          }
+          stroke="red"
+          strokeWidth={2}
+          lineCap="round"
+          lineJoin="round"
+        />
+
+        <TwoPointLine
+          model={
+            state?.inProgressObject?.type === "twoPointLine"
+              ? state?.inProgressObject
+              : null
+          }
+        />
       </Layer>
     </Stage>
   );

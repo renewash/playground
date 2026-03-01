@@ -1,41 +1,92 @@
 // drawing/core/types.ts
 
 export type Point = [number, number];
-export type ToolType = "freeDraw" | "twoPointLine" | "circle";
+export type ToolType = "line" | "circle" | "freeDraw";
 export type DrawingMode = "idle" | "drawing";
 
-export interface Stroke {
+export interface StrokeModel {
   id: string;
   type: "stroke";
   points: number[];
 }
 
-export interface Circle {
+export interface LineModel {
+  id: string;
+  type: "line";
+  start: Point;
+  end: Point;
+}
+
+export interface TwoPointLineModel {
+  id: string;
+  type: "twoPointLine";
+  start: Point;
+  end: Point;
+  radius: number;
+}
+
+export interface CircleModel {
   id: string;
   type: "circle";
   center: Point;
   radius: number;
 }
-
-export type PrimitiveObject = Stroke | Circle;
-export interface LineWithMarkersObject {
+export interface LineWithMarkersModel {
   type: "lineWithMarkers";
   id: string;
   points: number[];
   markerRadius: number;
 }
 
-export type CompositeObject = LineWithMarkersObject;
+export type DrawableObject =
+  | LineModel
+  | StrokeModel
+  | CircleModel
+  | TwoPointLineModel
+  | LineWithMarkersModel;
 
-export type Shape = PrimitiveObject | CompositeObject;
-
-export type DrawableObject = PrimitiveObject | CompositeObject;
-
-export type Shapes = Shape[];
+export type ObjectTable = Record<string, DrawableObject>;
+export type ChildToParentMap = Record<string, string | null>;
 
 export interface DrawingState {
-  objects: DrawableObject[];
-  activeObject: DrawableObject | null;
+  objects: ObjectTable;
+  childToParentMap: ChildToParentMap;
+  inProgressObject: DrawableObject | null;
   mode: DrawingMode;
   tool: ToolType;
+}
+
+export type Listener = () => void;
+
+export interface DrawingEngine {
+  getState(): DrawingState;
+  subscribe(listener: Listener): () => void;
+
+  getInProgressObject(): DrawingState["inProgressObject"];
+  getCommitedObjects(): DrawingState["objects"];
+  getParentId(nodeId: string): string | null;
+  getNode(nodeId: string): DrawableObject | null;
+  commitObject(): void;
+
+  // mutations to inProgressObject
+  // addMarker(point: Point): void;
+
+  createStraightline(point: Point): void;
+  endStraightline(point: Point): void;
+
+  createTwoPointline(point: Point): void;
+  endTwoPointline(point: Point): void;
+
+  createCircle(center: Point, radius: number): void;
+  setCircle(center: Point, radius: number): void;
+
+  createStroke(point: Point): void;
+  appendPointToStroke(point: Point): void;
+  setStroke(points: number[]): void;
+
+  cancelShape(): void;
+
+  undo(): void;
+  redo(): void;
+  clear(): void;
 }

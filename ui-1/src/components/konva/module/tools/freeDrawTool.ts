@@ -8,17 +8,17 @@ export function createFreeDrawTool(): DrawingTool {
     onPointerDown(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.startStroke([pos.x, pos.y]);
+      ctx.engine.createStroke([pos.x, pos.y]);
     },
 
     onPointerMove(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.appendPoint([pos.x, pos.y]);
+      ctx.engine.appendPointToStroke([pos.x, pos.y]);
     },
 
     onPointerUp(_, ctx) {
-      ctx.engine.commitStroke();
+      ctx.engine.commitObject();
     },
   };
 }

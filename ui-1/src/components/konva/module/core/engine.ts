@@ -1,46 +1,37 @@
 // drawing/core/engine.ts
 
 import type {
+  StrokeModel,
+  CircleModel,
+  LineModel,
+  Listener,
   DrawingState,
-  Point,
-  Stroke,
-  Shape,
-  Shapes,
-  ShapeData,
-  Circle,
+  DrawingEngine,
 } from "./types";
 
-type Listener = () => void;
-
-export interface DrawingEngine {
-  getState(): DrawingState;
-  subscribe(listener: Listener): () => void;
-  replaceActiveShape(data: ShapeData): void;
-  start(point: Point): void;
-  appendStrokeData(point: Point): void;
-  updateCircle(center: Point, radius: number): void;
-  getActiveShape(): DrawingState["activeShape"];
-  getCommitedShapes(): Shapes;
-  end(): void;
-  cancelShape(): void;
-
-  undo(): void;
-  clear(): void;
-}
-
+/**
+ * Holds internal state of canvas and defines mutation logic.
+ * @param initial
+ * @returns
+ */
 export function createDrawingEngine(
   initial?: Partial<DrawingState>,
 ): DrawingEngine {
   let state: DrawingState = {
-    shapes: [],
-    activeShape: null,
+    objects: {},
+    childToParentMap: {},
+    inProgressObject: null,
     mode: "idle",
     tool: "freeDraw",
     ...initial,
   };
 
   const listeners = new Set<Listener>();
-  const emit = () => listeners.forEach((l) => l());
+  const emit = () =>
+    listeners.forEach((l) => {
+      // console.log("emitting ", l);
+      return l();
+    });
 
   const setState = (next: DrawingState) => {
     state = next;
@@ -55,97 +46,169 @@ export function createDrawingEngine(
       return () => listeners.delete(listener);
     },
 
-    replaceActiveShape(data) {
-      if (!state.activeShape) return;
+    getInProgressObject() {
+      return state.inProgressObject;
+    },
 
-      if ("points" in data) {
-        state.activeShape.points = data.points;
-      } else if ("center" in data && "radius" in data) {
-        state.activeShape.center = data.center;
-        state.activeShape.radius = data.radius;
+    getCommitedObjects() {
+      return state.objects;
+    },
+
+    getParentId(nodeId) {
+      if (nodeId in state.childToParentMap === false) {
+        return null;
       }
+
+      return state.childToParentMap[nodeId];
+    },
+
+    getNode(nodeId) {
+      if (nodeId in state.objects === false) {
+        return null;
+      }
+      return state.objects[nodeId];
+    },
+
+    createStraightline(point) {
+      const line: LineModel = {
+        id: crypto.randomUUID(),
+        type: "line",
+        start: point,
+        end: point,
+      };
+
+      state.inProgressObject = line;
+      state.mode = "drawing";
+      emit();
+    },
+
+    endStraightline(point) {
+      if (
+        state.inProgressObject === null ||
+        state.inProgressObject.type !== "line"
+      )
+        return;
+
+      state.inProgressObject.end = point;
+      state.mode = "idle";
+      emit();
+    },
+
+    createTwoPointline(point) {
+      const line: LineModel = {
+        id: crypto.randomUUID(),
+        type: "line",
+        start: point,
+        end: point,
+      };
+
+      state.inProgressObject = line;
+      state.mode = "drawing";
+      emit();
+    },
+
+    endTwoPointline(point) {
+      if (
+        state.inProgressObject === null ||
+        state.inProgressObject.type !== "line"
+      )
+        return;
+
+      state.inProgressObject.end = point;
+      state.mode = "idle";
+      emit();
+    },
+
+    createCircle(center, radius) {
+      const circle: CircleModel = {
+        id: crypto.randomUUID(),
+        type: "circle",
+        center,
+        radius,
+      };
+      state.inProgressObject = circle;
+      state.mode = "drawing";
+      state.tool = "circle";
+      emit();
+    },
+
+    setCircle(center, radius) {
+      if (!state.inProgressObject || state.inProgressObject.type !== "circle")
+        return;
+
+      state.inProgressObject.center = center;
+      state.inProgressObject.radius = radius;
 
       emit();
     },
 
-    start(data) {
-      if (state.mode === "drawing") return;
-      const newShape: Partial<Shape> = { id: crypto.randomUUID() };
+    createStroke(point) {
+      const stroke: StrokeModel = {
+        id: crypto.randomUUID(),
+        type: "stroke",
+        points: [...point],
+      };
 
-      if (state.tool === "twoPointLine") {
-        newShape[type] = "circle";
-        newShape[center] = point;
-        newShape[radius] = 0;
-      } else {
-        // const newShape = {
-        //   id,
-        //   type: "stroke",
-        //   points: [...point],
-        // };
-      }
+      state.inProgressObject = stroke;
+      state.mode = "drawing";
+      console.log("created Stroke");
+      emit();
+    },
+
+    appendPointToStroke(point) {
+      if (!state.inProgressObject || state.inProgressObject.type !== "stroke")
+        return;
+
+      state.inProgressObject.points.push(...point);
+      emit();
+    },
+
+    setStroke(points) {
+      if (!state.inProgressObject || state.inProgressObject.type !== "stroke")
+        return;
+
+      state.inProgressObject.points = points;
+      emit();
+    },
+
+    commitObject() {
+      if (!state.inProgressObject) return;
+      const { inProgressObject } = state;
+      const { id } = inProgressObject;
 
       setState({
         ...state,
-        activeShape: newShape,
-        mode: "drawing",
-      });
-    },
-
-    appendStrokeData(point) {
-      if (!state.activeShape || state.activeShape.type !== "stroke") return;
-
-      state.activeShape.points.push(...point);
-      emit();
-    },
-
-    updateCircle(center, radius) {
-      if (!state.activeShape || state.activeShape.type !== "circle") return;
-
-      state.activeShape.center = center;
-      state.activeShape.radius = radius;
-
-      emit(); // Only for state observers; renderer may optimize
-    },
-
-    getActiveShape() {
-      return state.activeShape;
-    },
-
-    getCommitedShapes() {
-      return state.shapes;
-    },
-
-    end() {
-      if (!state.activeShape) return;
-
-      setState({
-        shapes: [...state.shapes, state.activeShape],
-        activeShape: null,
+        objects: { ...state.objects, [id]: inProgressObject },
+        childToParentMap: { ...state.childToParentMap, [id]: null },
+        inProgressObject: null,
         mode: "idle",
       });
+      emit();
     },
 
     cancelShape() {
       setState({
         ...state,
-        activeShape: null,
+        inProgressObject: null,
         mode: "idle",
       });
     },
 
     undo() {
-      if (!state.shapes.length) return;
+      if (!state.objects.length) return;
+      // TODO: Implement undo
+    },
 
-      setState({
-        ...state,
-        shapes: state.shapes.slice(0, -1),
-      });
+    redo() {
+      // TODO: Implement redo
     },
 
     clear() {
       setState({
-        shapes: [],
-        activeShape: null,
+        ...state,
+        objects: {},
+        childToParentMap: {},
+        inProgressObject: null,
         mode: "idle",
       });
     },

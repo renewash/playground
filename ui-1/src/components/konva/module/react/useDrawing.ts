@@ -1,8 +1,7 @@
 // drawing/react/useDrawing.ts
 
 import { useSyncExternalStore } from "react";
-import { type DrawingEngine } from "../core/engine";
-import { type DrawingState } from "../core/types";
+import type { DrawingState, DrawingEngine } from "../core/types";
 
 export function useDrawing(engine: DrawingEngine): DrawingState {
   return useSyncExternalStore(

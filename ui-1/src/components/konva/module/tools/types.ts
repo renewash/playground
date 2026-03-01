@@ -1,6 +1,6 @@
 // drawing/tools/types.ts
 
-import { type DrawingEngine } from "../core/engine";
+import { type DrawingEngine } from "../core/types";
 
 export interface ToolContext {
   engine: DrawingEngine;
@@ -10,8 +10,8 @@ export interface ToolContext {
 }
 
 // define an interface for drawing tools
-// accepts dom events and a context object with the engine and helper functions
-// isolates the drawing logic from the react component and konva event system
+// isolates the drawing logic from react and konva
+// ctx contains engine and additional helper functions
 export interface DrawingTool {
   onPointerDown?(e: PointerEvent, ctx: ToolContext): void;
   onPointerMove?(e: PointerEvent, ctx: ToolContext): void;
