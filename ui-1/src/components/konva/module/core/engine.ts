@@ -1,7 +1,7 @@
 // drawing/core/engine.ts
 
 import type {
-  StrokeModel,
+  FreeFormLineModel,
   CircleModel,
   LineModel,
   TwoPointLineModel,
@@ -144,9 +144,9 @@ export function createDrawingEngine(
     },
 
     createStroke(point) {
-      const stroke: StrokeModel = {
+      const stroke: FreeFormLineModel = {
         id: crypto.randomUUID(),
-        type: "stroke",
+        type: "freeFormLine",
         points: [...point],
       };
 
@@ -156,14 +156,14 @@ export function createDrawingEngine(
     },
 
     appendPointToStroke(point) {
-      if (!inProgressObject || inProgressObject.type !== "stroke") return;
+      if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
 
       inProgressObject.points.push(...point);
       emitInProgressUpdates();
     },
 
     setStroke(points) {
-      if (!inProgressObject || inProgressObject.type !== "stroke") return;
+      if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
       inProgressObject.points = points;
       emitInProgressUpdates();
     },

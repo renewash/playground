@@ -1,10 +1,10 @@
 import { Line } from "react-konva";
-import type { DrawableObject, StrokeModel } from "../../core/types";
+import type { DrawableObject, FreeFormLineModel } from "../../core/types";
 
 export const FreeFormLine = ({
   model,
 }: {
-  model: DrawableObject | StrokeModel | null;
+  model: DrawableObject | FreeFormLineModel | null;
 }) => {
   if (!model || model.type != "stroke") return;
 

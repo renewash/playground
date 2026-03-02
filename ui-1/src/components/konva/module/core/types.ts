@@ -4,9 +4,9 @@ export type Point = [number, number];
 export type ToolType = "line" | "circle" | "freeDraw";
 export type DrawingMode = "idle" | "drawing";
 
-export interface StrokeModel {
+export interface FreeFormLineModel {
   id: string;
-  type: "stroke";
+  type: "freeFormLine";
   points: number[];
 }
 
@@ -40,7 +40,7 @@ export interface LineWithMarkersModel {
 
 export type DrawableObject =
   | LineModel
-  | StrokeModel
+  | FreeFormLineModel
   | CircleModel
   | TwoPointLineModel
   | LineWithMarkersModel;
@@ -74,15 +74,16 @@ export interface DrawingEngine {
    * @returns {() => void} An unsubscribe function to stop listening.
    */
   subscribeTransient(listener: Listener): () => void;
+
   getInProgressObject(): DrawableObject | null;
   getCommitedObjects(): DrawingState["objects"];
+
   getParentId(nodeId: string): string | null;
   getNode(nodeId: string): DrawableObject | null;
+
   commitObject(): void;
 
   // mutations to inProgressObject
-  // addMarker(point: Point): void;
-
   createStraightline(point: Point): void;
   endStraightline(point: Point): void;
 
@@ -97,7 +98,6 @@ export interface DrawingEngine {
   setStroke(points: number[]): void;
 
   cancelShape(): void;
-
   undo(): void;
   redo(): void;
   clear(): void;

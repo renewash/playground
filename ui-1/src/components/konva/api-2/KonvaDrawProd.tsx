@@ -95,7 +95,7 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
         {Object.values(state.objects).map((object) => {
           // switch
           switch (object.type) {
-            case "stroke":
+            case "freeFormLine":
               return <FreeFormLine key={object.id} model={object} />;
             case "twoPointLine":
               return <TwoPointLine key={object.id} model={object} />;
