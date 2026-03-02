@@ -91,7 +91,7 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
       onMouseUp={handlePointerUp}
     >
       <Layer ref={layerRef}>
-        {/* Committed strokes */}
+        {/* Committed objects */}
         {Object.values(state.objects).map((object) => {
           // switch
           switch (object.type) {
