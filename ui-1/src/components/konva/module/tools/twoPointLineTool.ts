@@ -1,6 +1,8 @@
 // drawing/tools/twoPointLineTool.ts
+
 import type { DrawingTool, ToolContext } from "./types";
 import type { Point } from "../core/types";
+import Konva from "konva";
 
 export function createTwoPointLineTool(): DrawingTool {
   let firstPoint: Point | null = null;
@@ -39,5 +41,36 @@ export function createTwoPointLineTool(): DrawingTool {
     // onPointerUp(_, ctx: ToolContext) {
     //   // Nothing needed on pointer up for this tool
     // },
+
+    renderPreview(group, obj) {
+      if (obj.type !== "twoPointLine") return;
+      const { start, end, radius } = obj;
+
+      const line = new Konva.Line({
+        points: [...start, ...end],
+        stroke: "blue",
+        strokeWidth: 2,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+
+      const startCircle = new Konva.Circle({
+        x: start[0],
+        y: start[1],
+        radius,
+        stroke: "green",
+      });
+
+      const endCircle = new Konva.Circle({
+        x: end[0],
+        y: end[1],
+        radius,
+        stroke: "green",
+      });
+
+      group.add(line);
+      group.add(startCircle);
+      group.add(endCircle);
+    },
   };
 }

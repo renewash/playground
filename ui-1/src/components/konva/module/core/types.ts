@@ -51,7 +51,6 @@ export type ChildToParentMap = Record<string, string | null>;
 export interface DrawingState {
   objects: ObjectTable;
   childToParentMap: ChildToParentMap;
-  inProgressObject: DrawableObject | null;
   mode: DrawingMode;
   tool: ToolType;
 }
@@ -60,9 +59,22 @@ export type Listener = () => void;
 
 export interface DrawingEngine {
   getState(): DrawingState;
-  subscribe(listener: Listener): () => void;
 
-  getInProgressObject(): DrawingState["inProgressObject"];
+  /**
+   * Subscribe to changes in static objects.
+   *
+   * @param {Listener} listener - Callback invoked when changes occur.
+   * @returns {() => void} An unsubscribe function to stop listening.
+   */
+  subscribe(listener: Listener): () => void;
+  /**
+   * Subscribe to in-progress object changes.
+   *
+   * @param {Listener} listener - Callback invoked when changes occur.
+   * @returns {() => void} An unsubscribe function to stop listening.
+   */
+  subscribeTransient(listener: Listener): () => void;
+  getInProgressObject(): DrawableObject | null;
   getCommitedObjects(): DrawingState["objects"];
   getParentId(nodeId: string): string | null;
   getNode(nodeId: string): DrawableObject | null;

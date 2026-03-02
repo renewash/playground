@@ -1,7 +1,7 @@
 // drawing/konva/KonvaDrawingCanvas.tsx
 
 import React, { useEffect, useMemo, useRef } from "react";
-import { Stage, Layer, Group } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import Konva from "konva";
 
 import { type DrawingEngine } from "@/components/konva/module/core/types";
@@ -33,30 +33,18 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
 
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
-  const groupRef = useRef<Konva.Group>(null);
+  const inProgressObject = engine.getInProgressObject();
 
   useEffect(() => {
-    // subscribe to any inProgressObject changes and imperatively redraw.
+    // subscribe to any changes to inProgressObject.
     const unsubscribe = engine.subscribeTransient(() => {
-      if (!groupRef) return;
-
-      const group = groupRef.current;
-      const inProgressObject = engine.getInProgressObject();
-
-      // clear previous renders
-      if (!group) return;
-      group.destroyChildren(); // TODO: To be slightly more efficient, mutate nodes instead of destroying.
-
-      // imperatively create objects
-      if (!inProgressObject) return;
-      tool.renderPreview?.(group, inProgressObject);
-
-      // render
+      // how to do a redraw?
+      console.log("redrawn!");
       layerRef.current?.batchDraw();
     });
 
     return unsubscribe;
-  }, [engine, tool]);
+  }, [engine]);
 
   // bind react with tool and engine via context object
   const ctx: ToolContext = useMemo(
@@ -104,8 +92,8 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
           }
         })}
 
-        {/* imperative render */}
-        <Group ref={groupRef} visible={true} />
+        <FreeFormLine model={inProgressObject} />
+        <TwoPointLine model={inProgressObject} />
       </Layer>
     </Stage>
   );

@@ -5,6 +5,7 @@ import type {
   CircleModel,
   LineModel,
   TwoPointLineModel,
+  DrawableObject,
   Listener,
   DrawingState,
   DrawingEngine,
@@ -12,8 +13,12 @@ import type {
 
 /**
  * Holds internal state of canvas and defines mutation logic.
- * @param initial
- * @returns
+ * This engine manages objects and drawings.
+ * Objects are primatives (a single Konva shape) or composites shapes (multiple primatives) represented as a graph.
+ * Transient objects holds the state of a drawing that is in progress, such as a line being drawn.
+ *
+ * @param initial - Optional starting state for the engine.
+ * @returns A fresh DrawingEngine instance.
  */
 export function createDrawingEngine(
   initial?: Partial<DrawingState>,
@@ -21,22 +26,18 @@ export function createDrawingEngine(
   let state: DrawingState = {
     objects: {},
     childToParentMap: {},
-    inProgressObject: null,
     mode: "idle",
     tool: "freeDraw",
     ...initial,
   };
 
-  const listeners = new Set<Listener>();
-  const emit = () =>
-    listeners.forEach((l) => {
-      return l();
-    });
+  let inProgressObject: DrawableObject | null = null;
 
-  const setState = (next: DrawingState) => {
-    state = next;
-    emit();
-  };
+  const listeners = new Set<Listener>();
+  const transientListeners = new Set<Listener>();
+
+  const emit = () => listeners.forEach((l) => l());
+  const emitInProgressUpdates = () => transientListeners.forEach((l) => l());
 
   return {
     getState: () => state,
@@ -46,8 +47,13 @@ export function createDrawingEngine(
       return () => listeners.delete(listener);
     },
 
+    subscribeTransient(listener) {
+      transientListeners.add(listener);
+      return () => transientListeners.delete(listener);
+    },
+
     getInProgressObject() {
-      return state.inProgressObject;
+      return inProgressObject;
     },
 
     getCommitedObjects() {
@@ -77,21 +83,17 @@ export function createDrawingEngine(
         end: point,
       };
 
-      state.inProgressObject = line;
+      inProgressObject = line;
       state.mode = "drawing";
-      emit();
+      emitInProgressUpdates();
     },
 
     endStraightline(point) {
-      if (
-        state.inProgressObject === null ||
-        state.inProgressObject.type !== "line"
-      )
-        return;
+      if (inProgressObject === null || inProgressObject.type !== "line") return;
 
-      state.inProgressObject.end = point;
+      inProgressObject.end = point;
       state.mode = "idle";
-      emit();
+      emitInProgressUpdates();
     },
 
     createTwoPointline(point, radius) {
@@ -104,22 +106,19 @@ export function createDrawingEngine(
         radius: radius ?? fixedRadius,
       };
 
-      state.inProgressObject = line;
+      inProgressObject = line;
       state.mode = "drawing";
-      emit();
+      emitInProgressUpdates();
     },
 
     endTwoPointline(point, radius) {
-      if (
-        state.inProgressObject === null ||
-        state.inProgressObject.type !== "twoPointLine"
-      )
+      if (inProgressObject === null || inProgressObject.type !== "twoPointLine")
         return;
 
-      state.inProgressObject.end = point;
-      state.inProgressObject.radius = radius ?? state.inProgressObject.radius;
+      inProgressObject.end = point;
+      inProgressObject.radius = radius ?? inProgressObject.radius;
       state.mode = "idle";
-      emit();
+      emitInProgressUpdates();
     },
 
     createCircle(center, radius) {
@@ -129,20 +128,19 @@ export function createDrawingEngine(
         center,
         radius,
       };
-      state.inProgressObject = circle;
+      inProgressObject = circle;
       state.mode = "drawing";
       state.tool = "circle";
-      emit();
+      emitInProgressUpdates();
     },
 
     setCircle(center, radius) {
-      if (!state.inProgressObject || state.inProgressObject.type !== "circle")
-        return;
+      if (!inProgressObject || inProgressObject.type !== "circle") return;
 
-      state.inProgressObject.center = center;
-      state.inProgressObject.radius = radius;
+      inProgressObject.center = center;
+      inProgressObject.radius = radius;
 
-      emit();
+      emitInProgressUpdates();
     },
 
     createStroke(point) {
@@ -152,52 +150,47 @@ export function createDrawingEngine(
         points: [...point],
       };
 
-      state.inProgressObject = stroke;
+      inProgressObject = stroke;
       state.mode = "drawing";
-      emit();
+      emitInProgressUpdates();
     },
 
     appendPointToStroke(point) {
-      if (!state.inProgressObject || state.inProgressObject.type !== "stroke")
-        return;
+      if (!inProgressObject || inProgressObject.type !== "stroke") return;
 
-      state.inProgressObject.points.push(...point);
-      emit();
+      inProgressObject.points.push(...point);
+      emitInProgressUpdates();
     },
 
     setStroke(points) {
-      if (!state.inProgressObject || state.inProgressObject.type !== "stroke")
-        return;
-
-      state.inProgressObject.points = points;
-      emit();
+      if (!inProgressObject || inProgressObject.type !== "stroke") return;
+      inProgressObject.points = points;
+      emitInProgressUpdates();
     },
 
     commitObject() {
-      if (!state.inProgressObject) return;
-      const { inProgressObject } = state;
+      if (!inProgressObject) return;
       const { id } = inProgressObject;
 
-      setState({
+      state = {
         ...state,
         objects: { ...state.objects, [id]: inProgressObject },
         childToParentMap: { ...state.childToParentMap, [id]: null },
-        inProgressObject: null,
         mode: "idle",
-      });
+      };
       emit();
+
+      inProgressObject = null;
+      console.log("commit null");
+      emitInProgressUpdates();
     },
 
     cancelShape() {
-      setState({
-        ...state,
-        inProgressObject: null,
-        mode: "idle",
-      });
+      inProgressObject = null;
+      emit();
     },
 
     undo() {
-      if (!state.objects.length) return;
       // TODO: Implement undo
     },
 
@@ -206,13 +199,16 @@ export function createDrawingEngine(
     },
 
     clear() {
-      setState({
+      state = {
         ...state,
         objects: {},
         childToParentMap: {},
-        inProgressObject: null,
         mode: "idle",
-      });
+      };
+      emit();
+
+      inProgressObject = null;
+      emitInProgressUpdates();
     },
   };
 }

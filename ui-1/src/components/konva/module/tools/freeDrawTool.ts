@@ -1,5 +1,6 @@
 // drawing/tools/freeDrawTool.ts
 
+import Konva from "konva";
 import { type DrawingTool } from "./types";
 
 export function createFreeDrawTool(): DrawingTool {
@@ -19,6 +20,20 @@ export function createFreeDrawTool(): DrawingTool {
 
     onPointerUp(_, ctx) {
       ctx.engine.commitObject();
+    },
+
+    renderPreview(group, obj) {
+      if (obj.type !== "stroke") return;
+
+      const line = new Konva.Line({
+        points: obj.points,
+        stroke: "blue",
+        strokeWidth: 2,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+
+      group.add(line);
     },
   };
 }

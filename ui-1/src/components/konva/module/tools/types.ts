@@ -1,6 +1,7 @@
 // drawing/tools/types.ts
 
-import { type DrawingEngine } from "../core/types";
+import type { DrawingEngine, DrawableObject } from "../core/types";
+import Konva from "konva";
 
 export interface ToolContext {
   engine: DrawingEngine;
@@ -17,4 +18,6 @@ export interface DrawingTool {
   onPointerMove?(e: PointerEvent, ctx: ToolContext): void;
   onPointerUp?(e: PointerEvent, ctx: ToolContext): void;
   onKeyDown?(e: KeyboardEvent, ctx: ToolContext): void;
+
+  renderPreview?(group: Konva.Group, obj: DrawableObject): void;
 }
