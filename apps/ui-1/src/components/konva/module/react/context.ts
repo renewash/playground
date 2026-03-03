@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { type DrawingEngine } from "@/components/konva/module/core/types";
+import { type DrawingEngine } from "../core/types";
 
 export const KonvaContext = createContext<DrawingEngine | null>(null);
 export const useKonvaContext = () => {
