@@ -4,16 +4,8 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
-import { type DrawingEngine } from "@/components/konva/module/core/types";
-import {
-  useScene,
-  TwoPointLine,
-  FreeFormLine,
-} from "@/components/konva/module";
-import {
-  type DrawingTool,
-  type ToolContext,
-} from "@/components/konva/module/tools/types";
+import type { DrawingEngine, DrawingTool, ToolContext } from "@repo/drawable";
+import { useScene, TwoPointLine, FreeFormLine } from "@repo/drawable/react";
 
 interface Props {
   engine: DrawingEngine;
