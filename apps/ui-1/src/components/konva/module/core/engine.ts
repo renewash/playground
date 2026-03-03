@@ -65,14 +65,14 @@ export function createDrawingEngine(
         return null;
       }
 
-      return state.childToParentMap[nodeId];
+      return state.childToParentMap[nodeId] ?? null;
     },
 
     getNode(nodeId) {
       if (nodeId in state.objects === false) {
         return null;
       }
-      return state.objects[nodeId];
+      return state.objects[nodeId] ?? null;
     },
 
     createStraightline(point) {
