@@ -3,7 +3,8 @@
   "private": true,
   "pnpm": {
     "overrides": {
-      "@swc/helpers": ">=0.5.17"
+      "@swc/helpers": ">=0.5.17",
+      "esbuild": ">=0.27.3"
     },
     "peerDependencyRules": {
       "allowedVersions": {
