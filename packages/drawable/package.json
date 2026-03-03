@@ -3,7 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "default": "./dist/react/index.js"
+    }
   },
   "scripts": {
     "dev": "tsc --watch",
@@ -16,9 +23,20 @@
     "eslint": "^9.39.1",
     "typescript": "5.9.2"
   },
-  "dependencies": {
-    "konva": "^10.2.0",
-    "react": "^19.2.0",
-    "react-konva": "^19.2.2"
+  "peerDependencies": {
+    "konva": "^10",
+    "react": "^19",
+    "react-konva": "^19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "konva": {
+      "optional": false
+    },
+    "react-konva": {
+      "optional": false
+    }
   }
 }
