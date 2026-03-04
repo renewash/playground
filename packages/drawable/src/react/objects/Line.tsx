@@ -6,7 +6,7 @@ export const FreeFormLine = ({
 }: {
   model: DrawableObject | FreeFormLineModel | null;
 }) => {
-  if (!model || model.type != "freeFormLine") return;
+  if (!model || model.type != "freeFormLine") return null;
 
   return (
     <Line

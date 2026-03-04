@@ -2,7 +2,6 @@ import { KonvaDrawingCanvas } from "@/components/konva/api-2/KonvaDrawProd";
 import { useMemo, useState } from "react";
 import SharpBorder from "@/components/SharpBorder";
 import {
-  createDrawingEngine,
   createFreeDrawTool,
   createTwoPointLineTool,
   type DrawingTool,
@@ -11,7 +10,6 @@ import {
 const DrawModule = () => {
   const width = 600;
   const height = 600;
-  const engine = useMemo(() => createDrawingEngine(), []);
   const freeTool = useMemo(() => createFreeDrawTool(), []);
   const twoPointLineTool = useMemo(() => createTwoPointLineTool(), []);
 
@@ -27,12 +25,7 @@ const DrawModule = () => {
       </SharpBorder>
       <div className="flex gap-5">
         <SharpBorder className="mb-4 px-2 py-4">
-          <KonvaDrawingCanvas
-            engine={engine}
-            tool={tool}
-            width={width}
-            height={height}
-          />
+          <KonvaDrawingCanvas tool={tool} width={width} height={height} />
         </SharpBorder>
 
         <div>
