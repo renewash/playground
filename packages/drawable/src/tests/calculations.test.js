@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   calculateEuclideanDistance,
   calculateArea,
-} from "../geometry/calculate.js";
+} from "../utils/calculate.js";
 
 describe("distance calculations", () => {
   it("calculates the distance between two points", () => {

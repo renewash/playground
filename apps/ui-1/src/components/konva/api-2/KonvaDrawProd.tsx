@@ -4,12 +4,11 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
-import { createDrawingEngine } from "@repo/drawable";
-
-import type { DrawingTool, ToolContext } from "@repo/drawable";
+import type { DrawingEngine, DrawingTool, ToolContext } from "@repo/drawable";
 import { useScene, TwoPointLine, FreeFormLine } from "@repo/drawable/react";
 
 interface Props {
+  engine: DrawingEngine;
   tool: DrawingTool;
   width: number;
   height: number;
@@ -17,12 +16,11 @@ interface Props {
 
 // this component binds engine and tools to Konva.
 export const KonvaDrawingCanvas: React.FC<Props> = ({
+  engine,
   tool,
   width,
   height,
 }) => {
-  const engine = useMemo(() => createDrawingEngine(), []);
-
   const state = useScene(engine);
 
   const stageRef = useRef<Konva.Stage>(null);
