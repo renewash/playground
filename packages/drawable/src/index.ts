@@ -18,20 +18,23 @@ export { createTwoPointLineTool } from "./tools/twoPointLineTool";
 
 // === Types ===
 export type {
-  Point,
   ToolType,
   DrawingMode,
-  DrawableObject,
   ObjectTable,
   ChildToParentMap,
   Listener,
+  DrawingState,
+  DrawingEngine,
+} from "./core/types";
+
+export type {
+  Point,
+  DrawableObject,
   FreeFormLineModel,
   LineModel,
   TwoPointLineModel,
   CircleModel,
   LineWithMarkersModel,
-  DrawingState,
-  DrawingEngine,
-} from "./core/types";
+} from "./geometry/types";
 
 export type { DrawingTool, ToolContext } from "./tools/types";

@@ -34,8 +34,11 @@ export interface DrawingEngine {
    * @returns {() => void} An unsubscribe function to stop listening.
    */
   subscribeTransient(listener: Listener): () => void;
-
   getInProgressObject(): DrawableObject | null;
+  getTransientSnapshot(): {
+    version: number;
+    inProgressObject: DrawableObject | null;
+  };
   getCommitedObjects(): DrawingState["objects"];
 
   getParentId(nodeId: string): string | null;

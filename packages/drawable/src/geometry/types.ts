@@ -21,14 +21,13 @@ export interface TwoPointLineModel {
   start: Point;
   end: Point;
   radius: number;
-  length: number;
 }
 
 export interface FreeFormLineModel {
   id: string;
   type: "freeFormLine";
   points: number[];
-  area?: number;
+  area: number;
 }
 
 export interface CircleModel {
@@ -36,7 +35,7 @@ export interface CircleModel {
   type: "circle";
   center: Point;
   radius: number;
-  area?: number;
+  area: number;
 }
 export interface LineWithMarkersModel {
   type: "lineWithMarkers";

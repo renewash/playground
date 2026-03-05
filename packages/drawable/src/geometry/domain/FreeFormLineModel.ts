@@ -11,5 +11,6 @@ export const createFreeFormLineModel = ({
     id: crypto.randomUUID(),
     type: "freeFormLine",
     points: points ?? [],
+    area: 0,
   };
 };

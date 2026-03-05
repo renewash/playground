@@ -6,37 +6,35 @@ import {
 
 import { DrawableObject } from "../geometry/types";
 
-export const getArea = (obj: DrawableObject) => {
+export const getArea = (obj: DrawableObject): number => {
+  let area: number = 0;
   switch (obj.type) {
     case "circle":
-      return calculateAreaOfCircle(obj.radius);
+      area = calculateAreaOfCircle(obj.radius);
+      break;
     case "line":
     case "twoPointLine":
-      return calculateArea([...obj.start, ...obj.end]);
+      area = calculateArea([...obj.start, ...obj.end]);
+      break;
     case "freeFormLine":
-      return calculateArea(obj.points);
+      area = calculateArea(obj.points);
+      break;
     default:
       throw new Error(`Area calculation not supported for type ${obj.type}`);
   }
+
+  return Math.round(area * 100) / 100; // 2 d.p.
 };
 
-export const getLength = (obj: DrawableObject) => {
+export const getLength = (obj: DrawableObject): number => {
+  let length: number = 0;
   switch (obj.type) {
     case "line":
     case "twoPointLine":
-      return calculateEuclideanDistance(obj.start, obj.end);
-
+      length = calculateEuclideanDistance(obj.start, obj.end);
+      break;
     default:
       throw new Error(`Length calculation not supported for type ${obj.type}`);
   }
-};
-
-export const deriveMeasurements = (obj: DrawableObject) => {
-  if ("area" in obj) {
-    obj.area = getArea(obj);
-  }
-  if ("length" in obj) {
-    obj.length = getLength(obj);
-  }
-  return obj;
+  return Math.round(length * 100) / 100; // 2 d.p.
 };

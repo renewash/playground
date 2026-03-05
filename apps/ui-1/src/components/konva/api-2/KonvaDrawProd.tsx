@@ -33,7 +33,7 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
       if (!groupRef) return;
 
       const group = groupRef.current;
-      const inProgressObject = engine.getInProgressObject();
+      const { inProgressObject } = engine.getTransientSnapshot();
 
       // clear previous renders
       if (!group) return;

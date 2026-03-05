@@ -7,7 +7,8 @@ import { createLineModel } from "../geometry/domain/LineModel";
 import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createTwoPointLineModel } from "../geometry/domain/TwoPointLineModel";
 import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
-import { deriveMeasurements } from "./measure";
+import { getArea, getLength } from "./measure";
+import { version } from "react";
 
 /**
  * Holds internal state of canvas and defines mutation logic.
@@ -29,16 +30,41 @@ export function createDrawingEngine(
     ...initial,
   };
 
+  let inProgressUpdates: number = 0;
   let inProgressObject: DrawableObject | null = null;
+
+  let transientSnapshot = {
+    version: inProgressUpdates,
+    inProgressObject,
+  };
 
   const listeners = new Set<Listener>();
   const transientListeners = new Set<Listener>();
 
   const emit = () => listeners.forEach((l) => l());
-  const emitInProgressUpdates = () => transientListeners.forEach((l) => l());
+  const emitInProgressUpdates = () => {
+    inProgressUpdates++;
+    if (!inProgressObject) {
+      transientSnapshot = { version: inProgressUpdates, inProgressObject };
+      transientListeners.forEach((l) => l());
+    }
+
+    if ("area" in inProgressObject) {
+      inProgressObject.area = getArea(inProgressObject);
+    }
+    if ("length" in inProgressObject) {
+      inProgressObject.length = getLength(inProgressObject);
+    }
+
+    // only update version so that inProgressObject reference is preserved for better performance in react-konva.
+    transientSnapshot = { version: inProgressUpdates, inProgressObject };
+    transientListeners.forEach((l) => l());
+  };
 
   return {
-    getState: () => state,
+    getState() {
+      return state;
+    },
 
     subscribe(listener) {
       listeners.add(listener);
@@ -49,9 +75,11 @@ export function createDrawingEngine(
       transientListeners.add(listener);
       return () => transientListeners.delete(listener);
     },
-
     getInProgressObject() {
       return inProgressObject;
+    },
+    getTransientSnapshot() {
+      return transientSnapshot;
     },
 
     getCommitedObjects() {
@@ -144,11 +172,16 @@ export function createDrawingEngine(
       if (!inProgressObject) return;
       const { id } = inProgressObject;
 
-      const processedObject = deriveMeasurements(inProgressObject);
+      if ("area" in inProgressObject) {
+        inProgressObject.area = getArea(inProgressObject);
+      }
+      if ("length" in inProgressObject) {
+        inProgressObject.length = getLength(inProgressObject);
+      }
 
       state = {
         ...state,
-        objects: { ...state.objects, [id]: processedObject },
+        objects: { ...state.objects, [id]: inProgressObject },
         childToParentMap: { ...state.childToParentMap, [id]: null },
         mode: "idle",
       };

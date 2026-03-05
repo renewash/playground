@@ -8,7 +8,7 @@ import {
   type DrawingTool,
 } from "@repo/drawable";
 
-import { Drawable } from "@repo/drawable/react";
+import { Drawable, useScene, useInProgressObject } from "@repo/drawable/react";
 
 const DrawModule = () => {
   const width = 600;
@@ -17,10 +17,20 @@ const DrawModule = () => {
   const freeTool = useMemo(() => createFreeDrawTool(), []);
   const twoPointLineTool = useMemo(() => createTwoPointLineTool(), []);
 
+  const state = useScene(engine);
+  const inProgressObject = useInProgressObject(engine);
+
   const [tool, setTool] = useState<DrawingTool>(twoPointLineTool);
   const handleToolChange = (newTool: DrawingTool) => {
     setTool(newTool);
   };
+  const area =
+    inProgressObject && "area" in inProgressObject ? inProgressObject.area : 0;
+
+  const length =
+    inProgressObject && "length" in inProgressObject
+      ? inProgressObject.length
+      : 0;
 
   return (
     <div>
@@ -52,6 +62,26 @@ const DrawModule = () => {
               Use Two Point Line
             </button>
           </div>
+          {inProgressObject && (
+            <div className="mb-4 rounded-sm border bg-yellow-50 p-2">
+              <p className="font-semibold">In Progress Object</p>
+              <p>ID: {inProgressObject.id}</p>
+              <p>Type: {inProgressObject.type}</p>
+              <p>Measurements: {area || length || "NA"}</p>
+            </div>
+          )}
+          {Object.entries(state.objects).map(([id, obj]) => {
+            const area = obj && "area" in obj ? obj.area : 0;
+            const length = obj && "length" in obj ? obj.length : 0;
+
+            return (
+              <div key={id} className="mb-2 rounded-sm border p-2">
+                <p>ID: {id}</p>
+                <p>Type: {obj.type}</p>
+                <p>Measurements: {area || length || "NA"}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

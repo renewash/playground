@@ -28,7 +28,9 @@ export const Drawable: React.FC<Props> = ({ engine, tool, width, height }) => {
       if (!groupRef) return;
 
       const group = groupRef.current;
-      const inProgressObject = engine.getInProgressObject();
+      const { inProgressObject } = engine.getTransientSnapshot();
+
+      console.log("inProgressObject: ", inProgressObject);
 
       // clear previous renders
       if (!group) return;

@@ -1,4 +1,4 @@
-export { useScene } from "./useScene";
+export { useScene, useInProgressObject } from "./sync";
 export { useKonvaContext } from "./context";
 export { KonvaProvider } from "./KonvaProvider";
 export { TwoPointLine } from "./objects/TwoPointLine";
