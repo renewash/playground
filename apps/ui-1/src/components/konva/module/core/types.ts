@@ -93,9 +93,9 @@ export interface DrawingEngine {
   createCircle(center: Point, radius: number): void;
   setCircle(center: Point, radius: number): void;
 
-  createStroke(point: Point): void;
-  appendPointToStroke(point: Point): void;
-  setStroke(points: number[]): void;
+  createFreeFormLine(point: Point): void;
+  appendPointToFreeFormLine(point: Point): void;
+  setFreeFormLine(points: number[]): void;
 
   cancelShape(): void;
   undo(): void;

@@ -48,3 +48,7 @@ export const calculateArea = (points: number[]): number => {
 
   return Math.abs(area / 2);
 };
+
+export const calculateAreaOfCircle = (radius: number): number => {
+  return Math.PI * radius * radius;
+};

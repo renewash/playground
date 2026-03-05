@@ -1,49 +1,9 @@
 // drawing/core/types.ts
 
-export type Point = [number, number];
-export type ToolType = "line" | "circle" | "freeDraw";
+import { DrawableObject, Point, ModelTypes } from "../geometry/types";
+
+export type ToolType = ModelTypes;
 export type DrawingMode = "idle" | "drawing";
-
-export interface FreeFormLineModel {
-  id: string;
-  type: "freeFormLine";
-  points: number[];
-}
-
-export interface LineModel {
-  id: string;
-  type: "line";
-  start: Point;
-  end: Point;
-}
-
-export interface TwoPointLineModel {
-  id: string;
-  type: "twoPointLine";
-  start: Point;
-  end: Point;
-  radius: number;
-}
-
-export interface CircleModel {
-  id: string;
-  type: "circle";
-  center: Point;
-  radius: number;
-}
-export interface LineWithMarkersModel {
-  type: "lineWithMarkers";
-  id: string;
-  points: number[];
-  markerRadius: number;
-}
-
-export type DrawableObject =
-  | LineModel
-  | FreeFormLineModel
-  | CircleModel
-  | TwoPointLineModel
-  | LineWithMarkersModel;
 
 export type ObjectTable = Record<string, DrawableObject>;
 export type ChildToParentMap = Record<string, string | null>;
@@ -93,9 +53,9 @@ export interface DrawingEngine {
   createCircle(center: Point, radius: number): void;
   setCircle(center: Point, radius: number): void;
 
-  createStroke(point: Point): void;
-  appendPointToStroke(point: Point): void;
-  setStroke(points: number[]): void;
+  createFreeFormLine(point: Point): void;
+  appendPointToFreeFormLine(point: Point): void;
+  setFreeFormLine(points: number[]): void;
 
   cancelShape(): void;
   undo(): void;

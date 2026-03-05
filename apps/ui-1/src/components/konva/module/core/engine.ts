@@ -143,7 +143,7 @@ export function createDrawingEngine(
       emitInProgressUpdates();
     },
 
-    createStroke(point) {
+    createFreeFormLine(point) {
       const stroke: FreeFormLineModel = {
         id: crypto.randomUUID(),
         type: "freeFormLine",
@@ -155,14 +155,14 @@ export function createDrawingEngine(
       emitInProgressUpdates();
     },
 
-    appendPointToStroke(point) {
+    appendPointToFreeFormLine(point) {
       if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
 
       inProgressObject.points.push(...point);
       emitInProgressUpdates();
     },
 
-    setStroke(points) {
+    setFreeFormLine(points) {
       if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
       inProgressObject.points = points;
       emitInProgressUpdates();

@@ -9,13 +9,13 @@ export function createFreeDrawTool(): DrawingTool {
     onPointerDown(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.createStroke([pos.x, pos.y]);
+      ctx.engine.createFreeFormLine([pos.x, pos.y]);
     },
 
     onPointerMove(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.appendPointToStroke([pos.x, pos.y]);
+      ctx.engine.appendPointToFreeFormLine([pos.x, pos.y]);
     },
 
     onPointerUp(_, ctx) {

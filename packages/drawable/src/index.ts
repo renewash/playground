@@ -1,8 +1,22 @@
 export { createDrawingEngine } from "./core/engine";
+
+// === Geometry ===
+export {
+  calculateArea,
+  calculateEuclideanDistance,
+} from "./geometry/calculate";
+export {
+  normalisePoint,
+  normaliseAllPoints,
+  denormalisePoint,
+  denormaliseAllPoints,
+} from "./geometry/normalise";
+
+// === Tools ===
 export { createFreeDrawTool } from "./tools/freeDrawTool";
 export { createTwoPointLineTool } from "./tools/twoPointLineTool";
 
-export type { DrawingTool, ToolContext } from "./tools/types";
+// === Types ===
 export type {
   Point,
   ToolType,
@@ -19,3 +33,5 @@ export type {
   DrawingState,
   DrawingEngine,
 } from "./core/types";
+
+export type { DrawingTool, ToolContext } from "./tools/types";

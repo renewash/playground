@@ -1,15 +1,13 @@
 // drawing/core/engine.ts
 
-import type {
-  FreeFormLineModel,
-  CircleModel,
-  LineModel,
-  TwoPointLineModel,
-  DrawableObject,
-  Listener,
-  DrawingState,
-  DrawingEngine,
-} from "./types";
+import type { Listener, DrawingState, DrawingEngine } from "./types";
+
+import { DrawableObject } from "../geometry/types";
+import { createLineModel } from "../geometry/domain/LineModel";
+import { createCircleModel } from "../geometry/domain/CircleModel";
+import { createTwoPointLineModel } from "../geometry/domain/TwoPointLineModel";
+import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
+import { deriveMeasurements } from "./measure";
 
 /**
  * Holds internal state of canvas and defines mutation logic.
@@ -27,7 +25,7 @@ export function createDrawingEngine(
     objects: {},
     childToParentMap: {},
     mode: "idle",
-    tool: "freeDraw",
+    tool: "line",
     ...initial,
   };
 
@@ -76,15 +74,9 @@ export function createDrawingEngine(
     },
 
     createStraightline(point) {
-      const line: LineModel = {
-        id: crypto.randomUUID(),
-        type: "line",
-        start: point,
-        end: point,
-      };
-
-      inProgressObject = line;
+      inProgressObject = createLineModel({ start: point });
       state.mode = "drawing";
+
       emitInProgressUpdates();
     },
 
@@ -93,20 +85,12 @@ export function createDrawingEngine(
 
       inProgressObject.end = point;
       state.mode = "idle";
+
       emitInProgressUpdates();
     },
 
-    createTwoPointline(point, radius) {
-      const fixedRadius = 3;
-      const line: TwoPointLineModel = {
-        id: crypto.randomUUID(),
-        type: "twoPointLine",
-        start: point,
-        end: point,
-        radius: radius ?? fixedRadius,
-      };
-
-      inProgressObject = line;
+    createTwoPointline(start, radius) {
+      inProgressObject = createTwoPointLineModel({ start, radius });
       state.mode = "drawing";
       emitInProgressUpdates();
     },
@@ -122,13 +106,7 @@ export function createDrawingEngine(
     },
 
     createCircle(center, radius) {
-      const circle: CircleModel = {
-        id: crypto.randomUUID(),
-        type: "circle",
-        center,
-        radius,
-      };
-      inProgressObject = circle;
+      inProgressObject = createCircleModel({ center, radius });
       state.mode = "drawing";
       state.tool = "circle";
       emitInProgressUpdates();
@@ -143,26 +121,20 @@ export function createDrawingEngine(
       emitInProgressUpdates();
     },
 
-    createStroke(point) {
-      const stroke: FreeFormLineModel = {
-        id: crypto.randomUUID(),
-        type: "freeFormLine",
-        points: [...point],
-      };
-
-      inProgressObject = stroke;
+    createFreeFormLine(point) {
+      inProgressObject = createFreeFormLineModel({ points: point });
       state.mode = "drawing";
       emitInProgressUpdates();
     },
 
-    appendPointToStroke(point) {
+    appendPointToFreeFormLine(point) {
       if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
 
       inProgressObject.points.push(...point);
       emitInProgressUpdates();
     },
 
-    setStroke(points) {
+    setFreeFormLine(points) {
       if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
       inProgressObject.points = points;
       emitInProgressUpdates();
@@ -172,16 +144,17 @@ export function createDrawingEngine(
       if (!inProgressObject) return;
       const { id } = inProgressObject;
 
+      const processedObject = deriveMeasurements(inProgressObject);
+
       state = {
         ...state,
-        objects: { ...state.objects, [id]: inProgressObject },
+        objects: { ...state.objects, [id]: processedObject },
         childToParentMap: { ...state.childToParentMap, [id]: null },
         mode: "idle",
       };
       emit();
 
       inProgressObject = null;
-      console.log("commit null");
       emitInProgressUpdates();
     },
 

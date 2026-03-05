@@ -15,9 +15,10 @@
 
 ## Summary
 
-1. (Tools) compose primative shapes + calls mutations.
-2. (Core) Engine manages domain and objects / state, provides mutations and other features.
-3. (React) Binds engine and tools to react.
+1. (Core) Engine manages domain and objects / state, provides mutations and other features.
+2. (Tools) compose primative shapes + calls mutations.
+3. (Geometry) Pure functions to derive or transform geometry
+4. (React) Binds engine and tools to react.
 
 ## 1. State
 
