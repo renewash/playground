@@ -1,13 +1,14 @@
 // drawing/tools/twoPointLineTool.ts
 
 import type { DrawingTool, ToolContext } from "./types";
-import type { Point } from "../core/types";
+import type { Point } from "../geometry/types";
 import Konva from "konva";
 
 export function createTwoPointLineTool(): DrawingTool {
   let firstPoint: Point | null = null;
 
   return {
+    type: "twoPointLine",
     onPointerDown(_, ctx: ToolContext) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;

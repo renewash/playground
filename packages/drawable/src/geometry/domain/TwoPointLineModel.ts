@@ -1,3 +1,4 @@
+import { getLength } from "../../core/measure";
 import { TwoPointLineModel, Point } from "../types";
 
 const TWO_POINT_LINE_RADIUS_DEFAULT = 3;
@@ -12,7 +13,7 @@ export const createTwoPointLineModel = ({
   end = start, // Assume end = start point if not provided
   radius = TWO_POINT_LINE_RADIUS_DEFAULT,
 }: CreateTwoPointLineModel): TwoPointLineModel => {
-  return {
+  const obj: TwoPointLineModel = {
     id: crypto.randomUUID(),
     type: "twoPointLine",
     start,
@@ -20,4 +21,7 @@ export const createTwoPointLineModel = ({
     radius,
     length: 0,
   };
+
+  obj.length = getLength(obj);
+  return obj;
 };

@@ -67,7 +67,6 @@ const MainTable = () => {
     [documents, templates],
   );
 
-  console.log(data);
   // Columns and data are defined in a stable reference, will not cause infinite loop!
   const table = useReactTable({
     columns,

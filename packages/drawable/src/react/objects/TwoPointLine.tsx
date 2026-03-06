@@ -1,7 +1,7 @@
 // drawing/react/objects/TwoPointLine.tsx
 
 import { Circle, Line } from "react-konva";
-import type { DrawableObject, TwoPointLineModel } from "../../core/types";
+import type { DrawableObject, TwoPointLineModel } from "../../geometry/types";
 
 export const TwoPointLine = ({
   model,

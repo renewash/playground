@@ -21,6 +21,5 @@ export function useInProgressObject(
     engine.getTransientSnapshot,
   );
 
-  console.log("snap: ", snap);
   return snap.inProgressObject;
 }

@@ -1,6 +1,7 @@
 // drawing/core/types.ts
 
 import { DrawableObject, Point, ModelTypes } from "../geometry/types";
+import { DrawingTool } from "../tools/types";
 
 export type ToolType = ModelTypes;
 export type DrawingMode = "idle" | "drawing";
@@ -19,6 +20,9 @@ export type Listener = () => void;
 
 export interface DrawingEngine {
   getState(): DrawingState;
+  getTool(): DrawingTool;
+  useTool(tool: ToolType): void;
+  setTool(tool: DrawingTool): void;
 
   /**
    * Subscribe to changes in static objects.

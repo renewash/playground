@@ -181,7 +181,6 @@ export function createDrawingEngine(
       emit();
 
       inProgressObject = null;
-      console.log("commit null");
       emitInProgressUpdates();
     },
 

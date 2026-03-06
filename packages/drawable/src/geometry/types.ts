@@ -21,6 +21,7 @@ export interface TwoPointLineModel {
   start: Point;
   end: Point;
   radius: number;
+  length: number;
 }
 
 export interface FreeFormLineModel {

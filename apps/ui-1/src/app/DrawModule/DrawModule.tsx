@@ -1,36 +1,24 @@
-// import { KonvaDrawingCanvas } from "@/components/konva/api-2/KonvaDrawProd";
 import { useMemo, useState } from "react";
 import SharpBorder from "@/components/SharpBorder";
-import {
-  createDrawingEngine,
-  createFreeDrawTool,
-  createTwoPointLineTool,
-  type DrawingTool,
-} from "@repo/drawable";
 
-import { Drawable, useScene, useInProgressObject } from "@repo/drawable/react";
+import { createDrawingEngine, type ToolType } from "@repo/drawable";
+import { Drawable } from "@repo/drawable/react";
+
+import TotalArea from "./TotalArea";
+import DrawingData from "./DrawingData";
+import DrawnData from "./DrawnData";
 
 const DrawModule = () => {
-  const width = 600;
-  const height = 600;
+  const width = 400;
+  const height = 550;
   const engine = useMemo(() => createDrawingEngine(), []);
-  const freeTool = useMemo(() => createFreeDrawTool(), []);
-  const twoPointLineTool = useMemo(() => createTwoPointLineTool(), []);
 
-  const state = useScene(engine);
-  const inProgressObject = useInProgressObject(engine);
+  const [tool, setTool] = useState(engine.getTool().type);
 
-  const [tool, setTool] = useState<DrawingTool>(twoPointLineTool);
-  const handleToolChange = (newTool: DrawingTool) => {
+  const handleToolChange = (newTool: ToolType) => {
+    engine.useTool(newTool);
     setTool(newTool);
   };
-  const area =
-    inProgressObject && "area" in inProgressObject ? inProgressObject.area : 0;
-
-  const length =
-    inProgressObject && "length" in inProgressObject
-      ? inProgressObject.length
-      : 0;
 
   return (
     <div>
@@ -38,50 +26,31 @@ const DrawModule = () => {
         <h1>Drawing Canvas</h1>
       </SharpBorder>
       <div className="flex gap-5">
-        <SharpBorder className="mb-4 px-2 py-4">
-          <Drawable engine={engine} tool={tool} width={width} height={height} />
+        {/* <SharpBorder className={`mb-4 max-h-[${height}px] px-2 py-4`}> */}
+        <SharpBorder className={`mb-4 max-h-137.5 px-2 py-4`}>
+          <Drawable engine={engine} width={width} height={height} />
         </SharpBorder>
 
         <div>
           <h3 className="pb-2 text-lg font-semibold">Controls</h3>
-          <div className="flex gap-2">
-            {/* <KonvaCancelButton className="cursor-pointer rounded-sm border p-2" />
-          <KonvaApplyButton className="cursor-pointer rounded-sm border p-2" /> */}
-          </div>
+
           <div className="flex gap-2 py-3">
             <button
-              className={`cursor-pointer rounded-sm border p-2 ${tool === freeTool ? "bg-gray-300" : ""}`}
-              onClick={() => handleToolChange(freeTool)}
+              className={`cursor-pointer rounded-sm border p-2 ${tool === "freeFormLine" ? "bg-gray-300" : ""}`}
+              onClick={() => handleToolChange("freeFormLine")}
             >
               Use Free Draw
             </button>
             <button
-              className={`cursor-pointer rounded-sm border p-2 ${tool === twoPointLineTool ? "bg-gray-300" : ""}`}
-              onClick={() => handleToolChange(twoPointLineTool)}
+              className={`cursor-pointer rounded-sm border p-2 ${tool === "twoPointLine" ? "bg-gray-300" : ""}`}
+              onClick={() => handleToolChange("twoPointLine")}
             >
               Use Two Point Line
             </button>
           </div>
-          {inProgressObject && (
-            <div className="mb-4 rounded-sm border bg-yellow-50 p-2">
-              <p className="font-semibold">In Progress Object</p>
-              <p>ID: {inProgressObject.id}</p>
-              <p>Type: {inProgressObject.type}</p>
-              <p>Measurements: {area || length || "NA"}</p>
-            </div>
-          )}
-          {Object.entries(state.objects).map(([id, obj]) => {
-            const area = obj && "area" in obj ? obj.area : 0;
-            const length = obj && "length" in obj ? obj.length : 0;
-
-            return (
-              <div key={id} className="mb-2 rounded-sm border p-2">
-                <p>ID: {id}</p>
-                <p>Type: {obj.type}</p>
-                <p>Measurements: {area || length || "NA"}</p>
-              </div>
-            );
-          })}
+          <TotalArea engine={engine} />
+          <DrawingData engine={engine} />
+          <DrawnData engine={engine} />
         </div>
       </div>
     </div>

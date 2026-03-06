@@ -8,7 +8,9 @@ import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createTwoPointLineModel } from "../geometry/domain/TwoPointLineModel";
 import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
 import { getArea, getLength } from "./measure";
-import { version } from "react";
+import { DrawingTool } from "../tools/types";
+import { createTwoPointLineTool } from "../tools/twoPointLineTool";
+import { createFreeDrawTool } from "../tools/freeDrawTool";
 
 /**
  * Holds internal state of canvas and defines mutation logic.
@@ -26,9 +28,11 @@ export function createDrawingEngine(
     objects: {},
     childToParentMap: {},
     mode: "idle",
-    tool: "line",
+    tool: "twoPointLine",
     ...initial,
   };
+
+  let tool: DrawingTool = createTwoPointLineTool();
 
   let inProgressUpdates: number = 0;
   let inProgressObject: DrawableObject | null = null;
@@ -49,13 +53,6 @@ export function createDrawingEngine(
       transientListeners.forEach((l) => l());
     }
 
-    if ("area" in inProgressObject) {
-      inProgressObject.area = getArea(inProgressObject);
-    }
-    if ("length" in inProgressObject) {
-      inProgressObject.length = getLength(inProgressObject);
-    }
-
     // only update version so that inProgressObject reference is preserved for better performance in react-konva.
     transientSnapshot = { version: inProgressUpdates, inProgressObject };
     transientListeners.forEach((l) => l());
@@ -66,6 +63,26 @@ export function createDrawingEngine(
       return state;
     },
 
+    getTool() {
+      return tool;
+    },
+
+    useTool(newTool) {
+      switch (newTool) {
+        case "twoPointLine":
+          tool = createTwoPointLineTool();
+          break;
+        case "freeFormLine":
+          tool = createFreeDrawTool();
+          break;
+        default:
+          throw new Error(`Tool ${newTool} not implemented in engine`);
+      }
+    },
+
+    setTool(newTool) {
+      tool = newTool;
+    },
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -75,6 +92,7 @@ export function createDrawingEngine(
       transientListeners.add(listener);
       return () => transientListeners.delete(listener);
     },
+
     getInProgressObject() {
       return inProgressObject;
     },
@@ -120,6 +138,7 @@ export function createDrawingEngine(
     createTwoPointline(start, radius) {
       inProgressObject = createTwoPointLineModel({ start, radius });
       state.mode = "drawing";
+
       emitInProgressUpdates();
     },
 
@@ -128,7 +147,9 @@ export function createDrawingEngine(
         return;
 
       inProgressObject.end = point;
-      inProgressObject.radius = radius ?? inProgressObject.radius;
+      inProgressObject.radius = inProgressObject.radius ?? radius;
+
+      inProgressObject.length = getLength(inProgressObject);
       state.mode = "idle";
       emitInProgressUpdates();
     },
@@ -151,12 +172,20 @@ export function createDrawingEngine(
 
     createFreeFormLine(point) {
       inProgressObject = createFreeFormLineModel({ points: point });
+
+      // if ("area" in inProgressObject) {
+      //   inProgressObject.area = getArea(inProgressObject);
+      // }
+      // if ("length" in inProgressObject) {
+      //   inProgressObject.length = getLength(inProgressObject);
+      // }
       state.mode = "drawing";
       emitInProgressUpdates();
     },
 
     appendPointToFreeFormLine(point) {
       if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
+      inProgressObject.area = getArea(inProgressObject);
 
       inProgressObject.points.push(...point);
       emitInProgressUpdates();
@@ -165,6 +194,8 @@ export function createDrawingEngine(
     setFreeFormLine(points) {
       if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
       inProgressObject.points = points;
+      inProgressObject.area = getArea(inProgressObject);
+
       emitInProgressUpdates();
     },
 
