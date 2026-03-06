@@ -25,7 +25,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   const toolRef = useRef<ReturnType<DrawingEngine["getTool"]> | null>(null);
 
   useEffect(() => {
-    console.log("am i rendering");
     // subscribe to any inProgressObject changes and imperatively redraw.
     const unsubscribe = engine.subscribeTransient(() => {
       if (!groupRef) return;
@@ -70,8 +69,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   const handlePointerUp = (e: Konva.KonvaEventObject<PointerEvent>) => {
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
-
-  console.log("hello");
 
   return (
     <Stage
