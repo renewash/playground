@@ -1,5 +1,7 @@
 // drawing/core/engine.ts
 
+import History from "./history";
+
 import type { Listener, DrawingState, DrawingEngine } from "./types";
 
 import { DrawableObject } from "../geometry/types";
@@ -31,6 +33,8 @@ export function createDrawingEngine(
     tool: "twoPointLine",
     ...initial,
   };
+
+  const history = new History();
 
   let tool: DrawingTool = createTwoPointLineTool();
 
@@ -229,6 +233,7 @@ export function createDrawingEngine(
 
     undo() {
       // TODO: Implement undo
+      history.remove;
     },
 
     redo() {

@@ -1,9 +1,13 @@
 import { useMemo, useState } from "react";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import LineSegmentIcon from "./icons/LineSegmentIcon";
-import PolygonWithMarkersIcon from "./icons/PolygonWithMarkersIcon";
 
+import Tooltip from "@/components/Tooltip";
 import SharpBorder from "@/components/SharpBorder";
+
+import PolygonWithMarkersIcon from "@/icons/PolygonWithMarkersIcon";
+import LineSegmentIcon from "@/icons/LineSegmentIcon";
+import UndoIcon from "@/icons/UndoIcon";
+import RedoIcon from "@/icons/RedoIcon";
 
 import { createDrawingEngine, type ToolType } from "@repo/drawable";
 import { Drawable } from "@repo/drawable/react";
@@ -29,7 +33,7 @@ const DrawModule = () => {
       <SharpBorder className="mb-4 w-1/2 px-2 py-4 text-3xl font-semibold">
         <h1>Drawing Canvas</h1>
       </SharpBorder>
-      <div className="flex gap-5">
+      <div className="flex gap-10">
         {/* <SharpBorder className={`mb-4 max-h-[${height}px] px-2 py-4`}> */}
         <SharpBorder className={`mb-4 max-h-137.5 px-2 py-4`}>
           <Drawable engine={engine} width={width} height={height} />
@@ -39,26 +43,55 @@ const DrawModule = () => {
           <h3 className="pb-2 text-lg font-semibold">Controls</h3>
 
           <div className="flex gap-2 py-3">
+            <Tooltip content={"Free Draw"}>
+              <button
+                title="tooltip text"
+                className={`cursor-pointer rounded-sm border p-2 ${tool === "freeFormLine" ? "bg-gray-300" : ""}`}
+                onClick={() => handleToolChange("freeFormLine")}
+              >
+                <PencilIcon className="size-6" />
+              </button>
+            </Tooltip>
+            <Tooltip content={"Line Segment"}>
+              <button
+                className={`cursor-pointer rounded-sm border p-2 ${tool === "twoPointLine" ? "bg-gray-300" : ""}`}
+                onClick={() => handleToolChange("twoPointLine")}
+              >
+                <LineSegmentIcon />
+              </button>
+            </Tooltip>
             <button
-              className={`cursor-pointer rounded-sm border p-2 ${tool === "freeFormLine" ? "bg-gray-300" : ""}`}
-              onClick={() => handleToolChange("freeFormLine")}
-            >
-              <PencilIcon className="size-6" />
-            </button>
-            <button
-              className={`cursor-pointer rounded-sm border p-2 ${tool === "twoPointLine" ? "bg-gray-300" : ""}`}
-              onClick={() => handleToolChange("twoPointLine")}
-            >
-              <LineSegmentIcon />
-            </button>
-            <button
+              disabled
               className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-600`}
               // onClick={() => handleToolChange("polygonWithMarkers")}
             >
               <PolygonWithMarkersIcon />
             </button>
+            <div className="mx-1 border border-gray-500" />
+            <Tooltip content={"Undo"}>
+              <button
+                className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-300`}
+                onClick={() => engine.undo()}
+              >
+                <UndoIcon />
+              </button>
+            </Tooltip>
+            <Tooltip content={"Redo"}>
+              <button
+                className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-300`}
+                onClick={() => engine.redo()}
+              >
+                <RedoIcon />
+              </button>
+            </Tooltip>
           </div>
-          <TotalArea engine={engine} />
+        </div>
+        <div className="ml-auto w-[300px]">
+          <h3 className="pb-2 text-lg font-semibold">Data</h3>
+          <div className="border"></div>
+          <div className="mt-3 border p-2">
+            <TotalArea engine={engine} />
+          </div>
           <DrawingData engine={engine} />
           <DrawnData engine={engine} />
         </div>

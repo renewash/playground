@@ -1,6 +1,5 @@
 import { Line } from "react-konva";
 import type { DrawableObject, FreeFormLineModel } from "../..";
-import { Label } from "./Label";
 
 export const FreeFormLine = ({
   model,
