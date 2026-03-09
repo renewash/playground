@@ -1,4 +1,8 @@
 import { useMemo, useState } from "react";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import LineSegmentIcon from "./icons/LineSegmentIcon";
+import PolygonWithMarkersIcon from "./icons/PolygonWithMarkersIcon";
+
 import SharpBorder from "@/components/SharpBorder";
 
 import { createDrawingEngine, type ToolType } from "@repo/drawable";
@@ -39,13 +43,19 @@ const DrawModule = () => {
               className={`cursor-pointer rounded-sm border p-2 ${tool === "freeFormLine" ? "bg-gray-300" : ""}`}
               onClick={() => handleToolChange("freeFormLine")}
             >
-              Use Free Draw
+              <PencilIcon className="size-6" />
             </button>
             <button
               className={`cursor-pointer rounded-sm border p-2 ${tool === "twoPointLine" ? "bg-gray-300" : ""}`}
               onClick={() => handleToolChange("twoPointLine")}
             >
-              Use Two Point Line
+              <LineSegmentIcon />
+            </button>
+            <button
+              className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-600`}
+              // onClick={() => handleToolChange("polygonWithMarkers")}
+            >
+              <PolygonWithMarkersIcon />
             </button>
           </div>
           <TotalArea engine={engine} />

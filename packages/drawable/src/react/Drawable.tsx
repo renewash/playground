@@ -4,11 +4,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
-import type {
-  DrawingEngine,
-  ToolContext,
-  DrawableObject,
-} from "@repo/drawable";
+import type { DrawingEngine, ToolContext } from "@repo/drawable";
 
 import {
   useScene,
