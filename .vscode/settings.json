@@ -1,7 +1,14 @@
 {
   "eslint.workingDirectories": [
     {
-      "mode": "auto"
+      "mode": "auto",
+      "pattern": "./packages/*",
+      "lookFor": "eslint.config.*"
+    },
+    {
+      "mode": "auto",
+      "pattern": "./apps/*",
+      "lookFor": "eslint.config.*"
     }
   ]
 }

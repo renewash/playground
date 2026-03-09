@@ -6,14 +6,14 @@ const Header = () => {
     <header>
       <nav className="border-gray-200 bg-white px-4 py-2.5 lg:px-6 dark:bg-gray-800">
         <div className="mx-auto flex flex-wrap items-center justify-between">
-          <a href="https://flowbite.com" className="flex items-center">
+          <a href="/" className="flex items-center">
             <img
               src="https://flowbite.com/docs/images/logo.svg"
               className="mr-3 h-6 sm:h-9"
-              alt="Flowbite Logo"
+              alt="SandBox Logo"
             />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Flowbite
+              SandBox
             </span>
           </a>
           <div className="flex items-center lg:order-2">

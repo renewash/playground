@@ -4,8 +4,18 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
-import type { DrawingEngine, ToolContext } from "@repo/drawable";
-import { useScene, TwoPointLine, FreeFormLine } from "@repo/drawable/react";
+import type {
+  DrawingEngine,
+  ToolContext,
+  DrawableObject,
+} from "@repo/drawable";
+
+import {
+  useScene,
+  TwoPointLine,
+  FreeFormLine,
+  Label,
+} from "@repo/drawable/react";
 
 interface Props {
   engine: DrawingEngine;
@@ -34,7 +44,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
 
       // clear previous renders
       if (!group) return;
-      group.destroyChildren(); // TODO: To be slightly more efficient, mutate nodes instead of destroying.
+      group.destroyChildren(); // TODO: is slightly more efficient to mutate nodes instead of destroying.
 
       // imperatively create objects
       if (!inProgressObject) return;
@@ -46,6 +56,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
 
     return unsubscribe;
   }, [engine]);
+
   // bind react with tool and engine via context object
   const ctx: ToolContext = useMemo(
     () => ({
@@ -82,7 +93,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       <Layer ref={staticLayerRef} listening={false}>
         {/* Committed objects */}
         {Object.values(state.objects).map((object) => {
-          // switch
           switch (object.type) {
             case "freeFormLine":
               return <FreeFormLine key={object.id} model={object} />;
@@ -94,6 +104,17 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
                 object,
               );
           }
+        })}
+
+        {Object.values(state.objects).map((object) => {
+          if ("area" in object)
+            return (
+              <Label
+                key={object.id}
+                object={object}
+                value={(obj) => `${obj.area}`}
+              />
+            );
         })}
       </Layer>
 

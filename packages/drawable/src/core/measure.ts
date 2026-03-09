@@ -4,7 +4,7 @@ import {
   calculateAreaOfCircle,
 } from "../geometry/calculate";
 
-import { DrawableObject } from "../geometry/types";
+import { DrawableObject, Point } from "../geometry/types";
 
 export const getArea = (obj: DrawableObject): number => {
   let area: number = 0;
@@ -37,4 +37,26 @@ export const getLength = (obj: DrawableObject): number => {
       throw new Error(`Length calculation not supported for type ${obj.type}`);
   }
   return Math.round(length * 100) / 100; // 2 d.p.
+};
+
+export const calculateDefaultPosition = (
+  obj: DrawableObject,
+  width: number,
+  height: number,
+): Point => {
+  const offSetX = width / 10;
+  const offSetY = height;
+
+  switch (obj.type) {
+    case "twoPointLine":
+      return [obj.start[0] - offSetX, obj.start[1] - offSetY];
+    case "freeFormLine":
+      return obj.points.length >= 2
+        ? [obj.points[0] - offSetX, obj.points[1] - offSetY]
+        : [0, 0];
+    case "circle":
+      return [obj.center[0], obj.center[1] - obj.radius - offSetY];
+    default:
+      return [0, 0];
+  }
 };

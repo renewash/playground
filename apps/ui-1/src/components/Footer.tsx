@@ -1,27 +1,27 @@
 const Footer = () => {
   return (
-    <footer className="w-full bg-black rounded-base border ">
-      <div className=" mx-auto  p-4 md:flex md:items-center md:justify-between">
-        <span className="text-sm text-body sm:text-center">
+    <footer className="rounded-base w-full border bg-black">
+      <div className="mx-auto p-4 md:flex md:items-center md:justify-between">
+        <span className="text-body text-sm sm:text-center">
           © 2023{" "}
-          <a href="https://flowbite.com/" className="hover:underline">
-            Flowbite™
+          <a href="/" className="hover:underline">
+            Sandbox™
           </a>
           . All Rights Reserved.
         </span>
-        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-body sm:mt-0">
+        <ul className="text-body mt-3 flex flex-wrap items-center text-sm font-medium sm:mt-0">
           <li>
-            <a href="#" className="hover:underline me-4 md:me-6">
+            <a href="#" className="me-4 hover:underline md:me-6">
               About
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline me-4 md:me-6">
+            <a href="#" className="me-4 hover:underline md:me-6">
               Privacy Policy
             </a>
           </li>
           <li>
-            <a href="#" className="hover:underline me-4 md:me-6">
+            <a href="#" className="me-4 hover:underline md:me-6">
               Licensing
             </a>
           </li>

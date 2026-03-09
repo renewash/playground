@@ -7,16 +7,19 @@ export type ModelTypes =
   | "twoPointLine"
   | "lineWithMarkers";
 
-export interface LineModel {
+interface BaseModel {
   id: string;
+  type: ModelTypes;
+}
+
+export interface LineModel extends BaseModel {
   type: "line";
   start: Point;
   end: Point;
   length: number;
 }
 
-export interface TwoPointLineModel {
-  id: string;
+export interface TwoPointLineModel extends BaseModel {
   type: "twoPointLine";
   start: Point;
   end: Point;
@@ -24,23 +27,20 @@ export interface TwoPointLineModel {
   length: number;
 }
 
-export interface FreeFormLineModel {
-  id: string;
+export interface FreeFormLineModel extends BaseModel {
   type: "freeFormLine";
   points: number[];
   area: number;
 }
 
-export interface CircleModel {
-  id: string;
+export interface CircleModel extends BaseModel {
   type: "circle";
   center: Point;
   radius: number;
   area: number;
 }
-export interface LineWithMarkersModel {
+export interface LineWithMarkersModel extends BaseModel {
   type: "lineWithMarkers";
-  id: string;
   points: number[];
   markerRadius: number;
   length: number;
