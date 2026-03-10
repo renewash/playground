@@ -23,7 +23,7 @@ export function createFreeDrawTool(): DrawingTool {
     },
 
     renderPreview(group, obj) {
-      if (obj.type !== "freeFormLine") return;
+      if (obj.type !== "freeDraw") return;
 
       const line = new Konva.Line({
         points: obj.points,

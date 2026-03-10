@@ -44,15 +44,15 @@ const DrawModule = () => {
               <button
                 title="tooltip text"
                 className={`cursor-pointer rounded-sm border p-2 ${editorState.tool.type === "freeDraw" ? "bg-gray-300" : ""}`}
-                onClick={() => engine.pickTool("freeFormLine")}
+                onClick={() => engine.pickTool("freeDraw")}
               >
                 <PencilIcon className="size-6" />
               </button>
             </Tooltip>
             <Tooltip content={"Line Segment"}>
               <button
-                className={`cursor-pointer rounded-sm border p-2 ${editorState.tool.type === "twoPointLine" ? "bg-gray-300" : ""}`}
-                onClick={() => engine.pickTool("twoPointLine")}
+                className={`cursor-pointer rounded-sm border p-2 ${editorState.tool.type === "lineSegment" ? "bg-gray-300" : ""}`}
+                onClick={() => engine.pickTool("lineSegment")}
               >
                 <LineSegmentIcon />
               </button>

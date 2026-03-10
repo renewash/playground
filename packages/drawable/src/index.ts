@@ -14,7 +14,7 @@ export {
 
 // === Tools ===
 export { createFreeDrawTool } from "./tools/freeDrawTool";
-export { createTwoPointLineTool } from "./tools/twoPointLineTool";
+export { createLineSegmentTool } from "./tools/lineSegmentTool";
 
 // === Types ===
 export type {
@@ -32,7 +32,7 @@ export type {
   DrawableObject,
   FreeFormLineModel,
   LineModel,
-  TwoPointLineModel,
+  LineSegmentModel,
   CircleModel,
   LineWithMarkersModel,
 } from "./geometry/types";

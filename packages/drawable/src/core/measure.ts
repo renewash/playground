@@ -13,10 +13,10 @@ export const getArea = (obj: DrawableObject): number => {
       area = calculateAreaOfCircle(obj.radius);
       break;
     case "line":
-    case "twoPointLine":
+    case "lineSegment":
       area = calculateArea([...obj.start, ...obj.end]);
       break;
-    case "freeFormLine":
+    case "freeDraw":
       area = calculateArea(obj.points);
       break;
     default:
@@ -30,7 +30,7 @@ export const getLength = (obj: DrawableObject): number => {
   let length: number = 0;
   switch (obj.type) {
     case "line":
-    case "twoPointLine":
+    case "lineSegment":
       length = calculateEuclideanDistance(obj.start, obj.end);
       break;
     default:
@@ -48,9 +48,9 @@ export const calculateDefaultPosition = (
   const offSetY = height;
 
   switch (obj.type) {
-    case "twoPointLine":
+    case "lineSegment":
       return [obj.start[0] - offSetX, obj.start[1] - offSetY];
-    case "freeFormLine":
+    case "freeDraw":
       return obj.points.length >= 2
         ? [obj.points[0] - offSetX, obj.points[1] - offSetY]
         : [0, 0];

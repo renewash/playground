@@ -1,21 +1,21 @@
 import { getLength } from "../../core/measure";
-import { TwoPointLineModel, Point } from "../types";
+import { LineSegmentModel, Point } from "../types";
 
 const TWO_POINT_LINE_RADIUS_DEFAULT = 3;
 
-interface CreateTwoPointLineModel {
+interface CreateLineSegmentModel {
   start: Point;
   end?: Point;
   radius?: number;
 }
-export const createTwoPointLineModel = ({
+export const createLineSegmentModel = ({
   start,
   end = start, // Assume end = start point if not provided
   radius = TWO_POINT_LINE_RADIUS_DEFAULT,
-}: CreateTwoPointLineModel): TwoPointLineModel => {
-  const obj: TwoPointLineModel = {
+}: CreateLineSegmentModel): LineSegmentModel => {
+  const obj: LineSegmentModel = {
     id: crypto.randomUUID(),
-    type: "twoPointLine",
+    type: "lineSegment",
     start,
     end,
     radius,

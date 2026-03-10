@@ -4,7 +4,7 @@ import type {
   FreeFormLineModel,
   CircleModel,
   LineModel,
-  TwoPointLineModel,
+  LineSegmentModel,
   DrawableObject,
   Listener,
   DrawingState,
@@ -98,9 +98,9 @@ export function createDrawingEngine(
 
     createTwoPointline(point, radius) {
       const fixedRadius = 3;
-      const line: TwoPointLineModel = {
+      const line: LineSegmentModel = {
         id: crypto.randomUUID(),
-        type: "twoPointLine",
+        type: "lineSegment",
         start: point,
         end: point,
         radius: radius ?? fixedRadius,
@@ -112,7 +112,7 @@ export function createDrawingEngine(
     },
 
     endTwoPointline(point, radius) {
-      if (inProgressObject === null || inProgressObject.type !== "twoPointLine")
+      if (inProgressObject === null || inProgressObject.type !== "lineSegment")
         return;
 
       inProgressObject.end = point;
@@ -146,7 +146,7 @@ export function createDrawingEngine(
     createFreeFormLine(point) {
       const stroke: FreeFormLineModel = {
         id: crypto.randomUUID(),
-        type: "freeFormLine",
+        type: "freeDraw",
         points: [...point],
       };
 
@@ -156,14 +156,14 @@ export function createDrawingEngine(
     },
 
     appendPointToFreeFormLine(point) {
-      if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
+      if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
 
       inProgressObject.points.push(...point);
       emitInProgressUpdates();
     },
 
     setFreeFormLine(points) {
-      if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
+      if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
       inProgressObject.points = points;
       emitInProgressUpdates();
     },

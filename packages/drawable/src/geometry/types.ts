@@ -3,8 +3,8 @@ export type Point = [number, number];
 export type ModelTypes =
   | "line"
   | "circle"
-  | "freeFormLine"
-  | "twoPointLine"
+  | "freeDraw"
+  | "lineSegment"
   | "lineWithMarkers";
 
 interface BaseModel {
@@ -19,8 +19,8 @@ export interface LineModel extends BaseModel {
   length: number;
 }
 
-export interface TwoPointLineModel extends BaseModel {
-  type: "twoPointLine";
+export interface LineSegmentModel extends BaseModel {
+  type: "lineSegment";
   start: Point;
   end: Point;
   radius: number;
@@ -28,7 +28,7 @@ export interface TwoPointLineModel extends BaseModel {
 }
 
 export interface FreeFormLineModel extends BaseModel {
-  type: "freeFormLine";
+  type: "freeDraw";
   points: number[];
   area: number;
 }
@@ -50,5 +50,5 @@ export type DrawableObject =
   | LineModel
   | FreeFormLineModel
   | CircleModel
-  | TwoPointLineModel
+  | LineSegmentModel
   | LineWithMarkersModel;

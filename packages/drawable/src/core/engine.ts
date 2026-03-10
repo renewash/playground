@@ -12,10 +12,10 @@ import type {
 import { DrawableObject } from "../geometry/types";
 import { createLineModel } from "../geometry/domain/LineModel";
 import { createCircleModel } from "../geometry/domain/CircleModel";
-import { createTwoPointLineModel } from "../geometry/domain/TwoPointLineModel";
+import { createLineSegmentModel } from "../geometry/domain/LineSegmentModel";
 import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
 import { getArea, getLength } from "./measure";
-import { createTwoPointLineTool } from "../tools/twoPointLineTool";
+import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
 
 /**
@@ -38,7 +38,12 @@ export function createDrawingEngine(
 
   let editorState: EditorState = {
     mode: "idle",
-    tool: createTwoPointLineTool(),
+    tool: createLineSegmentTool(),
+  };
+
+  const toolSet = {
+    freeDraw: createFreeDrawTool(),
+    lineSegment: createLineSegmentTool(),
   };
 
   const history = new History();
@@ -64,6 +69,7 @@ export function createDrawingEngine(
     transientSnapshot = { version: inProgressUpdates, inProgressObject };
     transientListeners.forEach((l) => l());
   };
+  console.log(toolSet);
 
   return {
     getState() {
@@ -78,17 +84,8 @@ export function createDrawingEngine(
       return editorState.tool;
     },
 
-    pickTool(newTool) {
-      switch (newTool) {
-        case "twoPointLine":
-          this.setTool(createTwoPointLineTool());
-          break;
-        case "freeFormLine":
-          this.setTool(createFreeDrawTool());
-          break;
-        default:
-          throw new Error(`Tool ${newTool} not implemented in engine`);
-      }
+    pickTool(toolName) {
+      this.setTool(toolSet[toolName]);
     },
 
     setTool(tool) {
@@ -166,14 +163,14 @@ export function createDrawingEngine(
     },
 
     createTwoPointline(start, radius) {
-      inProgressObject = createTwoPointLineModel({ start, radius });
+      inProgressObject = createLineSegmentModel({ start, radius });
 
       this._startDrawing();
       emitInProgressUpdates();
     },
 
     endTwoPointline(point, radius) {
-      if (inProgressObject === null || inProgressObject.type !== "twoPointLine")
+      if (inProgressObject === null || inProgressObject.type !== "lineSegment")
         return;
 
       inProgressObject.end = point;
@@ -209,7 +206,7 @@ export function createDrawingEngine(
     },
 
     appendPointToFreeFormLine(point) {
-      if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
+      if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
       inProgressObject.area = getArea(inProgressObject);
 
       inProgressObject.points.push(...point);
@@ -217,7 +214,7 @@ export function createDrawingEngine(
     },
 
     setFreeFormLine(points) {
-      if (!inProgressObject || inProgressObject.type !== "freeFormLine") return;
+      if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
       inProgressObject.points = points;
       inProgressObject.area = getArea(inProgressObject);
 

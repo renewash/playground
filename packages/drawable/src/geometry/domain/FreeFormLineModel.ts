@@ -9,7 +9,7 @@ export const createFreeFormLineModel = ({
 }: CreateFreeFormLineModel): FreeFormLineModel => {
   return {
     id: crypto.randomUUID(),
-    type: "freeFormLine",
+    type: "freeDraw",
     points: points ?? [],
     area: 0,
   };

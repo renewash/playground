@@ -5,7 +5,7 @@ import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
 import type { DrawingEngine, ToolContext } from "..";
-import { useScene, TwoPointLine, FreeFormLine, Label } from "./";
+import { useScene, LineSegment, FreeDraw, Label } from "./";
 
 import { undoRedoShortcut } from "./keyShortcuts";
 
@@ -94,10 +94,10 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
         {/* Committed objects */}
         {Object.values(state.objects).map((object) => {
           switch (object.type) {
-            case "freeFormLine":
-              return <FreeFormLine key={object.id} model={object} />;
-            case "twoPointLine":
-              return <TwoPointLine key={object.id} model={object} />;
+            case "freeDraw":
+              return <FreeDraw key={object.id} model={object} />;
+            case "lineSegment":
+              return <LineSegment key={object.id} model={object} />;
             default:
               console.error(
                 "Object found that isn't a registered type",

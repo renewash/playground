@@ -1,14 +1,14 @@
-// drawing/tools/twoPointLineTool.ts
+// drawing/tools/lineSegmentTool.ts
 
 import type { DrawingTool, ToolContext } from "./types";
 import type { Point } from "../geometry/types";
 import Konva from "konva";
 
-export function createTwoPointLineTool(): DrawingTool {
+export function createLineSegmentTool(): DrawingTool {
   let firstPoint: Point | null = null;
 
   return {
-    type: "twoPointLine",
+    type: "lineSegment",
     onPointerDown(_, ctx: ToolContext) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
@@ -44,7 +44,7 @@ export function createTwoPointLineTool(): DrawingTool {
     // },
 
     renderPreview(group, obj, _) {
-      if (obj.type !== "twoPointLine") return;
+      if (obj.type !== "lineSegment") return;
       const { start, end, radius } = obj;
 
       const line = new Konva.Line({

@@ -5,7 +5,7 @@ import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
 import type { DrawingEngine, DrawingTool, ToolContext } from "@repo/drawable";
-import { useScene, TwoPointLine, FreeFormLine } from "@repo/drawable/react";
+import { useScene, LineSegment, FreeDraw } from "@repo/drawable/react";
 
 interface Props {
   engine: DrawingEngine;
@@ -87,10 +87,10 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
         {Object.values(state.objects).map((object) => {
           // switch
           switch (object.type) {
-            case "freeFormLine":
-              return <FreeFormLine key={object.id} model={object} />;
-            case "twoPointLine":
-              return <TwoPointLine key={object.id} model={object} />;
+            case "freeDraw":
+              return <FreeDraw key={object.id} model={object} />;
+            case "lineSegment":
+              return <LineSegment key={object.id} model={object} />;
             default:
               // TODO: create a UnknownObject component that can render something for unknown objects instead of just logging.
               console.error("Unexpected object type", object);

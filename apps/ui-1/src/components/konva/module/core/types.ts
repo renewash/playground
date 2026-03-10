@@ -6,7 +6,7 @@ export type DrawingMode = "idle" | "drawing";
 
 export interface FreeFormLineModel {
   id: string;
-  type: "freeFormLine";
+  type: "freeDraw";
   points: number[];
 }
 
@@ -17,9 +17,9 @@ export interface LineModel {
   end: Point;
 }
 
-export interface TwoPointLineModel {
+export interface LineSegmentModel {
   id: string;
-  type: "twoPointLine";
+  type: "lineSegment";
   start: Point;
   end: Point;
   radius: number;
@@ -42,7 +42,7 @@ export type DrawableObject =
   | LineModel
   | FreeFormLineModel
   | CircleModel
-  | TwoPointLineModel
+  | LineSegmentModel
   | LineWithMarkersModel;
 
 export type ObjectTable = Record<string, DrawableObject>;

@@ -3,8 +3,8 @@ export { createDrawingEngine } from "./core/engine";
 export { useKonvaContext } from "./react/context";
 export { KonvaProvider } from "./react/KonvaProvider";
 
-export { TwoPointLine } from "./react/objects/TwoPointLine";
-export { FreeFormLine } from "./react/objects/Line";
+export { LineSegment } from "./react/objects/LineSegment";
+export { FreeDraw } from "./react/objects/Line";
 
 export { createFreeDrawTool } from "./tools/freeDrawTool";
-export { createTwoPointLineTool } from "./tools/twoPointLineTool";
+export { createLineSegmentTool } from "./tools/lineSegmentTool";

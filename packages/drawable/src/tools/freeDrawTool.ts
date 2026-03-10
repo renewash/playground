@@ -25,7 +25,7 @@ export function createFreeDrawTool(): DrawingTool {
     },
 
     renderPreview(group, obj, ctx) {
-      if (obj.type !== "freeFormLine") return;
+      if (obj.type !== "freeDraw") return;
 
       const position = calculateDefaultPosition(obj, 100, 30);
       const value = String(obj["area"]);

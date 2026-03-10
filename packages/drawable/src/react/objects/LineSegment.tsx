@@ -1,14 +1,14 @@
-// drawing/react/objects/TwoPointLine.tsx
+// drawing/react/objects/LineSegment.tsx
 
 import { Circle, Line } from "react-konva";
-import type { DrawableObject, TwoPointLineModel } from "../../geometry/types";
+import type { DrawableObject, LineSegmentModel } from "../../geometry/types";
 
-export const TwoPointLine = ({
+export const LineSegment = ({
   model,
 }: {
-  model: DrawableObject | TwoPointLineModel | null;
+  model: DrawableObject | LineSegmentModel | null;
 }) => {
-  if (!model || model.type !== "twoPointLine") return null;
+  if (!model || model.type !== "lineSegment") return null;
   const { start, end, radius } = model;
 
   return (
