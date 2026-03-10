@@ -1,5 +1,5 @@
 import { useScene, useInProgressObject } from "@repo/drawable/react";
-
+import SharpBorder from "@/components/SharpBorder";
 const TotalArea = ({ engine }) => {
   const state = useScene(engine);
   const inProgressObject = useInProgressObject(engine);
@@ -13,7 +13,17 @@ const TotalArea = ({ engine }) => {
       0,
     ) + area;
 
-  return <div>Total Area = {totalArea}</div>;
+  return (
+    <div className="flex gap-3">
+      <SharpBorder className="mt-3 w-1/3 p-2">
+        <div className="text-md flex flex-col items-center bg-yellow-200 p-3">
+          <p className="font-bold">Total Area</p>
+          <p className="">{totalArea}</p>
+        </div>
+        <div className="w-1/3 border-b-2 py-2" />
+      </SharpBorder>
+    </div>
+  );
 };
 
 export default TotalArea;

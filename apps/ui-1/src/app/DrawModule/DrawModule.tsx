@@ -17,7 +17,7 @@ import DrawingData from "./DrawingData";
 import DrawnData from "./DrawnData";
 
 const DrawModule = () => {
-  const width = 400;
+  const width = 500;
   const height = 550;
   const engine = useMemo(() => createDrawingEngine(), []);
 
@@ -30,7 +30,7 @@ const DrawModule = () => {
 
   return (
     <div>
-      <SharpBorder className="mb-4 w-1/2 px-2 py-4 text-3xl font-semibold">
+      <SharpBorder className="mb-8 w-1/2 px-2 py-4 text-3xl font-semibold">
         <h1>Drawing Canvas</h1>
       </SharpBorder>
       <div className="flex gap-10">
@@ -41,6 +41,7 @@ const DrawModule = () => {
 
         <div>
           <h3 className="pb-2 text-lg font-semibold">Controls</h3>
+          <div className="border" />
 
           <div className="flex gap-2 py-3">
             <Tooltip content={"Free Draw"}>
@@ -85,14 +86,12 @@ const DrawModule = () => {
               </button>
             </Tooltip>
           </div>
-        </div>
-        <div className="ml-auto w-[300px]">
-          <h3 className="pb-2 text-lg font-semibold">Data</h3>
-          <div className="border"></div>
-          <div className="mt-3 border p-2">
-            <TotalArea engine={engine} />
-          </div>
           <DrawingData engine={engine} />
+        </div>
+        <div className="ml-auto w-[400px]">
+          <h3 className="pb-2 text-lg font-semibold">Data</h3>
+          <div className="border" />
+          <TotalArea engine={engine} />
           <DrawnData engine={engine} />
         </div>
       </div>

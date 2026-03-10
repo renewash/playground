@@ -11,6 +11,7 @@ const DrawnData = ({ engine }) => {
         return (
           <ObjectInfoBox
             key={id}
+            engine={engine}
             index={`${index + 1}.`}
             className="bg-yellow-200 px-2 py-3"
             drawableObject={obj}

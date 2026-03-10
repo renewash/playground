@@ -31,6 +31,28 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   const toolRef = useRef<ReturnType<DrawingEngine["getTool"]> | null>(null);
 
   useEffect(() => {
+    const undoRedoShortcut = (e: KeyboardEvent) => {
+      const isMac = /Mac/i.test(navigator.userAgent);
+
+      const modifier = isMac ? e.metaKey : e.ctrlKey;
+      // Undo: Ctrl/Cmd + Z
+      if (modifier && e.key.toLowerCase() === "z" && !e.shiftKey) {
+        e.preventDefault();
+        engine.undo();
+      }
+
+      // Redo: Ctrl/Cmd + Y OR Ctrl/Cmd + Shift + Z
+      if (isMac && modifier && e.shiftKey && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        engine.redo();
+      } else if (!isMac && modifier && e.key.toLowerCase() === "y") {
+        e.preventDefault();
+        engine.redo();
+      }
+    };
+
+    window.addEventListener("keydown", undoRedoShortcut);
+
     // subscribe to any inProgressObject changes and imperatively redraw.
     const unsubscribe = engine.subscribeTransient(() => {
       if (!groupRef) return;
@@ -50,7 +72,10 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       inProgressLayerRef.current?.batchDraw();
     });
 
-    return unsubscribe;
+    return () => {
+      window.removeEventListener("keydown", undoRedoShortcut);
+      unsubscribe();
+    };
   }, [engine]);
 
   // bind react with tool and engine via context object
@@ -76,6 +101,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   const handlePointerUp = (e: Konva.KonvaEventObject<PointerEvent>) => {
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
+  console.log("asdfasdf", engine.getState());
 
   return (
     <Stage

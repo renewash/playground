@@ -1,6 +1,6 @@
 // drawing/core/engine.ts
 
-import History from "./history";
+import History, { AddObjectCommand, DeleteObjectCommand } from "./history";
 
 import type { Listener, DrawingState, DrawingEngine } from "./types";
 
@@ -177,12 +177,6 @@ export function createDrawingEngine(
     createFreeFormLine(point) {
       inProgressObject = createFreeFormLineModel({ points: point });
 
-      // if ("area" in inProgressObject) {
-      //   inProgressObject.area = getArea(inProgressObject);
-      // }
-      // if ("length" in inProgressObject) {
-      //   inProgressObject.length = getLength(inProgressObject);
-      // }
       state.mode = "drawing";
       emitInProgressUpdates();
     },
@@ -220,10 +214,17 @@ export function createDrawingEngine(
         childToParentMap: { ...state.childToParentMap, [id]: null },
         mode: "idle",
       };
+
+      history.execute(new AddObjectCommand(inProgressObject), this);
       emit();
 
       inProgressObject = null;
       emitInProgressUpdates();
+    },
+
+    deleteObject(object) {
+      history.execute(new DeleteObjectCommand(object), this);
+      emit();
     },
 
     cancelShape() {
@@ -231,13 +232,38 @@ export function createDrawingEngine(
       emit();
     },
 
+    _addObject(object) {
+      const { id } = object;
+
+      state = {
+        ...state,
+        objects: { ...state.objects, [id]: object },
+        childToParentMap: { ...state.childToParentMap, [id]: null },
+      };
+    },
+
+    _removeObject(id) {
+      const newObjects = { ...state.objects };
+      delete newObjects[id];
+
+      const newChildToParentMap = { ...state.childToParentMap };
+      delete newChildToParentMap[id];
+
+      state = {
+        ...state,
+        objects: newObjects,
+        childToParentMap: newChildToParentMap,
+      };
+    },
+
     undo() {
-      // TODO: Implement undo
-      history.remove;
+      history.undo(this);
+      emit();
     },
 
     redo() {
-      // TODO: Implement redo
+      history.redo(this);
+      emit();
     },
 
     clear() {

@@ -1,5 +1,6 @@
 const ObjectInfoBox = ({
   drawableObject,
+  engine,
   index = "",
   className = "",
   ...rest
@@ -14,9 +15,17 @@ const ObjectInfoBox = ({
 
   return (
     <div className={` ${className}`} {...rest}>
-      <p className="border-b-2 font-semibold capitalize">
-        {index} {drawableObject.type}
-      </p>
+      <div className="flex justify-between border-b-2 font-semibold capitalize">
+        <span>
+          {index} {drawableObject.type}
+        </span>
+        <button
+          onClick={() => engine.deleteObject(drawableObject.id)}
+          className="cursor-pointer hover:underline"
+        >
+          Delete
+        </button>
+      </div>
       <p>ID: {drawableObject.id}</p>
       <p>Measurements: {area || length || "NA"}</p>
     </div>

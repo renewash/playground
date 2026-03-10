@@ -49,6 +49,7 @@ export interface DrawingEngine {
   getNode(nodeId: string): DrawableObject | null;
 
   commitObject(): void;
+  deleteObject(object: DrawableObject): void;
 
   // mutations to inProgressObject
   createStraightline(point: Point): void;
@@ -65,6 +66,9 @@ export interface DrawingEngine {
   setFreeFormLine(points: number[]): void;
 
   cancelShape(): void;
+
+  _addObject(object: DrawableObject): void;
+  _removeObject(id: string): void;
   undo(): void;
   redo(): void;
   clear(): void;
