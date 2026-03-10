@@ -19,5 +19,9 @@ export interface DrawingTool {
   onPointerUp?(e: PointerEvent, ctx: ToolContext): void;
   onKeyDown?(e: KeyboardEvent, ctx: ToolContext): void;
 
-  renderPreview?(group: Konva.Group, obj: DrawableObject): void;
+  renderPreview?(
+    group: Konva.Group,
+    obj: DrawableObject,
+    ctx: ToolContext,
+  ): void;
 }

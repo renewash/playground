@@ -4,14 +4,10 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
-import type { DrawingEngine, ToolContext } from "@repo/drawable";
+import type { DrawingEngine, ToolContext } from "..";
+import { useScene, TwoPointLine, FreeFormLine, Label } from "./";
 
-import {
-  useScene,
-  TwoPointLine,
-  FreeFormLine,
-  Label,
-} from "@repo/drawable/react";
+import { undoRedoShortcut } from "./keyShortcuts";
 
 interface Props {
   engine: DrawingEngine;
@@ -30,31 +26,22 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
 
   const toolRef = useRef<ReturnType<DrawingEngine["getTool"]> | null>(null);
 
+  // bind react with tool and engine via context object
+  const ctx: ToolContext = useMemo(
+    () => ({
+      engine,
+      getPointerPosition() {
+        return stageRef.current?.getPointerPosition() ?? null;
+      },
+    }),
+    [engine],
+  );
+
   useEffect(() => {
-    const undoRedoShortcut = (e: KeyboardEvent) => {
-      const isMac = /Mac/i.test(navigator.userAgent);
+    const keyShortcut = undoRedoShortcut(engine);
+    window.addEventListener("keydown", keyShortcut);
 
-      const modifier = isMac ? e.metaKey : e.ctrlKey;
-      // Undo: Ctrl/Cmd + Z
-      if (modifier && e.key.toLowerCase() === "z" && !e.shiftKey) {
-        e.preventDefault();
-        engine.undo();
-      }
-
-      // Redo: Ctrl/Cmd + Y OR Ctrl/Cmd + Shift + Z
-      if (isMac && modifier && e.shiftKey && e.key.toLowerCase() === "z") {
-        e.preventDefault();
-        engine.redo();
-      } else if (!isMac && modifier && e.key.toLowerCase() === "y") {
-        e.preventDefault();
-        engine.redo();
-      }
-    };
-
-    window.addEventListener("keydown", undoRedoShortcut);
-
-    // subscribe to any inProgressObject changes and imperatively redraw.
-    const unsubscribe = engine.subscribeTransient(() => {
+    const redraw = () => {
       if (!groupRef) return;
 
       const group = groupRef.current;
@@ -66,28 +53,20 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
 
       // imperatively create objects
       if (!inProgressObject) return;
-      engine.getTool().renderPreview?.(group, inProgressObject);
+      engine.getTool().renderPreview?.(group, inProgressObject, ctx);
 
       // render
       inProgressLayerRef.current?.batchDraw();
-    });
+    };
+
+    // On inProgressObject (transient) changes -> imperatively redraw.
+    const unsubscribe = engine.subscribeTransient(redraw);
 
     return () => {
-      window.removeEventListener("keydown", undoRedoShortcut);
+      window.removeEventListener("keydown", keyShortcut);
       unsubscribe();
     };
-  }, [engine]);
-
-  // bind react with tool and engine via context object
-  const ctx: ToolContext = useMemo(
-    () => ({
-      engine,
-      getPointerPosition() {
-        return stageRef.current?.getPointerPosition() ?? null;
-      },
-    }),
-    [engine],
-  );
+  }, [ctx, engine]);
 
   const handlePointerDown = (e: Konva.KonvaEventObject<PointerEvent>) => {
     toolRef.current = engine.getTool();
@@ -101,7 +80,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   const handlePointerUp = (e: Konva.KonvaEventObject<PointerEvent>) => {
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
-  console.log("asdfasdf", engine.getState());
 
   return (
     <Stage

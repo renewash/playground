@@ -24,7 +24,7 @@ export function createFreeDrawTool(): DrawingTool {
       ctx.engine.commitObject();
     },
 
-    renderPreview(group, obj) {
+    renderPreview(group, obj, ctx) {
       if (obj.type !== "freeFormLine") return;
 
       const position = calculateDefaultPosition(obj, 100, 30);

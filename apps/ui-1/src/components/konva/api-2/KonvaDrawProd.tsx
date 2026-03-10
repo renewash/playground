@@ -92,7 +92,8 @@ export const KonvaDrawingCanvas: React.FC<Props> = ({
             case "twoPointLine":
               return <TwoPointLine key={object.id} model={object} />;
             default:
-              console.log("default", object);
+              // TODO: create a UnknownObject component that can render something for unknown objects instead of just logging.
+              console.error("Unexpected object type", object);
           }
         })}
 

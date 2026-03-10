@@ -41,7 +41,7 @@ export const Label = <T extends DrawableObject>({
       width={width}
       height={height}
     >
-      <Tag opacity={0} />
+      <Tag opacity={1} fill="white" />
       <Text text={text} fontSize={12} padding={2} />
     </KonvaLabel>
   );

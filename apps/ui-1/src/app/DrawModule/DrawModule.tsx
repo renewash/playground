@@ -24,7 +24,7 @@ const DrawModule = () => {
   const [tool, setTool] = useState(engine.getTool().type);
 
   const handleToolChange = (newTool: ToolType) => {
-    engine.useTool(newTool);
+    engine.pickTool(newTool);
     setTool(newTool);
   };
 

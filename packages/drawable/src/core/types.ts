@@ -12,8 +12,11 @@ export type ChildToParentMap = Record<string, string | null>;
 export interface DrawingState {
   objects: ObjectTable;
   childToParentMap: ChildToParentMap;
+}
+
+export interface EditorState {
   mode: DrawingMode;
-  tool: ToolType;
+  tool: DrawingTool;
 }
 
 export type Listener = () => void;
@@ -21,8 +24,11 @@ export type Listener = () => void;
 export interface DrawingEngine {
   getState(): DrawingState;
   getTool(): DrawingTool;
-  useTool(tool: ToolType): void;
+  pickTool(tool: ToolType): void;
   setTool(tool: DrawingTool): void;
+
+  _startDrawing(): void;
+  _stopDrawing(): void;
 
   /**
    * Subscribe to changes in static objects.

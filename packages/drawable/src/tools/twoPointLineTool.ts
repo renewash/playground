@@ -43,7 +43,7 @@ export function createTwoPointLineTool(): DrawingTool {
     //   // Nothing needed on pointer up for this tool
     // },
 
-    renderPreview(group, obj) {
+    renderPreview(group, obj, _) {
       if (obj.type !== "twoPointLine") return;
       const { start, end, radius } = obj;
 
@@ -59,14 +59,14 @@ export function createTwoPointLineTool(): DrawingTool {
         x: start[0],
         y: start[1],
         radius,
-        stroke: "green",
+        stroke: "black",
       });
 
       const endCircle = new Konva.Circle({
         x: end[0],
         y: end[1],
         radius,
-        stroke: "green",
+        stroke: "black",
       });
 
       group.add(line);

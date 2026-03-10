@@ -10,7 +10,7 @@ import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createTwoPointLineModel } from "../geometry/domain/TwoPointLineModel";
 import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
 import { getArea, getLength } from "./measure";
-import { DrawingTool } from "../tools/types";
+// import { DrawingTool } from "../tools/types";
 import { createTwoPointLineTool } from "../tools/twoPointLineTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
 
@@ -29,14 +29,15 @@ export function createDrawingEngine(
   let state: DrawingState = {
     objects: {},
     childToParentMap: {},
-    mode: "idle",
-    tool: "twoPointLine",
     ...initial,
   };
 
-  const history = new History();
+  const editorState = {
+    mode: "idle",
+    tool: createTwoPointLineTool(),
+  };
 
-  let tool: DrawingTool = createTwoPointLineTool();
+  const history = new History();
 
   let inProgressUpdates: number = 0;
   let inProgressObject: DrawableObject | null = null;
@@ -52,10 +53,6 @@ export function createDrawingEngine(
   const emit = () => listeners.forEach((l) => l());
   const emitInProgressUpdates = () => {
     inProgressUpdates++;
-    if (!inProgressObject) {
-      transientSnapshot = { version: inProgressUpdates, inProgressObject };
-      transientListeners.forEach((l) => l());
-    }
 
     // only update version so that inProgressObject reference is preserved for better performance in react-konva.
     transientSnapshot = { version: inProgressUpdates, inProgressObject };
@@ -68,16 +65,16 @@ export function createDrawingEngine(
     },
 
     getTool() {
-      return tool;
+      return editorState.tool;
     },
 
-    useTool(newTool) {
+    pickTool(newTool) {
       switch (newTool) {
         case "twoPointLine":
-          tool = createTwoPointLineTool();
+          editorState.tool = createTwoPointLineTool();
           break;
         case "freeFormLine":
-          tool = createFreeDrawTool();
+          editorState.tool = createFreeDrawTool();
           break;
         default:
           throw new Error(`Tool ${newTool} not implemented in engine`);
@@ -85,8 +82,17 @@ export function createDrawingEngine(
     },
 
     setTool(newTool) {
-      tool = newTool;
+      editorState.tool = newTool;
     },
+
+    _startDrawing() {
+      editorState.mode = "drawing";
+    },
+
+    _stopDrawing() {
+      editorState.mode = "idle";
+    },
+
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -125,24 +131,23 @@ export function createDrawingEngine(
 
     createStraightline(point) {
       inProgressObject = createLineModel({ start: point });
-      state.mode = "drawing";
 
+      this._startDrawing();
       emitInProgressUpdates();
     },
 
     endStraightline(point) {
       if (inProgressObject === null || inProgressObject.type !== "line") return;
-
       inProgressObject.end = point;
-      state.mode = "idle";
 
+      this._stopDrawing();
       emitInProgressUpdates();
     },
 
     createTwoPointline(start, radius) {
       inProgressObject = createTwoPointLineModel({ start, radius });
-      state.mode = "drawing";
 
+      this._startDrawing();
       emitInProgressUpdates();
     },
 
@@ -154,14 +159,15 @@ export function createDrawingEngine(
       inProgressObject.radius = inProgressObject.radius ?? radius;
 
       inProgressObject.length = getLength(inProgressObject);
-      state.mode = "idle";
+
+      this._stopDrawing();
       emitInProgressUpdates();
     },
 
     createCircle(center, radius) {
       inProgressObject = createCircleModel({ center, radius });
-      state.mode = "drawing";
-      state.tool = "circle";
+
+      this._startDrawing();
       emitInProgressUpdates();
     },
 
@@ -177,7 +183,7 @@ export function createDrawingEngine(
     createFreeFormLine(point) {
       inProgressObject = createFreeFormLineModel({ points: point });
 
-      state.mode = "drawing";
+      this._startDrawing();
       emitInProgressUpdates();
     },
 
@@ -212,7 +218,6 @@ export function createDrawingEngine(
         ...state,
         objects: { ...state.objects, [id]: inProgressObject },
         childToParentMap: { ...state.childToParentMap, [id]: null },
-        mode: "idle",
       };
 
       history.execute(new AddObjectCommand(inProgressObject), this);
@@ -229,6 +234,7 @@ export function createDrawingEngine(
 
     cancelShape() {
       inProgressObject = null;
+      this._stopDrawing();
       emit();
     },
 
@@ -271,7 +277,6 @@ export function createDrawingEngine(
         ...state,
         objects: {},
         childToParentMap: {},
-        mode: "idle",
       };
       emit();
 
