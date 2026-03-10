@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { PencilIcon } from "@heroicons/react/24/outline";
 
 import Tooltip from "@/components/Tooltip";
@@ -9,8 +9,8 @@ import LineSegmentIcon from "@/icons/LineSegmentIcon";
 import UndoIcon from "@/icons/UndoIcon";
 import RedoIcon from "@/icons/RedoIcon";
 
-import { createDrawingEngine, type ToolType } from "@repo/drawable";
-import { Drawable } from "@repo/drawable/react";
+import { createDrawingEngine } from "@repo/drawable";
+import { Drawable, useEditor } from "@repo/drawable/react";
 
 import TotalArea from "./TotalArea";
 import DrawingData from "./DrawingData";
@@ -20,13 +20,9 @@ const DrawModule = () => {
   const width = 500;
   const height = 550;
   const engine = useMemo(() => createDrawingEngine(), []);
+  const editorState = useEditor(engine);
 
-  const [tool, setTool] = useState(engine.getTool().type);
-
-  const handleToolChange = (newTool: ToolType) => {
-    engine.pickTool(newTool);
-    setTool(newTool);
-  };
+  console.log("editorState has changed", editorState);
 
   return (
     <div>
@@ -47,16 +43,16 @@ const DrawModule = () => {
             <Tooltip content={"Free Draw"}>
               <button
                 title="tooltip text"
-                className={`cursor-pointer rounded-sm border p-2 ${tool === "freeFormLine" ? "bg-gray-300" : ""}`}
-                onClick={() => handleToolChange("freeFormLine")}
+                className={`cursor-pointer rounded-sm border p-2 ${editorState.tool.type === "freeDraw" ? "bg-gray-300" : ""}`}
+                onClick={() => engine.pickTool("freeFormLine")}
               >
                 <PencilIcon className="size-6" />
               </button>
             </Tooltip>
             <Tooltip content={"Line Segment"}>
               <button
-                className={`cursor-pointer rounded-sm border p-2 ${tool === "twoPointLine" ? "bg-gray-300" : ""}`}
-                onClick={() => handleToolChange("twoPointLine")}
+                className={`cursor-pointer rounded-sm border p-2 ${editorState.tool.type === "twoPointLine" ? "bg-gray-300" : ""}`}
+                onClick={() => engine.pickTool("twoPointLine")}
               >
                 <LineSegmentIcon />
               </button>

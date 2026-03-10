@@ -2,7 +2,12 @@
 
 import History, { AddObjectCommand, DeleteObjectCommand } from "./history";
 
-import type { Listener, DrawingState, DrawingEngine } from "./types";
+import type {
+  Listener,
+  DrawingState,
+  DrawingEngine,
+  EditorState,
+} from "./types";
 
 import { DrawableObject } from "../geometry/types";
 import { createLineModel } from "../geometry/domain/LineModel";
@@ -10,7 +15,6 @@ import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createTwoPointLineModel } from "../geometry/domain/TwoPointLineModel";
 import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
 import { getArea, getLength } from "./measure";
-// import { DrawingTool } from "../tools/types";
 import { createTwoPointLineTool } from "../tools/twoPointLineTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
 
@@ -32,7 +36,7 @@ export function createDrawingEngine(
     ...initial,
   };
 
-  const editorState = {
+  let editorState: EditorState = {
     mode: "idle",
     tool: createTwoPointLineTool(),
   };
@@ -48,9 +52,11 @@ export function createDrawingEngine(
   };
 
   const listeners = new Set<Listener>();
+  const editorListeners = new Set<Listener>();
   const transientListeners = new Set<Listener>();
 
   const emit = () => listeners.forEach((l) => l());
+  const emitEditorUpdate = () => editorListeners.forEach((l) => l());
   const emitInProgressUpdates = () => {
     inProgressUpdates++;
 
@@ -64,6 +70,10 @@ export function createDrawingEngine(
       return state;
     },
 
+    getEditorState() {
+      return editorState;
+    },
+
     getTool() {
       return editorState.tool;
     },
@@ -71,31 +81,42 @@ export function createDrawingEngine(
     pickTool(newTool) {
       switch (newTool) {
         case "twoPointLine":
-          editorState.tool = createTwoPointLineTool();
+          this.setTool(createTwoPointLineTool());
           break;
         case "freeFormLine":
-          editorState.tool = createFreeDrawTool();
+          this.setTool(createFreeDrawTool());
           break;
         default:
           throw new Error(`Tool ${newTool} not implemented in engine`);
       }
     },
 
-    setTool(newTool) {
-      editorState.tool = newTool;
+    setTool(tool) {
+      editorState = {
+        ...editorState,
+        tool,
+      };
+      emitEditorUpdate();
     },
 
     _startDrawing() {
       editorState.mode = "drawing";
+      emitEditorUpdate();
     },
 
     _stopDrawing() {
       editorState.mode = "idle";
+      emitEditorUpdate();
     },
 
     subscribe(listener) {
       listeners.add(listener);
       return () => listeners.delete(listener);
+    },
+
+    subscribeEditor(listener) {
+      editorListeners.add(listener);
+      return () => editorListeners.delete(listener);
     },
 
     subscribeTransient(listener) {

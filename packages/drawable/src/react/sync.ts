@@ -1,7 +1,7 @@
 // drawing/react/useScene.ts
 
 import { useSyncExternalStore } from "react";
-import type { DrawingState, DrawingEngine } from "../core/types";
+import type { DrawingState, DrawingEngine, EditorState } from "../core/types";
 import type { DrawableObject } from "../geometry/types";
 
 export function useScene(engine: DrawingEngine): DrawingState {
@@ -22,4 +22,12 @@ export function useInProgressObject(
   );
 
   return snap.inProgressObject;
+}
+
+export function useEditor(engine: DrawingEngine): EditorState {
+  return useSyncExternalStore(
+    engine.subscribeEditor,
+    engine.getEditorState,
+    engine.getEditorState,
+  );
 }

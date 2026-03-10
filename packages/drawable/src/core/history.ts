@@ -22,10 +22,13 @@ export class DeleteObjectCommand implements Command {
   constructor(private object: DrawableObject) {}
 
   undo(engine: DrawingEngine) {
+    console.log("am undo delete");
     engine._addObject(this.object);
   }
 
   do(engine: DrawingEngine) {
+    console.log("am deleting");
+
     engine._removeObject(this.object.id);
   }
 }
@@ -49,11 +52,9 @@ export default class History {
   }
 
   redo(engine: DrawingEngine) {
-    if (this.redoStack.length === 0) {
-      console.error("there is nothing in redoStack to redo");
-      return;
-    }
     const command = this.redoStack.pop();
+    if (!command) return;
+
     command.do(engine);
     this.undoStack.push(command);
   }

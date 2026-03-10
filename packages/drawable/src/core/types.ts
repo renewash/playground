@@ -23,6 +23,7 @@ export type Listener = () => void;
 
 export interface DrawingEngine {
   getState(): DrawingState;
+  getEditorState(): EditorState;
   getTool(): DrawingTool;
   pickTool(tool: ToolType): void;
   setTool(tool: DrawingTool): void;
@@ -30,6 +31,7 @@ export interface DrawingEngine {
   _startDrawing(): void;
   _stopDrawing(): void;
 
+  subscribeEditor(listener: Listener): () => void;
   /**
    * Subscribe to changes in static objects.
    *
