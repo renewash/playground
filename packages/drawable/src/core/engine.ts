@@ -1,5 +1,6 @@
 // drawing/core/engine.ts
 
+import { getArea, getLength } from "./measure";
 import History, { AddObjectCommand, DeleteObjectCommand } from "./history";
 
 import type {
@@ -15,9 +16,11 @@ import { createLineModel } from "../geometry/domain/LineModel";
 import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createLineSegmentModel } from "../geometry/domain/LineSegmentModel";
 import { createFreeDrawModel } from "../geometry/domain/FreeDrawModel";
-import { getArea, getLength } from "./measure";
+import { createPolygonSegmentModel } from "../geometry/domain/PolygonSegment";
+
 import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
+import { createPolygonSegmentTool } from "../tools/polygonSegmentTool";
 
 import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../constants";
 
@@ -51,6 +54,7 @@ export function createDrawingEngine(
   const toolSet = {
     freeDraw: createFreeDrawTool(),
     lineSegment: createLineSegmentTool(),
+    polygonSegment: createPolygonSegmentTool(),
   };
 
   const history = new History();
@@ -152,6 +156,7 @@ export function createDrawingEngine(
     getInProgressObject() {
       return inProgressObject;
     },
+
     getTransientSnapshot() {
       return transientSnapshot;
     },
@@ -189,7 +194,6 @@ export function createDrawingEngine(
       if (inProgressObject === null || inProgressObject.type !== "line") return;
       inProgressObject.end = point;
 
-      this._stopDrawing();
       emitInProgressUpdates();
     },
 
@@ -213,7 +217,6 @@ export function createDrawingEngine(
 
       inProgressObject.length = getLength(inProgressObject);
 
-      this._stopDrawing();
       emitInProgressUpdates();
     },
 
@@ -263,11 +266,70 @@ export function createDrawingEngine(
       emitInProgressUpdates();
     },
 
+    createPolygonSegment(points, radius) {
+      inProgressObject = createPolygonSegmentModel({
+        points: points,
+        radius,
+        style: editorState.style,
+      });
+      emitInProgressUpdates();
+    },
+
+    appendPointToPolygonSegment(point) {
+      if (!inProgressObject || inProgressObject.type !== "polygonSegment")
+        return;
+
+      inProgressObject.points.push(...point);
+      inProgressObject.area = getArea(inProgressObject);
+
+      emitInProgressUpdates();
+    },
+
+    setPolygonSegment(points, radius) {
+      if (!inProgressObject || inProgressObject.type !== "polygonSegment")
+        return;
+
+      inProgressObject.points = points;
+      inProgressObject.radius = inProgressObject.radius ?? radius;
+      inProgressObject.area = getArea(inProgressObject);
+
+      emitInProgressUpdates();
+    },
+
+    replaceLastPointOfPolygonSegment(point) {
+      if (!inProgressObject || inProgressObject.type !== "polygonSegment")
+        return;
+
+      const n = inProgressObject.points.length;
+      if (n < 2) return;
+
+      inProgressObject.points[n - 1] = point[1];
+      inProgressObject.points[n - 2] = point[0];
+
+      inProgressObject.area = getArea(inProgressObject);
+      emitInProgressUpdates();
+    },
+
+    removeLastPointOfPolygonSegment() {
+      if (!inProgressObject || inProgressObject.type !== "polygonSegment")
+        return;
+
+      const n = inProgressObject.points.length;
+      if (n < 2) return;
+
+      inProgressObject.points.pop();
+      inProgressObject.points.pop();
+      inProgressObject.area = getArea(inProgressObject);
+      emitInProgressUpdates();
+    },
+
     commitObject() {
       if (!inProgressObject) return;
       this.addObject(inProgressObject);
 
       inProgressObject = null;
+      this._stopDrawing();
+
       emitInProgressUpdates();
     },
 

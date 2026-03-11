@@ -18,6 +18,7 @@ export interface DrawingTool {
   onPointerMove?(e: PointerEvent, ctx: ToolContext): void;
   onPointerUp?(e: PointerEvent, ctx: ToolContext): void;
   onKeyDown?(e: KeyboardEvent, ctx: ToolContext): void;
+  onDoubleClick?(e: MouseEvent, ctx: ToolContext): void;
 
   renderPreview?(
     group: Konva.Group,

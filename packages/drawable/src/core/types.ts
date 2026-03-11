@@ -87,6 +87,12 @@ export interface DrawingEngine {
   appendPointToFreeFormLine(point: Point): void;
   setFreeFormLine(points: number[]): void;
 
+  createPolygonSegment(point: Point | number[], radius?: number): void;
+  appendPointToPolygonSegment(point: Point): void;
+  setPolygonSegment(points: number[], radius?: number): void;
+  replaceLastPointOfPolygonSegment(point: Point): void;
+  removeLastPointOfPolygonSegment(): void;
+
   cancelShape(): void;
 
   _addObject(object: DrawableObject): void;

@@ -5,7 +5,7 @@ export type ModelTypes =
   | "circle"
   | "freeDraw"
   | "lineSegment"
-  | "lineWithMarkers";
+  | "polygonSegment";
 
 export type ShapeStyle = {
   strokeWidth: number;
@@ -44,11 +44,11 @@ export interface CircleModel extends BaseModel {
   center: Point;
   radius: number;
 }
-export interface LineWithMarkersModel extends BaseModel {
-  type: "lineWithMarkers";
+export interface PolygonSegmentModel extends BaseModel {
+  type: "polygonSegment";
   points: number[];
-  markerRadius: number;
-  length: number;
+  radius: number;
+  area: number;
 }
 
 export type DrawableObject =
@@ -56,4 +56,4 @@ export type DrawableObject =
   | FreeDrawModel
   | CircleModel
   | LineSegmentModel
-  | LineWithMarkersModel;
+  | PolygonSegmentModel;

@@ -31,13 +31,15 @@ const EditorControls = ({ engine }: { engine: DrawingEngine }) => {
           <LineSegmentIcon />
         </button>
       </Tooltip>
-      <button
-        disabled
-        className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-600`}
-        // onClick={() => handleToolChange("polygonWithMarkers")}
-      >
-        <PolygonWithMarkersIcon />
-      </button>
+
+      <Tooltip content={"Polygon Segment"}>
+        <button
+          className={`cursor-pointer rounded-sm border p-2 ${editorState.tool.type === "polygonSegment" ? "bg-gray-300" : ""}`}
+          onClick={() => engine.pickTool("polygonSegment")}
+        >
+          <PolygonWithMarkersIcon />
+        </button>
+      </Tooltip>
     </>
   );
 };

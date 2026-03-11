@@ -16,11 +16,16 @@ export const getArea = (obj: DrawableObject): number => {
     case "lineSegment":
       area = calculateArea([...obj.start, ...obj.end]);
       break;
+    case "polygonSegment":
     case "freeDraw":
       area = calculateArea(obj.points);
       break;
-    default:
-      throw new Error(`Area calculation not supported for type ${obj.type}`);
+    default: {
+      // Exhaustiveness check
+      throw new Error(
+        `Area calculation not supported for type ${(obj as DrawableObject).type}`,
+      );
+    }
   }
 
   return Math.round(area * 100) / 100; // 2 d.p.

@@ -8,6 +8,7 @@ import type { DrawingEngine, ToolContext } from "..";
 import { useScene, LineSegment, FreeDraw, Label } from "./";
 
 import { undoRedoShortcut } from "./helpers/keyShortcuts";
+import PolygonSegment from "./objects/PolygonSegment";
 
 interface Props {
   engine: DrawingEngine;
@@ -81,6 +82,10 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
 
+  const handleDoubleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+    toolRef.current?.onDoubleClick?.(e.evt, ctx);
+  };
+
   return (
     <Stage
       width={width}
@@ -89,6 +94,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       onMouseDown={handlePointerDown}
       onMouseMove={handlePointerMove}
       onMouseUp={handlePointerUp}
+      onDblClick={handleDoubleClick}
     >
       <Layer ref={staticLayerRef} listening={false}>
         {/* Committed objects */}
@@ -98,6 +104,8 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
               return <FreeDraw key={object.id} model={object} />;
             case "lineSegment":
               return <LineSegment key={object.id} model={object} />;
+            case "polygonSegment":
+              return <PolygonSegment key={object.id} model={object} />;
             default:
               console.error(
                 "Object found that isn't a registered type",

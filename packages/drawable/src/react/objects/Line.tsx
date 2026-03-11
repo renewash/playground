@@ -15,6 +15,7 @@ export const FreeDraw = ({
       strokeWidth={model.style.strokeWidth}
       lineCap="round"
       lineJoin="round"
+      closed={true}
     />
   );
 };
