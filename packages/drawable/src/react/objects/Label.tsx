@@ -3,7 +3,7 @@ import { Label as KonvaLabel, Tag, Text } from "react-konva";
 import { calculateDefaultPosition } from "../../core/measure";
 
 interface LabelProps<T extends DrawableObject> {
-  object: T;
+  model: T;
   value: string | ((model: T) => string);
   position?: Point;
   width?: number;
@@ -24,15 +24,15 @@ interface LabelProps<T extends DrawableObject> {
  * If position is not provided, it will default to the top of the start point of the object if possible, otherwise it will default to [0, 0].
  */
 export const Label = <T extends DrawableObject>({
-  object,
+  model,
   value,
   position,
   width = 100,
   height = 30,
 }: LabelProps<T>) => {
   const finalPosition =
-    position ?? calculateDefaultPosition(object, width, height);
-  const text = typeof value === "function" ? value(object) : value;
+    position ?? calculateDefaultPosition(model, width, height);
+  const text = typeof value === "function" ? value(model) : value;
 
   return (
     <KonvaLabel
@@ -41,8 +41,8 @@ export const Label = <T extends DrawableObject>({
       width={width}
       height={height}
     >
-      <Tag opacity={1} fill="white" />
-      <Text text={text} fontSize={12} padding={2} />
+      <Tag opacity={0.25} fill={model.style.strokeColor} />
+      <Text text={text} fontSize={12} padding={3} />
     </KonvaLabel>
   );
 };

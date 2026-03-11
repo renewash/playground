@@ -111,7 +111,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
             return (
               <Label
                 key={object.id}
-                object={object}
+                model={object}
                 value={(obj) => `${obj.area}`}
               />
             );

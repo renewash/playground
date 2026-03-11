@@ -10,6 +10,7 @@ import DrawnData from "./DrawnData";
 import ShapeControls from "./ShapeControls";
 import ColorPicker from "./ColorPicker";
 import ActionControls from "./ActionControls";
+import StylingControls from "./StylingControls";
 
 const DrawModule = () => {
   const width = 500;
@@ -33,11 +34,20 @@ const DrawModule = () => {
         <div>
           <h3 className="pb-2 text-lg font-semibold">Controls</h3>
           <div className="border" />
-          <div className="flex gap-2 py-3">
+
+          <div className="mt-2">Shapes</div>
+          <div className="flex gap-2 pt-1 pb-2">
             <ShapeControls engine={engine} />
           </div>
-          <div className="flex gap-2 py-3">
+
+          <div className="mt-2">Undo and Redo</div>
+          <div className="flex gap-2 pt-1 pb-2">
             <ActionControls engine={engine} />
+          </div>
+          <div className="mt-2">Border Width</div>
+
+          <div className="flex gap-2 pt-1 pb-2">
+            <StylingControls engine={engine} />
           </div>
 
           <div className="py-3">
