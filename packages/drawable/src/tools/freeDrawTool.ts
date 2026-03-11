@@ -25,6 +25,8 @@ export function createFreeDrawTool(): DrawingTool {
     },
 
     renderPreview(group, obj, ctx) {
+      // TODO: use ctx to allow labels to be boundary aware
+
       if (obj.type !== "freeDraw") return;
 
       const position = calculateDefaultPosition(obj, 100, 30);

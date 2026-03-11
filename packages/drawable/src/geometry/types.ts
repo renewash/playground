@@ -33,7 +33,7 @@ export interface LineSegmentModel extends BaseModel {
   length: number;
 }
 
-export interface FreeFormLineModel extends BaseModel {
+export interface FreeDrawModel extends BaseModel {
   type: "freeDraw";
   points: number[];
   area: number;
@@ -53,7 +53,7 @@ export interface LineWithMarkersModel extends BaseModel {
 
 export type DrawableObject =
   | LineModel
-  | FreeFormLineModel
+  | FreeDrawModel
   | CircleModel
   | LineSegmentModel
   | LineWithMarkersModel;

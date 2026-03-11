@@ -42,5 +42,9 @@
     "react-konva": {
       "optional": false
     }
+  },
+  "dependencies": {
+    "@testing-library/react": "^16.3.2",
+    "jsdom": "^28.1.0"
   }
 }

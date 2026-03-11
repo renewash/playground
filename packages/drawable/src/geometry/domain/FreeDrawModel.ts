@@ -1,13 +1,13 @@
-import { calculateArea } from "../../geometry/calculate";
-import { FreeFormLineModel } from "../types";
+import { calculateArea } from "../calculate";
+import { FreeDrawModel } from "../types";
 
-interface CreateFreeFormLineModel {
+interface CreateFreeDrawModel {
   points: number[];
 }
 
-export const createFreeFormLineModel = ({
+export const createFreeDrawModel = ({
   points,
-}: CreateFreeFormLineModel): FreeFormLineModel => {
+}: CreateFreeDrawModel): FreeDrawModel => {
   const area = calculateArea(points);
   return {
     id: crypto.randomUUID(),

@@ -13,7 +13,7 @@ import { DrawableObject } from "../geometry/types";
 import { createLineModel } from "../geometry/domain/LineModel";
 import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createLineSegmentModel } from "../geometry/domain/LineSegmentModel";
-import { createFreeFormLineModel } from "../geometry/domain/FreeFormLineModel";
+import { createFreeFormLineModel } from "../geometry/domain/FreeDrawModel";
 import { getArea, getLength } from "./measure";
 import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
@@ -259,6 +259,11 @@ export function createDrawingEngine(
 
     deleteObjectById(id) {
       const node = this.getNode(id);
+      if (!node) {
+        console.warn(`Attempting to delete non existent node with id ${id}`);
+        return;
+      }
+
       history.execute(new DeleteObjectCommand(node), this);
       emit();
     },
