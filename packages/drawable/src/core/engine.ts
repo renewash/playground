@@ -7,6 +7,7 @@ import type {
   DrawingState,
   DrawingEngine,
   EditorState,
+  TransientSnapshot,
 } from "./types";
 
 import { DrawableObject } from "../geometry/types";
@@ -17,6 +18,8 @@ import { createFreeDrawModel } from "../geometry/domain/FreeDrawModel";
 import { getArea, getLength } from "./measure";
 import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
+
+import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../constants";
 
 /**
  * Holds internal state of canvas and defines mutation logic.
@@ -40,8 +43,8 @@ export function createDrawingEngine(
     mode: "idle",
     tool: createLineSegmentTool(),
     style: {
-      strokeWidth: 3,
-      strokeColor: "#8e2d9a",
+      strokeWidth: STROKE_WIDTH_DEFAULT,
+      strokeColor: STROKE_COLOR_DEFAULT,
     },
   };
 
@@ -55,7 +58,7 @@ export function createDrawingEngine(
   let inProgressUpdates: number = 0;
   let inProgressObject: DrawableObject | null = null;
 
-  let transientSnapshot = {
+  let transientSnapshot: TransientSnapshot = {
     version: inProgressUpdates,
     inProgressObject,
   };
@@ -69,18 +72,8 @@ export function createDrawingEngine(
   const emitInProgressUpdates = () => {
     inProgressUpdates++;
 
-    // only update version so that inProgressObject reference is preserved for better performance in react-konva.
-    if (!inProgressObject) {
-      transientSnapshot = {
-        version: inProgressUpdates,
-        inProgressObject: null,
-      };
-      transientListeners.forEach((l) => l());
-      return;
-    }
-
-    // transientSnapshot = { version: inProgressUpdates, inProgressObject };
-    // transientListeners.forEach((l) => l());
+    transientSnapshot = { version: inProgressUpdates, inProgressObject };
+    transientListeners.forEach((l) => l());
   };
 
   return {
@@ -90,6 +83,28 @@ export function createDrawingEngine(
 
     getEditorState() {
       return editorState;
+    },
+
+    setStrokeColor(color) {
+      editorState = {
+        ...editorState,
+        style: {
+          ...editorState.style,
+          strokeColor: color,
+        },
+      };
+      emitEditorUpdate();
+    },
+
+    setStrokeWidth(width) {
+      editorState = {
+        ...editorState,
+        style: {
+          ...editorState.style,
+          strokeWidth: width,
+        },
+      };
+      emitEditorUpdate();
     },
 
     getTool() {
@@ -161,7 +176,10 @@ export function createDrawingEngine(
     },
 
     createStraightline(point) {
-      inProgressObject = createLineModel({ start: point });
+      inProgressObject = createLineModel({
+        start: point,
+        style: editorState.style,
+      });
 
       this._startDrawing();
       emitInProgressUpdates();
@@ -176,7 +194,11 @@ export function createDrawingEngine(
     },
 
     createTwoPointline(start, radius) {
-      inProgressObject = createLineSegmentModel({ start, radius });
+      inProgressObject = createLineSegmentModel({
+        start,
+        radius,
+        style: editorState.style,
+      });
 
       this._startDrawing();
       emitInProgressUpdates();
@@ -196,7 +218,11 @@ export function createDrawingEngine(
     },
 
     createCircle(center, radius) {
-      inProgressObject = createCircleModel({ center, radius });
+      inProgressObject = createCircleModel({
+        center,
+        radius,
+        style: editorState.style,
+      });
 
       this._startDrawing();
       emitInProgressUpdates();
@@ -212,7 +238,10 @@ export function createDrawingEngine(
     },
 
     createFreeFormLine(point) {
-      inProgressObject = createFreeDrawModel({ points: point });
+      inProgressObject = createFreeDrawModel({
+        points: point,
+        style: editorState.style,
+      });
 
       this._startDrawing();
       emitInProgressUpdates();

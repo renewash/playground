@@ -43,14 +43,18 @@ export function createLineSegmentTool(): DrawingTool {
     //   // Nothing needed on pointer up for this tool
     // },
 
-    renderPreview(group, obj, _) {
+    renderPreview(group, obj, ctx) {
       if (obj.type !== "lineSegment") return;
       const { start, end, radius } = obj;
 
+      const { style } = ctx.engine.getEditorState();
+      const strokeColor = style.strokeColor || "black";
+      const strokeWidth = style.strokeWidth || 1;
+
       const line = new Konva.Line({
         points: [...start, ...end],
-        stroke: "blue",
-        strokeWidth: 2,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
         lineCap: "round",
         lineJoin: "round",
       });
@@ -59,14 +63,14 @@ export function createLineSegmentTool(): DrawingTool {
         x: start[0],
         y: start[1],
         radius,
-        stroke: "black",
+        stroke: strokeColor,
       });
 
       const endCircle = new Konva.Circle({
         x: end[0],
         y: end[1],
         radius,
-        stroke: "black",
+        stroke: strokeColor,
       });
 
       group.add(line);

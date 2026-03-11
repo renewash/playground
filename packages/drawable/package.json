@@ -4,12 +4,12 @@
   "private": true,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     },
     "./react": {
-      "types": "./dist/react/index.d.ts",
-      "default": "./dist/react/index.js"
+      "types": "./src/react/index.ts",
+      "default": "./src/react/index.ts"
     }
   },
   "scripts": {

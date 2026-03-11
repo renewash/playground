@@ -11,8 +11,8 @@ export const FreeDraw = ({
   return (
     <Line
       points={model.points}
-      stroke="red"
-      strokeWidth={7}
+      stroke={model.style.strokeColor}
+      strokeWidth={model.style.strokeWidth}
       lineCap="round"
       lineJoin="round"
     />

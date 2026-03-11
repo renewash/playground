@@ -1,22 +1,25 @@
-import type { CircleModel, Point } from "../types";
+import type { CircleModel, Point, ShapeStyle } from "../types";
+import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../../constants";
 
 interface CreateCircleModel {
   center: Point;
   radius: number;
+  style?: ShapeStyle;
 }
 
 export const createCircleModel = ({
   center,
   radius,
+  style = {
+    strokeWidth: STROKE_WIDTH_DEFAULT,
+    strokeColor: STROKE_COLOR_DEFAULT,
+  },
 }: CreateCircleModel): CircleModel => {
   return {
     id: crypto.randomUUID(),
     type: "circle",
     center,
     radius,
-    style: {
-      strokeWidth: 2,
-      strokeColor: "#1d12e3",
-    },
+    style,
   };
 };

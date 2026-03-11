@@ -1,13 +1,19 @@
-import { LineModel, Point } from "../types";
+import { LineModel, Point, ShapeStyle } from "../types";
+import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../../constants";
 
 // Assume end point is the same as start point if not provided
 interface CreateLineModel {
   start: Point;
   end?: Point;
+  style?: ShapeStyle;
 }
 export const createLineModel = ({
   start,
   end = start,
+  style = {
+    strokeWidth: STROKE_WIDTH_DEFAULT,
+    strokeColor: STROKE_COLOR_DEFAULT,
+  },
 }: CreateLineModel): LineModel => {
   return {
     id: crypto.randomUUID(),
@@ -15,9 +21,6 @@ export const createLineModel = ({
     start,
     end,
     length: 0,
-    style: {
-      strokeWidth: 2,
-      strokeColor: "#1d12e3",
-    },
+    style,
   };
 };

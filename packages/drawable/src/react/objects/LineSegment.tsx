@@ -15,13 +15,23 @@ export const LineSegment = ({
     <>
       <Line
         points={[...start, ...end]}
-        stroke="blue"
-        strokeWidth={2}
+        stroke={model.style.strokeColor}
+        strokeWidth={model.style.strokeWidth}
         lineCap="round"
         lineJoin="round"
       />
-      <Circle x={start[0]} y={start[1]} radius={radius} stroke="black" />
-      <Circle x={end[0]} y={end[1]} radius={radius} stroke="black" />
+      <Circle
+        x={start[0]}
+        y={start[1]}
+        radius={radius}
+        stroke={model.style.strokeColor}
+      />
+      <Circle
+        x={end[0]}
+        y={end[1]}
+        radius={radius}
+        stroke={model.style.strokeColor}
+      />
     </>
   );
 };

@@ -43,10 +43,14 @@ export function createFreeDrawTool(): DrawingTool {
       label.add(tag);
       label.add(text);
 
+      const { style } = ctx.engine.getEditorState();
+      const strokeColor = style.strokeColor || "black";
+      const strokeWidth = style.strokeWidth || 1;
+
       const line = new Konva.Line({
         points: obj.points,
-        stroke: "green",
-        strokeWidth: 3,
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
         lineCap: "round",
         lineJoin: "round",
       });

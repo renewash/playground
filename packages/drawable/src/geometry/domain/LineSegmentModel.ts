@@ -1,17 +1,25 @@
 import { getLength } from "../../core/measure";
-import { LineSegmentModel, Point } from "../types";
-
-const TWO_POINT_LINE_RADIUS_DEFAULT = 3;
+import { LineSegmentModel, Point, ShapeStyle } from "../types";
+import {
+  STROKE_COLOR_DEFAULT,
+  STROKE_WIDTH_DEFAULT,
+  TWO_POINT_LINE_RADIUS_DEFAULT,
+} from "../../constants";
 
 interface CreateLineSegmentModel {
   start: Point;
   end?: Point;
   radius?: number;
+  style?: ShapeStyle;
 }
 export const createLineSegmentModel = ({
   start,
   end = start, // Assume end = start point if not provided
   radius = TWO_POINT_LINE_RADIUS_DEFAULT,
+  style = {
+    strokeWidth: STROKE_WIDTH_DEFAULT,
+    strokeColor: STROKE_COLOR_DEFAULT,
+  },
 }: CreateLineSegmentModel): LineSegmentModel => {
   const obj: LineSegmentModel = {
     id: crypto.randomUUID(),
@@ -20,10 +28,7 @@ export const createLineSegmentModel = ({
     end,
     radius,
     length: 0,
-    style: {
-      strokeWidth: 2,
-      strokeColor: "#1d12e3",
-    },
+    style,
   };
 
   obj.length = getLength(obj);

@@ -32,6 +32,7 @@ export type {
   Listener,
   DrawingState,
   DrawingEngine,
+  EditorState,
 } from "./core/types";
 
 export type {

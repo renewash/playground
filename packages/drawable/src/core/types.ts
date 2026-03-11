@@ -14,6 +14,10 @@ export type DrawingMode = "idle" | "drawing";
 export type ObjectTable = Record<string, DrawableObject>;
 export type ChildToParentMap = Record<string, string | null>;
 
+export interface TransientSnapshot {
+  version: number;
+  inProgressObject: DrawableObject | null;
+}
 export interface DrawingState {
   objects: ObjectTable;
   childToParentMap: ChildToParentMap;
@@ -30,6 +34,9 @@ export type Listener = () => void;
 export interface DrawingEngine {
   getState(): DrawingState;
   getEditorState(): EditorState;
+  setStrokeColor(color: string): void;
+  setStrokeWidth(width: number): void;
+
   getTool(): DrawingTool;
   pickTool(tool: ToolType): void;
   setTool(tool: DrawingTool): void;
