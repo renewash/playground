@@ -63,6 +63,7 @@ export interface DrawingEngine {
   getNode(nodeId: string): DrawableObject | null;
 
   commitObject(): void;
+  addObject(object: DrawableObject): void;
   deleteObjectById(id: string): void;
 
   // mutations to inProgressObject

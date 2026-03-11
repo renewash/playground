@@ -226,26 +226,35 @@ export function createDrawingEngine(
 
     commitObject() {
       if (!inProgressObject) return;
-      const { id } = inProgressObject;
+      this.addObject(inProgressObject);
 
-      if ("area" in inProgressObject) {
-        inProgressObject.area = getArea(inProgressObject);
+      inProgressObject = null;
+      emitInProgressUpdates();
+    },
+
+    addObject(object) {
+      if (!object) {
+        console.warn("Attempting to add null object");
+        return;
       }
-      if ("length" in inProgressObject) {
-        inProgressObject.length = getLength(inProgressObject);
+
+      const { id } = object;
+
+      if ("area" in object) {
+        object.area = getArea(object);
+      }
+      if ("length" in object) {
+        object.length = getLength(object);
       }
 
       state = {
         ...state,
-        objects: { ...state.objects, [id]: inProgressObject },
+        objects: { ...state.objects, [id]: object },
         childToParentMap: { ...state.childToParentMap, [id]: null },
       };
+      history.execute(new AddObjectCommand(object), this);
 
-      history.execute(new AddObjectCommand(inProgressObject), this);
       emit();
-
-      inProgressObject = null;
-      emitInProgressUpdates();
     },
 
     deleteObjectById(id) {
