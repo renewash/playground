@@ -1,8 +1,9 @@
 import { useScene } from "@repo/drawable/react";
 import SharpBorder from "@/components/SharpBorder";
 import ObjectInfoBox from "./ObjectInfoBox";
+import { DrawingEngine } from "@repo/drawable";
 
-const DrawnData = ({ engine }) => {
+const DrawnData = ({ engine }: { engine: DrawingEngine }) => {
   const state = useScene(engine);
 
   return (

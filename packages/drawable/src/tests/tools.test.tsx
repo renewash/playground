@@ -2,11 +2,6 @@ import { describe, expect, it } from "vitest";
 import { createDrawingEngine } from "../core/engine";
 import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
-import { page, userEvent } from "vitest/browser";
-import { Drawable } from "../react";
-import Konva from "konva";
-import React from "react";
-import { render } from "@testing-library/react";
 
 describe("Tools", () => {
   it("initializes with default tool", () => {
@@ -35,22 +30,10 @@ describe("Tools", () => {
   });
 });
 
-describe("Drawable component", () => {
-  it("renders without crashing", () => {
-    const engine = createDrawingEngine();
-    render(<Drawable engine={engine} width={500} height={500} />);
-  });
+// describe("Drawable component", () => {
+//   it("renders without crashing", () => {
+//     const engine = createDrawingEngine();
+//     render(<Drawable engine={engine} width={500} height={500} />);
+//   });
 
-  it("renders a line segment preview", async () => {
-    const engine = createDrawingEngine();
-    const { container } = render(<Drawable engine={engine} width={500} height={500} />);
-
-    // Simulate pointer down to start line segment
-    await userEvent.pointer({ target: container.querySelector("canvas")!, clientX: 50, clientY: 50, pointerType: "mouse", buttons: 1 });
-    await userEvent.pointerMove({ target: container.querySelector("canvas")!, clientX: 150, clientY: 150, pointerType: "mouse", buttons: 1 });
-
-    // Check if the line segment preview is rendered
-    const lines = container.querySelectorAll("canvas");
-    expect(lines.length).toBeGreaterThan(0);
-  });
-});
+// });

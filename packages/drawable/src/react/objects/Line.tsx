@@ -1,10 +1,10 @@
 import { Line } from "react-konva";
-import type { DrawableObject, FreeFormLineModel } from "../..";
+import type { DrawableObject, FreeDrawModel } from "../..";
 
 export const FreeDraw = ({
   model,
 }: {
-  model: DrawableObject | FreeFormLineModel | null;
+  model: DrawableObject | FreeDrawModel | null;
 }) => {
   if (!model || model.type != "freeDraw") return null;
 

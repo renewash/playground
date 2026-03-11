@@ -1,6 +1,8 @@
 import { useScene, useInProgressObject } from "@repo/drawable/react";
 import SharpBorder from "@/components/SharpBorder";
-const TotalArea = ({ engine }) => {
+import { DrawingEngine } from "@repo/drawable";
+
+const TotalArea = ({ engine }: { engine: DrawingEngine }) => {
   const state = useScene(engine);
   const inProgressObject = useInProgressObject(engine);
 

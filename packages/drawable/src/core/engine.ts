@@ -13,7 +13,7 @@ import { DrawableObject } from "../geometry/types";
 import { createLineModel } from "../geometry/domain/LineModel";
 import { createCircleModel } from "../geometry/domain/CircleModel";
 import { createLineSegmentModel } from "../geometry/domain/LineSegmentModel";
-import { createFreeFormLineModel } from "../geometry/domain/FreeDrawModel";
+import { createFreeDrawModel } from "../geometry/domain/FreeDrawModel";
 import { getArea, getLength } from "./measure";
 import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
@@ -70,8 +70,17 @@ export function createDrawingEngine(
     inProgressUpdates++;
 
     // only update version so that inProgressObject reference is preserved for better performance in react-konva.
-    transientSnapshot = { version: inProgressUpdates, inProgressObject };
-    transientListeners.forEach((l) => l());
+    if (!inProgressObject) {
+      transientSnapshot = {
+        version: inProgressUpdates,
+        inProgressObject: null,
+      };
+      transientListeners.forEach((l) => l());
+      return;
+    }
+
+    // transientSnapshot = { version: inProgressUpdates, inProgressObject };
+    // transientListeners.forEach((l) => l());
   };
 
   return {
@@ -88,7 +97,8 @@ export function createDrawingEngine(
     },
 
     pickTool(toolName) {
-      this.setTool(toolSet[toolName]);
+      const tool = toolName as keyof typeof toolSet;
+      this.setTool(toolSet[tool]);
     },
 
     setTool(tool) {
@@ -202,7 +212,7 @@ export function createDrawingEngine(
     },
 
     createFreeFormLine(point) {
-      inProgressObject = createFreeFormLineModel({ points: point });
+      inProgressObject = createFreeDrawModel({ points: point });
 
       this._startDrawing();
       emitInProgressUpdates();

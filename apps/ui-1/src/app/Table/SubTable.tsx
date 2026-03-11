@@ -12,7 +12,7 @@ type Template = {
   name: string;
 };
 
-const SubTable = ({ parentRow }) => {
+const SubTable = ({ parentRow }: { parentRow: { templates: Template[] } }) => {
   const templates = parentRow.templates;
   const data = useMemo(() => templates, [templates]);
 

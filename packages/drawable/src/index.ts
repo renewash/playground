@@ -1,5 +1,12 @@
 export { createDrawingEngine } from "./core/engine";
 
+export { getArea, getLength, calculateDefaultPosition } from "./core/measure";
+
+// === Domain ===
+export { createCircleModel } from "./geometry/domain/CircleModel";
+export { createLineSegmentModel } from "./geometry/domain/LineSegmentModel";
+export { createFreeDrawModel } from "./geometry/domain/FreeDrawModel";
+
 // === Geometry ===
 export {
   calculateArea,
@@ -30,7 +37,7 @@ export type {
 export type {
   Point,
   DrawableObject,
-  FreeFormLineModel,
+  FreeDrawModel,
   LineModel,
   LineSegmentModel,
   CircleModel,

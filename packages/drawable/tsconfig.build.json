@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"],
+  // "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.tsx"],
+  //   "exclude": ["node_modules", "dist"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "**/__tests__", // Exclude common test folder names
+    "**/tests" // Exclude common test folder names
+  ]
+}

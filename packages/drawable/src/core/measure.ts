@@ -51,9 +51,9 @@ export const calculateDefaultPosition = (
     case "lineSegment":
       return [obj.start[0] - offSetX, obj.start[1] - offSetY];
     case "freeDraw":
-      return obj.points.length >= 2
-        ? [obj.points[0] - offSetX, obj.points[1] - offSetY]
-        : [0, 0];
+      if (obj.points.length < 2) return [0, 0];
+
+      return [obj.points[0]! - offSetX, obj.points[1]! - offSetY];
     case "circle":
       return [obj.center[0], obj.center[1] - obj.radius - offSetY];
     default:

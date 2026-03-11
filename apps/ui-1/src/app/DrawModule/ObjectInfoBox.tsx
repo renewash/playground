@@ -1,9 +1,17 @@
+import type { DrawingEngine, DrawableObject } from "@repo/drawable";
+
 const ObjectInfoBox = ({
   drawableObject,
   engine,
   index = "",
   className = "",
   ...rest
+}: {
+  drawableObject: DrawableObject;
+  engine: DrawingEngine;
+  index?: string;
+  className?: string;
+  [key: string]: any;
 }) => {
   const area =
     drawableObject && "area" in drawableObject ? drawableObject.area : 0;

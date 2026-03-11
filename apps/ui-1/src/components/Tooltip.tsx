@@ -1,4 +1,10 @@
-const Tooltip = ({ children, content }) => {
+const Tooltip = ({
+  children,
+  content,
+}: {
+  children: React.ReactNode;
+  content: string;
+}) => {
   return (
     // The parent container is set as a 'group' and 'relative'
     <div className="group relative flex justify-center">
