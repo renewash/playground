@@ -21,6 +21,9 @@ export function createFreeDrawTool(): DrawingTool {
     },
 
     onPointerUp(_, ctx) {
+      const pos = ctx.getPointerPosition();
+      if (!pos) return;
+      ctx.engine.appendPointToFreeFormLine([pos.x, pos.y]);
       ctx.engine.commitObject();
     },
 

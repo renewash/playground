@@ -39,6 +39,7 @@ export function createPolygonSegmentTool(): DrawingTool {
       const penultimatePoint = object.points[object.points.length - 4];
       const currentPointSameAsLastPoint =
         penultimatePoint === pos.x && lastPoint === pos.y;
+
       if (currentPointSameAsLastPoint) return;
 
       ctx.engine.replaceLastPointOfPolygonSegment([pos.x, pos.y]);
@@ -60,8 +61,18 @@ export function createPolygonSegmentTool(): DrawingTool {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
 
+      const object = ctx.engine.getInProgressObject();
+      // if (?.type !== "polygonSegment") {
+
+      if (
+        !object ||
+        object.type !== "polygonSegment" ||
+        object.points.length < 4
+      )
+        return;
+
       ctx.engine.removeLastPointOfPolygonSegment();
-      ctx.engine.replaceLastPointOfPolygonSegment([pos.x, pos.y]);
+      ctx.engine.appendPointToPolygonSegment([pos.x, pos.y]);
 
       ctx.engine.commitObject();
       firstPoint = null;
@@ -89,8 +100,6 @@ export function createPolygonSegmentTool(): DrawingTool {
       const { style } = ctx.engine.getEditorState();
       const strokeColor = style.strokeColor || "black";
       const strokeWidth = style.strokeWidth || 1;
-
-      console.log("Rendering preview for polygon segment with area:", obj);
 
       const line = new Konva.Line({
         points: obj.points,

@@ -23,6 +23,14 @@ const EditorControls = ({ engine }: { engine: DrawingEngine }) => {
           <RedoIcon />
         </button>
       </Tooltip>
+      <Tooltip content={"Reset"}>
+        <button
+          className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-300`}
+          onClick={() => engine.clear()}
+        >
+          Reset
+        </button>
+      </Tooltip>
     </>
   );
 };

@@ -420,5 +420,9 @@ export function createDrawingEngine(
       inProgressObject = null;
       emitInProgressUpdates();
     },
+
+    serializeState() {
+      return JSON.stringify(state);
+    },
   };
 }

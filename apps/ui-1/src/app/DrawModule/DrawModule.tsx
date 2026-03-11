@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
-import { createDrawingEngine } from "@repo/drawable";
+import { createDrawingEngine, DrawingState } from "@repo/drawable";
 import { Drawable } from "@repo/drawable/react";
 
 import SharpBorder from "@/components/SharpBorder";
@@ -11,11 +11,25 @@ import ShapeControls from "./ShapeControls";
 import ColorPicker from "./ColorPicker";
 import ActionControls from "./ActionControls";
 import StylingControls from "./StylingControls";
+import useLocalStorage from "./useLocalStorage";
 
 const DrawModule = () => {
   const width = 500;
   const height = 550;
-  const engine = useMemo(() => createDrawingEngine(), []);
+  const [serializedState, setSerializedState] = useLocalStorage<DrawingState>(
+    "drawingState",
+    { objects: {}, childToParentMap: {} },
+  );
+
+  const engine = useMemo(() => createDrawingEngine(serializedState), []);
+
+  useEffect(() => {
+    const saveStateOnDismount = () => {
+      const state = engine.getState();
+      setSerializedState(state);
+    };
+    return saveStateOnDismount;
+  }, [engine]);
 
   return (
     <div>
@@ -40,11 +54,11 @@ const DrawModule = () => {
             <ShapeControls engine={engine} />
           </div>
 
-          <div className="mt-2">Undo and Redo</div>
+          <div className="mt-2">Actions</div>
           <div className="flex gap-2 pt-1 pb-2">
             <ActionControls engine={engine} />
           </div>
-          <div className="mt-2">Border Width</div>
+          <div className="mt-2">Style</div>
 
           <div className="flex gap-2 pt-1 pb-2">
             <StylingControls engine={engine} />

@@ -100,4 +100,6 @@ export interface DrawingEngine {
   undo(): void;
   redo(): void;
   clear(): void;
+
+  serializeState(): string;
 }

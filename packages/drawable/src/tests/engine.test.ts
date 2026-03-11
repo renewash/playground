@@ -111,3 +111,28 @@ describe("DrawingEngine - Complex Scenarios", () => {
     expect(state.objects[freeDraw.id]).toEqual(freeDraw);
   });
 });
+
+describe("DrawingEngine - State", () => {
+  it("clears the scene", () => {
+    const engine = createDrawingEngine();
+    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+
+    engine.addObject(line);
+    engine.clear();
+
+    const state = engine.getState();
+    expect(Object.keys(state.objects).length).toBe(0);
+  });
+
+  it("serializes and deserializes state correctly", () => {
+    const engine = createDrawingEngine();
+    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    engine.addObject(line);
+
+    const serializedState = engine.serializeState();
+    const deserializedState = JSON.parse(serializedState);
+
+    expect(deserializedState).toHaveProperty("objects");
+    expect(deserializedState.objects[line.id]).toEqual(line);
+  });
+});
