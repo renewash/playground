@@ -1,4 +1,4 @@
-import { DrawingEngine } from "../core/types";
+import { DrawingEngine } from "../../core/types";
 
 export const undoRedoShortcut =
   (engine: DrawingEngine) => (e: KeyboardEvent) => {

@@ -7,7 +7,7 @@ import Konva from "konva";
 import type { DrawingEngine, ToolContext } from "..";
 import { useScene, LineSegment, FreeDraw, Label } from "./";
 
-import { undoRedoShortcut } from "./keyShortcuts";
+import { undoRedoShortcut } from "./helpers/keyShortcuts";
 
 interface Props {
   engine: DrawingEngine;

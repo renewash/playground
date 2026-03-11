@@ -29,7 +29,7 @@ const DrawModule = () => {
       </SharpBorder>
       <div className="flex gap-10">
         {/* <SharpBorder className={`mb-4 max-h-[${height}px] px-2 py-4`}> */}
-        <SharpBorder className={`mb-4 max-h-137.5 px-2 py-4`}>
+        <SharpBorder className={`mb-4 max-h-137.5`}>
           <Drawable engine={engine} width={width} height={height} />
         </SharpBorder>
 
