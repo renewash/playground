@@ -7,9 +7,15 @@ export type ModelTypes =
   | "lineSegment"
   | "lineWithMarkers";
 
+export type ShapeStyle = {
+  strokeWidth: number;
+  strokeColor: string;
+};
+
 interface BaseModel {
   id: string;
   type: ModelTypes;
+  style: ShapeStyle;
 }
 
 export interface LineModel extends BaseModel {
@@ -37,7 +43,6 @@ export interface CircleModel extends BaseModel {
   type: "circle";
   center: Point;
   radius: number;
-  area: number;
 }
 export interface LineWithMarkersModel extends BaseModel {
   type: "lineWithMarkers";

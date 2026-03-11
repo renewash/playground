@@ -22,8 +22,6 @@ const DrawModule = () => {
   const engine = useMemo(() => createDrawingEngine(), []);
   const editorState = useEditor(engine);
 
-  console.log("editorState has changed", editorState);
-
   return (
     <div>
       <SharpBorder className="mb-8 w-1/2 px-2 py-4 text-3xl font-semibold">

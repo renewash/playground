@@ -39,6 +39,10 @@ export function createDrawingEngine(
   let editorState: EditorState = {
     mode: "idle",
     tool: createLineSegmentTool(),
+    style: {
+      strokeWidth: 3,
+      strokeColor: "#8e2d9a",
+    },
   };
 
   const toolSet = {
@@ -69,7 +73,6 @@ export function createDrawingEngine(
     transientSnapshot = { version: inProgressUpdates, inProgressObject };
     transientListeners.forEach((l) => l());
   };
-  console.log(toolSet);
 
   return {
     getState() {
@@ -245,8 +248,9 @@ export function createDrawingEngine(
       emitInProgressUpdates();
     },
 
-    deleteObject(object) {
-      history.execute(new DeleteObjectCommand(object), this);
+    deleteObjectById(id) {
+      const node = this.getNode(id);
+      history.execute(new DeleteObjectCommand(node), this);
       emit();
     },
 

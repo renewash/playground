@@ -20,6 +20,10 @@ export const createLineSegmentModel = ({
     end,
     radius,
     length: 0,
+    style: {
+      strokeWidth: 2,
+      strokeColor: "#1d12e3",
+    },
   };
 
   obj.length = getLength(obj);

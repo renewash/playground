@@ -22,13 +22,10 @@ export class DeleteObjectCommand implements Command {
   constructor(private object: DrawableObject) {}
 
   undo(engine: DrawingEngine) {
-    console.log("am undo delete");
     engine._addObject(this.object);
   }
 
   do(engine: DrawingEngine) {
-    console.log("am deleting");
-
     engine._removeObject(this.object.id);
   }
 }

@@ -15,5 +15,9 @@ export const createLineModel = ({
     start,
     end,
     length: 0,
+    style: {
+      strokeWidth: 2,
+      strokeColor: "#1d12e3",
+    },
   };
 };

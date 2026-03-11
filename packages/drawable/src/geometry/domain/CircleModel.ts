@@ -14,6 +14,9 @@ export const createCircleModel = ({
     type: "circle",
     center,
     radius,
-    area: 0,
+    style: {
+      strokeWidth: 2,
+      strokeColor: "#1d12e3",
+    },
   };
 };

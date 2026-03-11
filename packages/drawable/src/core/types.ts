@@ -1,6 +1,11 @@
 // drawing/core/types.ts
 
-import { DrawableObject, Point, ModelTypes } from "../geometry/types";
+import {
+  DrawableObject,
+  Point,
+  ModelTypes,
+  ShapeStyle,
+} from "../geometry/types";
 import { DrawingTool } from "../tools/types";
 
 export type ToolType = ModelTypes;
@@ -17,6 +22,7 @@ export interface DrawingState {
 export interface EditorState {
   mode: DrawingMode;
   tool: DrawingTool;
+  style: ShapeStyle;
 }
 
 export type Listener = () => void;
@@ -57,7 +63,7 @@ export interface DrawingEngine {
   getNode(nodeId: string): DrawableObject | null;
 
   commitObject(): void;
-  deleteObject(object: DrawableObject): void;
+  deleteObjectById(id: string): void;
 
   // mutations to inProgressObject
   createStraightline(point: Point): void;

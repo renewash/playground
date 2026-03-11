@@ -20,7 +20,7 @@ const ObjectInfoBox = ({
           {index} {drawableObject.type}
         </span>
         <button
-          onClick={() => engine.deleteObject(drawableObject.id)}
+          onClick={() => engine.deleteObjectById(drawableObject.id)}
           className="cursor-pointer hover:underline"
         >
           Delete
