@@ -23,10 +23,15 @@ export interface DrawingState {
   childToParentMap: ChildToParentMap;
 }
 
+export type ToolSet = {
+  [key in ToolType]: DrawingTool;
+};
+
 export interface EditorState {
   mode: DrawingMode;
   tool: DrawingTool;
   style: ShapeStyle;
+  editable: boolean;
 }
 
 export type Listener = () => void;
@@ -36,6 +41,7 @@ export interface DrawingEngine {
   getEditorState(): EditorState;
   setStrokeColor(color: string): void;
   setStrokeWidth(width: number): void;
+  toggleEditable(): void;
 
   getTool(): DrawingTool;
   pickTool(tool: ToolType): void;
@@ -70,7 +76,7 @@ export interface DrawingEngine {
   getNode(nodeId: string): DrawableObject | null;
 
   commitObject(): void;
-  addObject(object: DrawableObject): void;
+  // addObject(object: DrawableObject): void;
   deleteObjectById(id: string): void;
 
   // mutations to inProgressObject

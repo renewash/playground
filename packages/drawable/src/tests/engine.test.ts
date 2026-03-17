@@ -16,7 +16,7 @@ describe("DrawingEngine", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
 
-    engine.addObject(line);
+    engine._addObject(line);
     const state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(1);
     expect(state.objects[line.id]).toEqual(line);
@@ -26,7 +26,7 @@ describe("DrawingEngine", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
 
-    engine.addObject(line);
+    engine._addObject(line);
     engine.deleteObjectById(line.id);
     const state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(0);
@@ -36,7 +36,7 @@ describe("DrawingEngine", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
 
-    engine.addObject(line);
+    engine._addObject(line);
     engine.undo();
     const state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(0);
@@ -46,7 +46,7 @@ describe("DrawingEngine", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
 
-    engine.addObject(line);
+    engine._addObject(line);
     engine.undo();
     engine.redo();
     const state = engine.getState();
@@ -79,9 +79,9 @@ describe("DrawingEngine - Complex Scenarios", () => {
     const line2 = createLineSegmentModel({ start: [1, 1], end: [2, 2] });
     const freeDraw = createFreeDrawModel({ points: [0, 0, 0.5, 0.5, 1, 1] });
 
-    engine.addObject(line1);
-    engine.addObject(line2);
-    engine.addObject(freeDraw);
+    engine._addObject(line1);
+    engine._addObject(line2);
+    engine._addObject(freeDraw);
 
     let state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(3);
@@ -117,7 +117,7 @@ describe("DrawingEngine - State", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
 
-    engine.addObject(line);
+    engine._addObject(line);
     engine.clear();
 
     const state = engine.getState();
@@ -127,7 +127,7 @@ describe("DrawingEngine - State", () => {
   it("serializes and deserializes state correctly", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
-    engine.addObject(line);
+    engine._addObject(line);
 
     const serializedState = engine.serializeState();
     const deserializedState = JSON.parse(serializedState);

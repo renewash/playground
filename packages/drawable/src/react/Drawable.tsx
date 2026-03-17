@@ -1,4 +1,4 @@
-// drawing/konva/Drawable.tsx
+// drawing/react/Drawable.tsx
 
 import React, { useEffect, useMemo, useRef } from "react";
 import { Stage, Layer, Group } from "react-konva";
@@ -70,19 +70,27 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   }, [ctx, engine]);
 
   const handlePointerDown = (e: Konva.KonvaEventObject<PointerEvent>) => {
+    if (!engine.getEditorState().editable) return;
+
     toolRef.current = engine.getTool();
     toolRef.current?.onPointerDown?.(e.evt, ctx);
   };
 
   const handlePointerMove = (e: Konva.KonvaEventObject<PointerEvent>) => {
+    if (!engine.getEditorState().editable) return;
+
     toolRef.current?.onPointerMove?.(e.evt, ctx);
   };
 
   const handlePointerUp = (e: Konva.KonvaEventObject<PointerEvent>) => {
+    if (!engine.getEditorState().editable) return;
+
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
 
   const handleDoubleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+    if (!engine.getEditorState().editable) return;
+
     toolRef.current?.onDoubleClick?.(e.evt, ctx);
   };
 

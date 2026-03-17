@@ -42,7 +42,7 @@ export type {
   LineModel,
   LineSegmentModel,
   CircleModel,
-  LineWithMarkersModel,
+  PolygonSegmentModel,
 } from "./geometry/types";
 
 export type { DrawingTool, ToolContext } from "./tools/types";

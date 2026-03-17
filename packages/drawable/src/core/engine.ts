@@ -9,6 +9,8 @@ import type {
   DrawingEngine,
   EditorState,
   TransientSnapshot,
+  ToolType,
+  ToolSet,
 } from "./types";
 
 import { DrawableObject } from "../geometry/types";
@@ -24,6 +26,12 @@ import { createPolygonSegmentTool } from "../tools/polygonSegmentTool";
 
 import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../constants";
 
+interface CreateDrawingEngineOptions {
+  initialState?: Partial<DrawingState>;
+  initialTool?: ToolType;
+  editable?: boolean;
+}
+
 /**
  * Holds internal state of canvas and defines mutation logic.
  * This engine manages objects and drawings.
@@ -33,28 +41,32 @@ import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../constants";
  * @param initial - Optional starting state for the engine.
  * @returns A fresh DrawingEngine instance.
  */
-export function createDrawingEngine(
-  initial?: Partial<DrawingState>,
-): DrawingEngine {
+export function createDrawingEngine({
+  initialState = {},
+  initialTool = "lineSegment",
+  editable = true,
+}: CreateDrawingEngineOptions = {}): DrawingEngine {
   let state: DrawingState = {
     objects: {},
     childToParentMap: {},
-    ...initial,
+    ...initialState,
+  };
+
+  // TODO: fix design so tools are registered outside of the engine and this fallback is not necessary
+  const toolSet: Partial<ToolSet> = {
+    freeDraw: createFreeDrawTool(),
+    lineSegment: createLineSegmentTool(),
+    polygonSegment: createPolygonSegmentTool(),
   };
 
   let editorState: EditorState = {
     mode: "idle",
-    tool: createLineSegmentTool(),
+    tool: toolSet[initialTool] || createLineSegmentTool(),
     style: {
       strokeWidth: STROKE_WIDTH_DEFAULT,
       strokeColor: STROKE_COLOR_DEFAULT,
     },
-  };
-
-  const toolSet = {
-    freeDraw: createFreeDrawTool(),
-    lineSegment: createLineSegmentTool(),
-    polygonSegment: createPolygonSegmentTool(),
+    editable,
   };
 
   const history = new History();
@@ -111,13 +123,22 @@ export function createDrawingEngine(
       emitEditorUpdate();
     },
 
+    toggleEditable() {
+      editorState = {
+        ...editorState,
+        editable: !editorState.editable,
+      };
+      emitEditorUpdate();
+    },
+
     getTool() {
       return editorState.tool;
     },
 
     pickTool(toolName) {
       const tool = toolName as keyof typeof toolSet;
-      this.setTool(toolSet[tool]);
+      // TODO: fix design so this fallback is not necessary
+      this.setTool(toolSet[tool] ?? createLineSegmentTool());
     },
 
     setTool(tool) {
@@ -325,37 +346,14 @@ export function createDrawingEngine(
 
     commitObject() {
       if (!inProgressObject) return;
-      this.addObject(inProgressObject);
+
+      history.execute(new AddObjectCommand(inProgressObject), this);
+      emit();
 
       inProgressObject = null;
       this._stopDrawing();
 
       emitInProgressUpdates();
-    },
-
-    addObject(object) {
-      if (!object) {
-        console.warn("Attempting to add null object");
-        return;
-      }
-
-      const { id } = object;
-
-      if ("area" in object) {
-        object.area = getArea(object);
-      }
-      if ("length" in object) {
-        object.length = getLength(object);
-      }
-
-      state = {
-        ...state,
-        objects: { ...state.objects, [id]: object },
-        childToParentMap: { ...state.childToParentMap, [id]: null },
-      };
-      history.execute(new AddObjectCommand(object), this);
-
-      emit();
     },
 
     deleteObjectById(id) {
@@ -376,7 +374,19 @@ export function createDrawingEngine(
     },
 
     _addObject(object) {
+      if (!object) {
+        console.warn("Attempting to add null object");
+        return;
+      }
+
       const { id } = object;
+
+      if ("area" in object) {
+        object.area = getArea(object);
+      }
+      if ("length" in object) {
+        object.length = getLength(object);
+      }
 
       state = {
         ...state,

@@ -16,20 +16,11 @@ import useLocalStorage from "./useLocalStorage";
 const DrawModule = () => {
   const width = 500;
   const height = 550;
-  const [serializedState, setSerializedState] = useLocalStorage<DrawingState>(
-    "drawingState",
-    { objects: {}, childToParentMap: {} },
+
+  const engine = useMemo(
+    () => createDrawingEngine({ initialTool: "polygonSegment" }),
+    [],
   );
-
-  const engine = useMemo(() => createDrawingEngine(serializedState), []);
-
-  useEffect(() => {
-    const saveStateOnDismount = () => {
-      const state = engine.getState();
-      setSerializedState(state);
-    };
-    return saveStateOnDismount;
-  }, [engine]);
 
   return (
     <div>

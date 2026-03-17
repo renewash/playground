@@ -4,8 +4,7 @@ import Tooltip from "@/components/Tooltip";
 
 import PolygonWithMarkersIcon from "@/icons/PolygonWithMarkersIcon";
 import LineSegmentIcon from "@/icons/LineSegmentIcon";
-import UndoIcon from "@/icons/UndoIcon";
-import RedoIcon from "@/icons/RedoIcon";
+
 import type { DrawingEngine } from "@repo/drawable";
 import { useEditor } from "@repo/drawable/react";
 
