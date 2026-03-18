@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
-import { createDrawingEngine, DrawingState } from "@repo/drawable";
+import { createDrawingEngine } from "@repo/drawable";
 import { Drawable } from "@repo/drawable/react";
 
 import SharpBorder from "@/components/SharpBorder";
@@ -11,7 +11,7 @@ import ShapeControls from "./ShapeControls";
 import ColorPicker from "./ColorPicker";
 import ActionControls from "./ActionControls";
 import StylingControls from "./StylingControls";
-import useLocalStorage from "./useLocalStorage";
+import SaveControls from "./SaveControls";
 
 const DrawModule = () => {
   const width = 500;
@@ -53,6 +53,11 @@ const DrawModule = () => {
 
           <div className="flex gap-2 pt-1 pb-2">
             <StylingControls engine={engine} />
+          </div>
+
+          <div className="mt-2">State saving</div>
+          <div className="flex gap-2 pt-1 pb-2">
+            <SaveControls engine={engine} />
           </div>
 
           <div className="py-3">

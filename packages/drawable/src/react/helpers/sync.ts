@@ -1,4 +1,4 @@
-// drawing/react/useScene.ts
+// drawing/react/sync.ts
 
 import { useSyncExternalStore } from "react";
 import type {

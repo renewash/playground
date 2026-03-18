@@ -107,5 +107,6 @@ export interface DrawingEngine {
   redo(): void;
   clear(): void;
 
-  serializeState(): string;
+  getSerializedState(): string;
+  setSerializedState(serializedState: string): void;
 }

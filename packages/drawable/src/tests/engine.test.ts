@@ -129,7 +129,7 @@ describe("DrawingEngine - State", () => {
     const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
     engine._addObject(line);
 
-    const serializedState = engine.serializeState();
+    const serializedState = engine.getSerializedState();
     const deserializedState = JSON.parse(serializedState);
 
     expect(deserializedState).toHaveProperty("objects");

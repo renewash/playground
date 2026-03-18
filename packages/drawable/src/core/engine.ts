@@ -347,6 +347,8 @@ export function createDrawingEngine({
     commitObject() {
       if (!inProgressObject) return;
 
+      // TODO: deep clone inProgressObject to prevent future mutations from affecting the commited object
+      // can do something like const finalized = finalizeObject(inProgressObject);
       history.execute(new AddObjectCommand(inProgressObject), this);
       emit();
 
@@ -431,8 +433,21 @@ export function createDrawingEngine({
       emitInProgressUpdates();
     },
 
-    serializeState() {
+    getSerializedState() {
       return JSON.stringify(state);
+    },
+
+    setSerializedState(serializedState) {
+      try {
+        const parsedState = JSON.parse(serializedState);
+        state = {
+          ...state,
+          ...parsedState,
+        };
+        emit();
+      } catch (e) {
+        console.error("Failed to parse serialized state:", e);
+      }
     },
   };
 }
