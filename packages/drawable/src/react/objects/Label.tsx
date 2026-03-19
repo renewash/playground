@@ -36,8 +36,8 @@ export const Label = <T extends DrawableObject>({
 
   return (
     <KonvaLabel
-      x={finalPosition[0]}
-      y={finalPosition[1]}
+      x={finalPosition.x}
+      y={finalPosition.y}
       width={width}
       height={height}
     >

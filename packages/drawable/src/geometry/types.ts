@@ -1,4 +1,5 @@
-export type Point = [number, number];
+export type Point = { x: number; y: number };
+export type Points = Point[];
 
 export type ModelTypes =
   | "line"
@@ -35,7 +36,8 @@ export interface LineSegmentModel extends BaseModel {
 
 export interface FreeDrawModel extends BaseModel {
   type: "freeDraw";
-  points: number[];
+  points: Points;
+  pixelPoints: number[];
   area: number;
 }
 
@@ -46,7 +48,7 @@ export interface CircleModel extends BaseModel {
 }
 export interface PolygonSegmentModel extends BaseModel {
   type: "polygonSegment";
-  points: number[];
+  points: Points;
   radius: number;
   area: number;
 }

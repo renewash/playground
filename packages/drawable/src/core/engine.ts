@@ -261,9 +261,9 @@ export function createDrawingEngine({
       emitInProgressUpdates();
     },
 
-    createFreeFormLine(point) {
+    createFreeFormLine(points) {
       inProgressObject = createFreeDrawModel({
-        points: point,
+        points,
         style: editorState.style,
       });
 
@@ -275,13 +275,19 @@ export function createDrawingEngine({
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
       inProgressObject.area = getArea(inProgressObject);
 
-      inProgressObject.points.push(...point);
+      inProgressObject.points.push(point);
+      inProgressObject.pixelPoints.push(point.x, point.y);
+
       emitInProgressUpdates();
     },
 
     setFreeFormLine(points) {
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
       inProgressObject.points = points;
+      inProgressObject.pixelPoints = points.flatMap((point) => [
+        point.x,
+        point.y,
+      ]);
       inProgressObject.area = getArea(inProgressObject);
 
       emitInProgressUpdates();
@@ -289,7 +295,7 @@ export function createDrawingEngine({
 
     createPolygonSegment(points, radius) {
       inProgressObject = createPolygonSegmentModel({
-        points: points,
+        points,
         radius,
         style: editorState.style,
       });
@@ -300,7 +306,7 @@ export function createDrawingEngine({
       if (!inProgressObject || inProgressObject.type !== "polygonSegment")
         return;
 
-      inProgressObject.points.push(...point);
+      inProgressObject.points.push(point);
       inProgressObject.area = getArea(inProgressObject);
 
       emitInProgressUpdates();
@@ -324,9 +330,7 @@ export function createDrawingEngine({
       const n = inProgressObject.points.length;
       if (n < 2) return;
 
-      inProgressObject.points[n - 1] = point[1];
-      inProgressObject.points[n - 2] = point[0];
-
+      inProgressObject.points[n - 1] = point;
       inProgressObject.area = getArea(inProgressObject);
       emitInProgressUpdates();
     },
@@ -339,14 +343,13 @@ export function createDrawingEngine({
       if (n < 2) return;
 
       inProgressObject.points.pop();
-      inProgressObject.points.pop();
       inProgressObject.area = getArea(inProgressObject);
       emitInProgressUpdates();
     },
 
     commitObject() {
       if (!inProgressObject) return;
-
+      console.log("this is in", inProgressObject);
       // TODO: deep clone inProgressObject to prevent future mutations from affecting the commited object
       // can do something like const finalized = finalizeObject(inProgressObject);
       history.execute(new AddObjectCommand(inProgressObject), this);
@@ -369,7 +372,7 @@ export function createDrawingEngine({
       emit();
     },
 
-    cancelShape() {
+    cancelDrawing() {
       inProgressObject = null;
       this._stopDrawing();
       emit();

@@ -11,19 +11,23 @@ export function createFreeDrawTool(): DrawingTool {
     onPointerDown(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.createFreeFormLine([pos.x, pos.y]);
+      const { x, y } = pos;
+      ctx.engine.createFreeFormLine([{ x, y }]);
     },
 
     onPointerMove(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.appendPointToFreeFormLine([pos.x, pos.y]);
+      const { x, y } = pos;
+      ctx.engine.appendPointToFreeFormLine({ x, y });
     },
 
     onPointerUp(_, ctx) {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
-      ctx.engine.appendPointToFreeFormLine([pos.x, pos.y]);
+      const { x, y } = pos;
+
+      ctx.engine.appendPointToFreeFormLine({ x, y });
       ctx.engine.commitObject();
     },
 
@@ -32,10 +36,10 @@ export function createFreeDrawTool(): DrawingTool {
 
       if (obj.type !== "freeDraw") return;
 
-      const position = calculateDefaultPosition(obj, 100, 30);
+      const { x, y } = calculateDefaultPosition(obj, 100, 30);
       const value = String(obj["area"]);
 
-      const label = new Konva.Label({ x: position[0], y: position[1] });
+      const label = new Konva.Label({ x, y });
       const tag = new Konva.Tag({ opacity: 1 });
       const text = new Konva.Text({
         text: value,
@@ -51,7 +55,7 @@ export function createFreeDrawTool(): DrawingTool {
       const strokeWidth = style.strokeWidth || 1;
 
       const line = new Konva.Line({
-        points: obj.points,
+        points: obj.pixelPoints,
         stroke: strokeColor,
         strokeWidth: strokeWidth,
         lineCap: "round",

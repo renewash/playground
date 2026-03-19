@@ -1,4 +1,4 @@
-import { PolygonSegmentModel, ShapeStyle } from "../types";
+import { Points, PolygonSegmentModel, ShapeStyle } from "../types";
 import {
   STROKE_COLOR_DEFAULT,
   STROKE_WIDTH_DEFAULT,
@@ -7,7 +7,7 @@ import {
 import { calculateArea } from "../..";
 
 interface CreatePolygonSegmentModel {
-  points: number[];
+  points: Points;
   radius?: number;
   style?: ShapeStyle;
 }

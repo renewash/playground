@@ -14,7 +14,10 @@ describe("DrawingEngine", () => {
 
   it("adds an object to the scene", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    const line = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
 
     engine._addObject(line);
     const state = engine.getState();
@@ -24,7 +27,10 @@ describe("DrawingEngine", () => {
 
   it("deletes an object from the scene", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    const line = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
 
     engine._addObject(line);
     engine.deleteObjectById(line.id);
@@ -34,17 +40,25 @@ describe("DrawingEngine", () => {
 
   it("undoes an action", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    const line = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
 
     engine._addObject(line);
+    console.log("line", line, engine.getState());
     engine.undo();
     const state = engine.getState();
+    console.log("state after undo", state);
     expect(Object.keys(state.objects).length).toBe(0);
   });
 
   it("redoes an action", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    const line = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
 
     engine._addObject(line);
     engine.undo();
@@ -75,9 +89,21 @@ describe("DrawingEngine - Edge Cases", () => {
 describe("DrawingEngine - Complex Scenarios", () => {
   it("multiple actions and undos/redos", () => {
     const engine = createDrawingEngine();
-    const line1 = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
-    const line2 = createLineSegmentModel({ start: [1, 1], end: [2, 2] });
-    const freeDraw = createFreeDrawModel({ points: [0, 0, 0.5, 0.5, 1, 1] });
+    const line1 = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
+    const line2 = createLineSegmentModel({
+      start: { x: 1, y: 1 },
+      end: { x: 2, y: 2 },
+    });
+    const freeDraw = createFreeDrawModel({
+      points: [
+        { x: 0, y: 0 },
+        { x: 0.5, y: 0.5 },
+        { x: 1, y: 1 },
+      ],
+    });
 
     engine._addObject(line1);
     engine._addObject(line2);
@@ -115,7 +141,10 @@ describe("DrawingEngine - Complex Scenarios", () => {
 describe("DrawingEngine - State", () => {
   it("clears the scene", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    const line = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
 
     engine._addObject(line);
     engine.clear();
@@ -126,7 +155,10 @@ describe("DrawingEngine - State", () => {
 
   it("serializes and deserializes state correctly", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({ start: [0, 0], end: [1, 1] });
+    const line = createLineSegmentModel({
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    });
     engine._addObject(line);
 
     const serializedState = engine.getSerializedState();

@@ -3,6 +3,7 @@
 import {
   DrawableObject,
   Point,
+  Points,
   ModelTypes,
   ShapeStyle,
 } from "../geometry/types";
@@ -89,17 +90,17 @@ export interface DrawingEngine {
   createCircle(center: Point, radius: number): void;
   setCircle(center: Point, radius: number): void;
 
-  createFreeFormLine(point: Point): void;
+  createFreeFormLine(points: Points): void;
   appendPointToFreeFormLine(point: Point): void;
-  setFreeFormLine(points: number[]): void;
+  setFreeFormLine(points: Points): void;
 
-  createPolygonSegment(point: Point | number[], radius?: number): void;
+  createPolygonSegment(points: Points, radius?: number): void;
   appendPointToPolygonSegment(point: Point): void;
-  setPolygonSegment(points: number[], radius?: number): void;
+  setPolygonSegment(points: Points, radius?: number): void;
   replaceLastPointOfPolygonSegment(point: Point): void;
   removeLastPointOfPolygonSegment(): void;
 
-  cancelShape(): void;
+  cancelDrawing(): void;
 
   _addObject(object: DrawableObject): void;
   _removeObject(id: string): void;

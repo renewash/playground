@@ -14,7 +14,7 @@ export const getArea = (obj: DrawableObject): number => {
       break;
     case "line":
     case "lineSegment":
-      area = calculateArea([...obj.start, ...obj.end]);
+      area = calculateArea([obj.start, obj.end]);
       break;
     case "polygonSegment":
     case "freeDraw":
@@ -51,22 +51,23 @@ export const calculateDefaultPosition = (
 ): Point => {
   const offSetX = width / 10;
   const offSetY = height;
+  const originPoint = { x: 0, y: 0 };
 
   switch (obj.type) {
     case "lineSegment":
-      return [obj.start[0] - offSetX, obj.start[1] - offSetY];
+      return { x: obj.start.x - offSetX, y: obj.start.y - offSetY };
     case "freeDraw":
-      if (obj.points.length < 2) return [0, 0];
-      return [obj.points[0]! - offSetX, obj.points[1]! - offSetY];
+      if (obj.points.length < 2) return originPoint;
+      return { x: obj.points[0]!.x - offSetX, y: obj.points[0]!.y - offSetY };
     case "polygonSegment":
-      if (obj.points.length < 2) return [0, 0];
-      return [obj.points[0]! - offSetX, obj.points[1]! - offSetY];
+      if (obj.points.length < 2) return originPoint;
+      return { x: obj.points[0]!.x - offSetX, y: obj.points[0]!.y - offSetY };
     case "circle":
-      return [obj.center[0], obj.center[1] - obj.radius - offSetY];
+      return { x: obj.center.x, y: obj.center.y - obj.radius - offSetY };
     default:
       console.warn(
-        `Default position calculation not implemented for type ${obj.type}. Returning [0, 0].`,
+        `Default position calculation not implemented for type ${obj.type}. Returning {x: 0, y: 0}.`,
       );
-      return [0, 0];
+      return originPoint;
   }
 };

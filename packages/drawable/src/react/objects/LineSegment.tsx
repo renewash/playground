@@ -10,25 +10,24 @@ export const LineSegment = ({
 }) => {
   if (!model || model.type !== "lineSegment") return null;
   const { start, end, radius } = model;
-
   return (
     <>
       <Line
-        points={[...start, ...end]}
+        points={[start.x, start.y, end.x, end.y]}
         stroke={model.style.strokeColor}
         strokeWidth={model.style.strokeWidth}
         lineCap="round"
         lineJoin="round"
       />
       <Circle
-        x={start[0]}
-        y={start[1]}
+        x={start.x}
+        y={start.y}
         radius={radius}
         stroke={model.style.strokeColor}
       />
       <Circle
-        x={end[0]}
-        y={end[1]}
+        x={end.x}
+        y={end.y}
         radius={radius}
         stroke={model.style.strokeColor}
       />

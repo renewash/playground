@@ -8,6 +8,7 @@ import { DrawingTool } from "../tools/types";
 import {
   FreeDrawModel,
   LineSegmentModel,
+  Point,
   PolygonSegmentModel,
 } from "../geometry/types";
 
@@ -47,12 +48,9 @@ describe("Tools", () => {
     expect(freeDraw.type).toBe("freeDraw");
 
     expect(freeDraw.points).toEqual([
-      point1.x,
-      point1.y,
-      point2.x,
-      point2.y,
-      point3.x,
-      point3.y,
+      { x: point1.x, y: point1.y },
+      { x: point2.x, y: point2.y },
+      { x: point3.x, y: point3.y },
     ]);
   });
 
@@ -83,8 +81,8 @@ describe("Tools", () => {
     expect(lineSegment).toBeDefined();
     expect(lineSegment.type).toBe("lineSegment");
 
-    expect(lineSegment.start).toEqual([point1.x, point1.y]);
-    expect(lineSegment.end).toEqual([point2.x, point2.y]);
+    expect(lineSegment.start).toEqual({ x: point1.x, y: point1.y });
+    expect(lineSegment.end).toEqual({ x: point2.x, y: point2.y });
   });
 
   it("use polygon segment tool", () => {
@@ -112,14 +110,10 @@ describe("Tools", () => {
 
     expect(polygonSegment).toBeDefined();
     expect(polygonSegment.type).toBe("polygonSegment");
-
     expect(polygonSegment.points).toEqual([
-      point1.x,
-      point1.y,
-      point2.x,
-      point2.y,
-      point3.x,
-      point3.y,
+      { x: point1.x, y: point1.y },
+      { x: point2.x, y: point2.y },
+      { x: point3.x, y: point3.y },
     ]);
   });
 });
@@ -135,7 +129,7 @@ describe("Tools", () => {
 const mockClickEvent = (
   tool: DrawingTool,
   engine: DrawingEngine,
-  clickEvent: { x: number; y: number },
+  clickEvent: Point,
 ) => {
   const pointerdown = new PointerEvent("pointerdown", {
     clientX: clickEvent.x,
@@ -153,7 +147,7 @@ const mockClickEvent = (
 const mockMoveEvent = (
   tool: DrawingTool,
   engine: DrawingEngine,
-  moveEvent: { x: number; y: number },
+  moveEvent: Point,
 ) => {
   const pointermove = new PointerEvent("pointermove", {
     clientX: moveEvent.x,
@@ -171,7 +165,7 @@ const mockMoveEvent = (
 const mockPointerUpEvent = (
   tool: DrawingTool,
   engine: DrawingEngine,
-  upEvent: { x: number; y: number },
+  upEvent: Point,
 ) => {
   const pointerup = new PointerEvent("pointerup", {
     clientX: upEvent.x,
@@ -189,7 +183,7 @@ const mockPointerUpEvent = (
 const mockDoubleClickEvent = (
   tool: DrawingTool,
   engine: DrawingEngine,
-  clickEvent: { x: number; y: number },
+  clickEvent: Point,
 ) => {
   const dblclick = new PointerEvent("dblclick", {
     clientX: clickEvent.x,

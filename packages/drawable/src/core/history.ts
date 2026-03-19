@@ -45,7 +45,7 @@ export default class History {
   undo(engine: DrawingEngine) {
     const command = this.undoStack.pop();
     if (!command) return;
-
+    console.log("undoing command", command);
     command.undo(engine);
     this.redoStack.push(command);
   }

@@ -14,33 +14,22 @@ const PolygonSegment = ({
   return (
     <>
       <Line
-        points={model.points}
+        points={model.points.flatMap((point) => [point.x, point.y])}
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         lineCap="round"
         lineJoin="round"
         closed={true}
       />
-      {model.points
-        .reduce((acc: number[][], _, i) => {
-          if (i % 2 === 0) {
-            const x = model.points[i];
-            const y = model.points[i + 1];
-            if (typeof x === "number" && typeof y === "number") {
-              acc.push([x, y]);
-            }
-          }
-          return acc;
-        }, [])
-        .map((point) => (
-          <Circle
-            key={`${point[0]}-${point[1]}`}
-            x={point[0]}
-            y={point[1]}
-            radius={radius}
-            stroke={strokeColor}
-          />
-        ))}
+      {model.points.map((point) => (
+        <Circle
+          key={`${point.x}-${point.y}`}
+          x={point.x}
+          y={point.y}
+          radius={radius}
+          stroke={strokeColor}
+        />
+      ))}
     </>
   );
 };

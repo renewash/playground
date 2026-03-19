@@ -13,12 +13,14 @@ export function createLineSegmentTool(): DrawingTool {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
 
+      const { x, y } = pos;
+
       if (!firstPoint) {
         // Store first point on first click
-        firstPoint = [pos.x, pos.y];
+        firstPoint = { x, y };
         ctx.engine.createTwoPointline(firstPoint);
       } else {
-        ctx.engine.endTwoPointline([pos.x, pos.y]);
+        ctx.engine.endTwoPointline({ x, y });
         ctx.engine.commitObject();
 
         // Reset for next line
@@ -33,7 +35,7 @@ export function createLineSegmentTool(): DrawingTool {
       const pos = ctx.getPointerPosition();
       if (!pos) return;
 
-      const secondPoint: Point = [pos.x, pos.y];
+      const secondPoint: Point = { x: pos.x, y: pos.y };
 
       // set up active stroke points to be the line between firstPoint and current mouse position
       ctx.engine.endTwoPointline(secondPoint);
@@ -52,7 +54,7 @@ export function createLineSegmentTool(): DrawingTool {
       const strokeWidth = style.strokeWidth || 1;
 
       const line = new Konva.Line({
-        points: [...start, ...end],
+        points: [start.x, start.y, end.x, end.y],
         stroke: strokeColor,
         strokeWidth: strokeWidth,
         lineCap: "round",
@@ -60,15 +62,15 @@ export function createLineSegmentTool(): DrawingTool {
       });
 
       const startCircle = new Konva.Circle({
-        x: start[0],
-        y: start[1],
+        x: start.x,
+        y: start.y,
         radius,
         stroke: strokeColor,
       });
 
       const endCircle = new Konva.Circle({
-        x: end[0],
-        y: end[1],
+        x: end.x,
+        y: end.y,
         radius,
         stroke: strokeColor,
       });

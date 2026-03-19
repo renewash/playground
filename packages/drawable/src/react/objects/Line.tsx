@@ -7,10 +7,9 @@ export const FreeDraw = ({
   model: DrawableObject | FreeDrawModel | null;
 }) => {
   if (!model || model.type != "freeDraw") return null;
-
   return (
     <Line
-      points={model.points}
+      points={model.pixelPoints}
       stroke={model.style.strokeColor}
       strokeWidth={model.style.strokeWidth}
       lineCap="round"
