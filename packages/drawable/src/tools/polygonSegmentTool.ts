@@ -6,11 +6,10 @@ import { calculateDefaultPosition } from "../core/measure";
 import { Point } from "../geometry/types";
 import { TWO_POINT_LINE_RADIUS_DEFAULT } from "../constants";
 
-type RollBack = () => void;
-
 export function createPolygonSegmentTool(): DrawingTool {
   const DOUBLE_CLICK_THRESHOLD = 250; // milliseconds
   let lastClickTime = 0;
+  let lastClickPos: Point = { x: -10, y: -10 };
   let firstPoint: Point | null = null;
 
   const handleSingleClick = (ctx: any) => {
@@ -70,13 +69,12 @@ export function createPolygonSegmentTool(): DrawingTool {
     const { x, y } = pos;
 
     if (lastMarker.x !== x && lastMarker.y !== y) {
-      handleSingleClick(ctx);
       return;
     }
 
-    if (n < 3) return;
-
+    if (n <= 3) return;
     ctx.engine.removeLastPointOfPolygonSegment();
+
     ctx.engine.commitObject();
     firstPoint = null;
   };
@@ -86,12 +84,23 @@ export function createPolygonSegmentTool(): DrawingTool {
     onPointerDown(_, ctx) {
       const now = performance.now();
       const timeDiffBetweenClicks = now - lastClickTime;
-      if (timeDiffBetweenClicks >= DOUBLE_CLICK_THRESHOLD) {
-        handleSingleClick(ctx);
-      } else {
+
+      const curPos = ctx.getPointerPosition();
+      if (!curPos) return;
+
+      // Only when clicks are close enough AND both clicks are at the same position is a double click considered
+      // Using a manual implementation as browsers trigger both "pointerdown" and "dblclick" events during a double click
+      if (
+        timeDiffBetweenClicks <= DOUBLE_CLICK_THRESHOLD &&
+        curPos.x === lastClickPos.x &&
+        curPos.y === lastClickPos.y
+      ) {
         handleDoubleClick(ctx);
+      } else {
+        handleSingleClick(ctx);
       }
 
+      lastClickPos = curPos;
       lastClickTime = now;
     },
 

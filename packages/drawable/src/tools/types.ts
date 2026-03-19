@@ -1,12 +1,12 @@
 // drawing/tools/types.ts
 
 import type { DrawingEngine } from "../core/types";
-import type { DrawableObject } from "../geometry/types";
+import type { DrawableObject, Point } from "../geometry/types";
 import Konva from "konva";
 
 export interface ToolContext {
   engine: DrawingEngine;
-  getPointerPosition(): { x: number; y: number } | null;
+  getPointerPosition(): Point | null;
 }
 
 // define an interface for drawing tools

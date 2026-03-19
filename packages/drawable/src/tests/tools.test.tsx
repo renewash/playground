@@ -185,15 +185,6 @@ const mockDoubleClickEvent = (
   engine: DrawingEngine,
   clickEvent: Point,
 ) => {
-  const dblclick = new PointerEvent("dblclick", {
-    clientX: clickEvent.x,
-    clientY: clickEvent.y,
-  });
-
-  tool.onDoubleClick?.(dblclick, {
-    engine,
-    getPointerPosition() {
-      return { x: dblclick.clientX, y: dblclick.clientY };
-    },
-  });
+  mockClickEvent(tool, engine, clickEvent);
+  mockClickEvent(tool, engine, clickEvent);
 };

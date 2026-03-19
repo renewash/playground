@@ -349,7 +349,6 @@ export function createDrawingEngine({
 
     commitObject() {
       if (!inProgressObject) return;
-      console.log("this is in", inProgressObject);
       // TODO: deep clone inProgressObject to prevent future mutations from affecting the commited object
       // can do something like const finalized = finalizeObject(inProgressObject);
       history.execute(new AddObjectCommand(inProgressObject), this);
