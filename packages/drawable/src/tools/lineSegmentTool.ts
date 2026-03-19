@@ -18,9 +18,9 @@ export function createLineSegmentTool(): DrawingTool {
       if (!firstPoint) {
         // Store first point on first click
         firstPoint = { x, y };
-        ctx.engine.createTwoPointline(firstPoint);
+        ctx.engine.createLineSegment(firstPoint);
       } else {
-        ctx.engine.endTwoPointline({ x, y });
+        ctx.engine.endLineSegment({ x, y });
         ctx.engine.commitObject();
 
         // Reset for next line
@@ -38,7 +38,7 @@ export function createLineSegmentTool(): DrawingTool {
       const secondPoint: Point = { x: pos.x, y: pos.y };
 
       // set up active stroke points to be the line between firstPoint and current mouse position
-      ctx.engine.endTwoPointline(secondPoint);
+      ctx.engine.endLineSegment(secondPoint);
     },
 
     // onPointerUp(_, ctx: ToolContext) {

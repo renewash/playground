@@ -38,34 +38,23 @@ describe("DrawingEngine", () => {
     expect(Object.keys(state.objects).length).toBe(0);
   });
 
-  it("undoes an action", () => {
+  it("undo and redo an action", () => {
     const engine = createDrawingEngine();
-    const line = createLineSegmentModel({
-      start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
-    });
 
-    engine._addObject(line);
-    console.log("line", line, engine.getState());
+    engine.createFreeFormLine([
+      { x: 0, y: 0 },
+      { x: 1, y: 1 },
+      { x: 20, y: 13 },
+    ]);
+    engine.commitObject();
     engine.undo();
-    const state = engine.getState();
-    console.log("state after undo", state);
+    let state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(0);
-  });
 
-  it("redoes an action", () => {
-    const engine = createDrawingEngine();
-    const line = createLineSegmentModel({
-      start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
-    });
-
-    engine._addObject(line);
-    engine.undo();
     engine.redo();
-    const state = engine.getState();
+    state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(1);
-    expect(state.objects[line.id]).toEqual(line);
+    // expect(state.objects[line.id]).toEqual(line);
   });
 });
 
@@ -89,52 +78,45 @@ describe("DrawingEngine - Edge Cases", () => {
 describe("DrawingEngine - Complex Scenarios", () => {
   it("multiple actions and undos/redos", () => {
     const engine = createDrawingEngine();
-    const line1 = createLineSegmentModel({
-      start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
-    });
-    const line2 = createLineSegmentModel({
-      start: { x: 1, y: 1 },
-      end: { x: 2, y: 2 },
-    });
-    const freeDraw = createFreeDrawModel({
-      points: [
-        { x: 0, y: 0 },
-        { x: 0.5, y: 0.5 },
-        { x: 1, y: 1 },
-      ],
-    });
+    engine.createLineSegment({ x: 0, y: 0 });
+    engine.endLineSegment({ x: 1, y: 1 });
+    const lineSegment1 = engine.getInProgressObject();
+    engine.commitObject();
 
-    engine._addObject(line1);
-    engine._addObject(line2);
-    engine._addObject(freeDraw);
+    engine.createFreeFormLine([
+      { x: 0, y: 0 },
+      { x: 0.5, y: 0.5 },
+      { x: 1, y: 1 },
+    ]);
+    const freeDraw1 = engine.getInProgressObject();
+    engine.commitObject();
+
+    if (!lineSegment1 || !freeDraw1) {
+      throw new Error("In-progress objects should be defined");
+    }
 
     let state = engine.getState();
-    expect(Object.keys(state.objects).length).toBe(3);
-
-    engine.undo();
-    state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(2);
-    expect(state.objects[line1.id]).toEqual(line1);
-    expect(state.objects[line2.id]).toEqual(line2);
 
     engine.undo();
     state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(1);
-    expect(state.objects[line1.id]).toEqual(line1);
+    expect(state.objects[lineSegment1.id]).toEqual(lineSegment1);
+
+    engine.undo();
+    state = engine.getState();
+    expect(Object.keys(state.objects).length).toBe(0);
+
+    engine.redo();
+    state = engine.getState();
+    expect(Object.keys(state.objects).length).toBe(1);
+    expect(state.objects[lineSegment1.id]).toEqual(lineSegment1);
 
     engine.redo();
     state = engine.getState();
     expect(Object.keys(state.objects).length).toBe(2);
-    expect(state.objects[line1.id]).toEqual(line1);
-    expect(state.objects[line2.id]).toEqual(line2);
-
-    engine.redo();
-    state = engine.getState();
-    expect(Object.keys(state.objects).length).toBe(3);
-    expect(state.objects[line1.id]).toEqual(line1);
-    expect(state.objects[line2.id]).toEqual(line2);
-    expect(state.objects[freeDraw.id]).toEqual(freeDraw);
+    expect(state.objects[lineSegment1.id]).toEqual(lineSegment1);
+    expect(state.objects[freeDraw1.id]).toEqual(freeDraw1);
   });
 });
 

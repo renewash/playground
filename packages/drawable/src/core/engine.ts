@@ -218,7 +218,7 @@ export function createDrawingEngine({
       emitInProgressUpdates();
     },
 
-    createTwoPointline(start, radius) {
+    createLineSegment(start, radius) {
       inProgressObject = createLineSegmentModel({
         start,
         radius,
@@ -229,7 +229,7 @@ export function createDrawingEngine({
       emitInProgressUpdates();
     },
 
-    endTwoPointline(point, radius) {
+    endLineSegment(point, radius) {
       if (inProgressObject === null || inProgressObject.type !== "lineSegment")
         return;
 
