@@ -12,12 +12,10 @@ export function createPolygonSegmentTool(): DrawingTool {
   const DOUBLE_CLICK_THRESHOLD = 250; // milliseconds
   let lastClickTime = 0;
   let firstPoint: Point | null = null;
-  let rollBack: RollBack = () => {};
 
-  const handleSingleClick = (ctx: any): RollBack => {
-    let singleClickRollBack = () => {};
+  const handleSingleClick = (ctx: any) => {
     const pos = ctx.getPointerPosition();
-    if (!pos) return singleClickRollBack;
+    if (!pos) return;
     const { x, y } = pos;
 
     if (!firstPoint) {
@@ -30,12 +28,7 @@ export function createPolygonSegmentTool(): DrawingTool {
         TWO_POINT_LINE_RADIUS_DEFAULT,
       );
 
-      singleClickRollBack = () => {
-        firstPoint = null;
-        ctx.engine.cancelDrawing();
-      };
-
-      return singleClickRollBack;
+      return;
     }
 
     // check if click is same as last point, if so ignore (prevents creating duplicate points on click)
@@ -48,23 +41,18 @@ export function createPolygonSegmentTool(): DrawingTool {
       console.warn(
         "Invalid object state in polygon segment tool. Expected a polygon segment with at least 2 points.",
       );
-      return singleClickRollBack;
+      return;
     }
 
-    const lastPoint = object.points[n - 1];
     const lastMarker = object.points[n - 2]!;
     const currentPointSameAsLastMarker =
       lastMarker.x === x && lastMarker.y === y;
 
-    if (currentPointSameAsLastMarker) return singleClickRollBack;
+    if (currentPointSameAsLastMarker) return;
     ctx.engine.replaceLastPointOfPolygonSegment({ x, y });
     ctx.engine.appendPointToPolygonSegment({ x, y });
 
-    singleClickRollBack = () => {
-      ctx.engine.removeLastPointOfPolygonSegment();
-      ctx.engine.replaceLastPointOfPolygonSegment(lastPoint);
-    };
-    return singleClickRollBack;
+    return;
   };
 
   const handleDoubleClick = (ctx: any) => {
@@ -73,26 +61,22 @@ export function createPolygonSegmentTool(): DrawingTool {
     const pos = ctx.getPointerPosition();
     if (!pos) return;
 
-    // const object = ctx.engine.getInProgressObject();
-    // const n = object.points.length;
+    const object = ctx.engine.getInProgressObject();
+    const n = object.points.length;
 
-    // if (!object || object.type !== "polygonSegment" || n < 3) return;
+    if (!object || object.type !== "polygonSegment") return;
 
-    // const lastPoint = object.points[n - 1];
-    // const penultimatePoint = object.points[n - 2];
-    // const { x, y } = pos;
+    const lastMarker = object.points[n - 2];
+    const { x, y } = pos;
 
-    // if (
-    //   lastPoint.x === x &&
-    //   lastPoint.y === y &&
-    //   penultimatePoint.x === x &&
-    //   penultimatePoint.y === y
-    // ) {
-    //   ctx.engine.removeLastPointOfPolygonSegment();
-    // } else {
-    //   ctx.engine.replaceLastPointOfPolygonSegment({ x, y });
-    // }
+    if (lastMarker.x !== x && lastMarker.y !== y) {
+      handleSingleClick(ctx);
+      return;
+    }
 
+    if (n < 3) return;
+
+    ctx.engine.removeLastPointOfPolygonSegment();
     ctx.engine.commitObject();
     firstPoint = null;
   };
@@ -103,9 +87,8 @@ export function createPolygonSegmentTool(): DrawingTool {
       const now = performance.now();
       const timeDiffBetweenClicks = now - lastClickTime;
       if (timeDiffBetweenClicks >= DOUBLE_CLICK_THRESHOLD) {
-        rollBack = handleSingleClick(ctx);
+        handleSingleClick(ctx);
       } else {
-        rollBack();
         handleDoubleClick(ctx);
       }
 
