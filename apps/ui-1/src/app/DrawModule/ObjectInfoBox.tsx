@@ -21,6 +21,14 @@ const ObjectInfoBox = ({
 
   if (!drawableObject) return null;
 
+  let measurementText = "NA";
+
+  if (area) {
+    measurementText = `${area} (Area)`;
+  } else if (length) {
+    measurementText = `${length} (Length)`;
+  }
+
   return (
     <div className={` ${className}`} {...rest}>
       <div className="flex justify-between border-b-2 font-semibold capitalize">
@@ -35,7 +43,7 @@ const ObjectInfoBox = ({
         </button>
       </div>
       <p>ID: {drawableObject.id}</p>
-      <p>Measurements: {area || length || "NA"}</p>
+      <p>Measurements: {measurementText}</p>
     </div>
   );
 };

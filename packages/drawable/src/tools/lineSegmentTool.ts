@@ -65,6 +65,7 @@ export function createLineSegmentTool(): DrawingTool {
         x: start.x,
         y: start.y,
         radius,
+        strokeWidth: strokeWidth,
         stroke: strokeColor,
       });
 
@@ -72,6 +73,7 @@ export function createLineSegmentTool(): DrawingTool {
         x: end.x,
         y: end.y,
         radius,
+        strokeWidth: strokeWidth,
         stroke: strokeColor,
       });
 

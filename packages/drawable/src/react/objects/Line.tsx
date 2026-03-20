@@ -9,7 +9,7 @@ export const FreeDraw = ({
   if (!model || model.type != "freeDraw") return null;
   return (
     <Line
-      points={model.pixelPoints}
+      points={model.points.flatMap((point) => [point.x, point.y])}
       stroke={model.style.strokeColor}
       strokeWidth={model.style.strokeWidth}
       lineCap="round"

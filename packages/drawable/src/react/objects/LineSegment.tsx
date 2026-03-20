@@ -9,13 +9,14 @@ export const LineSegment = ({
   model: DrawableObject | LineSegmentModel | null;
 }) => {
   if (!model || model.type !== "lineSegment") return null;
-  const { start, end, radius } = model;
+  const { start, end, radius, style } = model;
+  console.log("model", model);
   return (
     <>
       <Line
         points={[start.x, start.y, end.x, end.y]}
-        stroke={model.style.strokeColor}
-        strokeWidth={model.style.strokeWidth}
+        strokeWidth={style.strokeWidth}
+        stroke={style.strokeColor}
         lineCap="round"
         lineJoin="round"
       />
@@ -23,13 +24,15 @@ export const LineSegment = ({
         x={start.x}
         y={start.y}
         radius={radius}
-        stroke={model.style.strokeColor}
+        strokeWidth={style.strokeWidth}
+        stroke={style.strokeColor}
       />
       <Circle
         x={end.x}
         y={end.y}
         radius={radius}
-        stroke={model.style.strokeColor}
+        strokeWidth={style.strokeWidth}
+        stroke={style.strokeColor}
       />
     </>
   );

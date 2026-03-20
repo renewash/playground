@@ -20,7 +20,7 @@ const TotalArea = ({ engine }: { engine: DrawingEngine }) => {
       <SharpBorder className="mt-3 w-1/3 p-2">
         <div className="text-md flex flex-col items-center bg-yellow-200 p-3">
           <p className="font-bold">Total Area</p>
-          <p className="">{totalArea}</p>
+          <p className="">{Math.round(totalArea * 1000000) / 1000000}</p>
         </div>
         <div className="w-1/3 border-b-2 py-2" />
       </SharpBorder>
