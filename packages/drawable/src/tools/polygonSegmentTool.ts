@@ -4,7 +4,11 @@ import Konva from "konva";
 import { type DrawingTool } from "./types";
 import { calculateDefaultPosition } from "../core/measure";
 import { Point } from "../geometry/types";
-import { TWO_POINT_LINE_RADIUS_DEFAULT } from "../constants";
+import {
+  LABEL_PADDING_DEFAULT,
+  LABEL_FONT_SIZE_DEFAULT,
+  TWO_POINT_LINE_RADIUS_DEFAULT,
+} from "../constants";
 
 export function createPolygonSegmentTool(): DrawingTool {
   const DOUBLE_CLICK_THRESHOLD = 250; // milliseconds
@@ -19,6 +23,7 @@ export function createPolygonSegmentTool(): DrawingTool {
 
     if (!firstPoint) {
       firstPoint = { x, y };
+
       // create a temporary line (using currentLastPoint) to show:
       // real time preview of line as user moves their pointer
       const currentLastPoint = { x, y };
@@ -141,15 +146,15 @@ export function createPolygonSegmentTool(): DrawingTool {
 
       if (obj.type !== "polygonSegment") return;
 
-      const position = calculateDefaultPosition(obj, 100, 30);
+      const position = calculateDefaultPosition(obj);
       const value = String(obj["area"]);
 
       const label = new Konva.Label({ x: position.x, y: position.y });
       const tag = new Konva.Tag({ opacity: 1 });
       const text = new Konva.Text({
         text: value,
-        fontSize: 12,
-        padding: 2,
+        fontSize: LABEL_FONT_SIZE_DEFAULT,
+        padding: LABEL_PADDING_DEFAULT,
       });
 
       label.add(tag);
@@ -157,7 +162,7 @@ export function createPolygonSegmentTool(): DrawingTool {
 
       const { style } = ctx.engine.getEditorState();
       const strokeColor = style.strokeColor || "black";
-      const strokeWidth = style.strokeWidth || 1;
+      const strokeWidth = style.strokeWidth || 0.003;
 
       const line = new Konva.Line({
         points: obj.points.flatMap((point) => [point.x, point.y]),

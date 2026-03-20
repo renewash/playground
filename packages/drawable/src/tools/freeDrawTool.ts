@@ -3,6 +3,7 @@
 import Konva from "konva";
 import { type DrawingTool } from "./types";
 import { calculateDefaultPosition } from "../core/measure";
+import { LABEL_FONT_SIZE_DEFAULT, LABEL_PADDING_DEFAULT } from "../constants";
 
 export function createFreeDrawTool(): DrawingTool {
   // free draw tool doesn't require DOM event e, thus we can ignore it with _
@@ -36,15 +37,15 @@ export function createFreeDrawTool(): DrawingTool {
 
       if (obj.type !== "freeDraw") return;
 
-      const { x, y } = calculateDefaultPosition(obj, 0.01, 0.003);
+      const { x, y } = calculateDefaultPosition(obj);
       const value = String(obj["area"]);
 
       const label = new Konva.Label({ x, y });
       const tag = new Konva.Tag({ opacity: 1 });
       const text = new Konva.Text({
         text: value,
-        fontSize: 0.025,
-        padding: 0.01,
+        fontSize: LABEL_FONT_SIZE_DEFAULT,
+        padding: LABEL_PADDING_DEFAULT,
       });
 
       label.add(tag);

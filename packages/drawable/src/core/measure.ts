@@ -1,3 +1,4 @@
+import { LABEL_HEIGHT_DEFAULT, LABEL_WIDTH_DEFAULT } from "../constants";
 import {
   calculateEuclideanDistance,
   calculateArea,
@@ -46,8 +47,8 @@ export const getLength = (obj: DrawableObject): number => {
 
 export const calculateDefaultPosition = (
   obj: DrawableObject,
-  width: number,
-  height: number,
+  width: number = LABEL_WIDTH_DEFAULT,
+  height: number = LABEL_HEIGHT_DEFAULT,
 ): Point => {
   const offSetX = width / 4;
   const offSetY = height * 1.5;
