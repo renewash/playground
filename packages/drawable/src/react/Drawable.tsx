@@ -32,10 +32,21 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     () => ({
       engine,
       getPointerPosition() {
-        return stageRef.current?.getPointerPosition() ?? null;
+        const pos = stageRef.current?.getPointerPosition();
+        if (!pos) return null;
+        const { x, y } = pos;
+        // normalize pointer position to [0, 1] range based on viewport size
+        return {
+          x: x / width,
+          y: y / height,
+        };
+      },
+      viewport: {
+        width,
+        height,
       },
     }),
-    [engine],
+    [engine, width, height],
   );
 
   useEffect(() => {
@@ -103,7 +114,11 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       onMouseUp={handlePointerUp}
       // onDblClick={handleDoubleClick}
     >
-      <Layer ref={staticLayerRef} listening={false}>
+      <Layer
+        scale={{ x: width, y: height }}
+        ref={staticLayerRef}
+        listening={false}
+      >
         {/* Committed objects */}
         {Object.values(state.objects).map((object) => {
           switch (object.type) {
@@ -133,7 +148,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
         })}
       </Layer>
 
-      <Layer ref={inProgressLayerRef}>
+      <Layer scale={{ x: width, y: height }} ref={inProgressLayerRef}>
         {/* imperative render */}
         <Group ref={groupRef} visible={true} />
       </Layer>

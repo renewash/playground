@@ -7,7 +7,7 @@ import { useEditor } from "@repo/drawable/react";
 const StylingControls = ({ engine }: { engine: DrawingEngine }) => {
   const editorState = useEditor(engine);
 
-  const sizes = [1, 2, 3, 4, 5];
+  const sizes = [0.001, 0.002, 0.003, 0.004, 0.005];
 
   return (
     <>

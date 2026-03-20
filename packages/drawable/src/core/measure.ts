@@ -49,8 +49,8 @@ export const calculateDefaultPosition = (
   width: number,
   height: number,
 ): Point => {
-  const offSetX = width / 10;
-  const offSetY = height;
+  const offSetX = width / 4;
+  const offSetY = height * 1.5;
   const originPoint = { x: 0, y: 0 };
 
   switch (obj.type) {

@@ -114,6 +114,7 @@ export function createPolygonSegmentTool(): DrawingTool {
       ctx.engine.replaceLastPointOfPolygonSegment({ x: pos.x, y: pos.y });
     },
 
+    // TODO: remove this once new implementation of double click is verified to work well
     // onDoubleClick(_, ctx) {
     //   if (!firstPoint) return;
 

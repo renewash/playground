@@ -28,7 +28,7 @@ const Tld = () => {
           </Layer>
         </Stage> */}
         <Stage width={width} height={height}>
-          <Layer scaleX={width} scaleY={height}>
+          <Layer scale={{ x: width, y: height }}>
             <Line
               points={[0.5, 0.5, 0.4, 0.9, 0.25, 0.6, 0.3, 0.2]}
               stroke="red"

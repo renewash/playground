@@ -1,6 +1,12 @@
 import { DrawableObject, Point } from "../../geometry/types";
 import { Label as KonvaLabel, Tag, Text } from "react-konva";
 import { calculateDefaultPosition } from "../../core/measure";
+import {
+  LABEL_FONT_SIZE_DEFAULT,
+  LABEL_HEIGHT_DEFAULT,
+  LABEL_PADDING_DEFAULT,
+  LABEL_WIDTH_DEFAULT,
+} from "../../constants";
 
 interface LabelProps<T extends DrawableObject> {
   model: T;
@@ -27,8 +33,8 @@ export const Label = <T extends DrawableObject>({
   model,
   value,
   position,
-  width = 100,
-  height = 30,
+  width = LABEL_WIDTH_DEFAULT,
+  height = LABEL_HEIGHT_DEFAULT,
 }: LabelProps<T>) => {
   const finalPosition =
     position ?? calculateDefaultPosition(model, width, height);
@@ -42,7 +48,11 @@ export const Label = <T extends DrawableObject>({
       height={height}
     >
       <Tag opacity={0.25} fill={model.style.strokeColor} />
-      <Text text={text} fontSize={12} padding={3} />
+      <Text
+        text={text}
+        fontSize={LABEL_FONT_SIZE_DEFAULT}
+        padding={LABEL_PADDING_DEFAULT}
+      />
     </KonvaLabel>
   );
 };

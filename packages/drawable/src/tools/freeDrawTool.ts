@@ -36,15 +36,15 @@ export function createFreeDrawTool(): DrawingTool {
 
       if (obj.type !== "freeDraw") return;
 
-      const { x, y } = calculateDefaultPosition(obj, 100, 30);
+      const { x, y } = calculateDefaultPosition(obj, 0.01, 0.003);
       const value = String(obj["area"]);
 
       const label = new Konva.Label({ x, y });
       const tag = new Konva.Tag({ opacity: 1 });
       const text = new Konva.Text({
         text: value,
-        fontSize: 12,
-        padding: 2,
+        fontSize: 0.025,
+        padding: 0.01,
       });
 
       label.add(tag);
@@ -52,7 +52,7 @@ export function createFreeDrawTool(): DrawingTool {
 
       const { style } = ctx.engine.getEditorState();
       const strokeColor = style.strokeColor || "black";
-      const strokeWidth = style.strokeWidth || 1;
+      const strokeWidth = style.strokeWidth || 0.002;
 
       const line = new Konva.Line({
         points: obj.pixelPoints,
@@ -61,8 +61,8 @@ export function createFreeDrawTool(): DrawingTool {
         lineCap: "round",
         lineJoin: "round",
       });
-      group.add(label).add(line);
-      // group.add(line);
+      group.add(label);
+      group.add(line);
     },
   };
 }

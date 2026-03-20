@@ -51,7 +51,7 @@ export function createLineSegmentTool(): DrawingTool {
 
       const { style } = ctx.engine.getEditorState();
       const strokeColor = style.strokeColor || "black";
-      const strokeWidth = style.strokeWidth || 1;
+      const strokeWidth = style.strokeWidth || 0.003;
 
       const line = new Konva.Line({
         points: [start.x, start.y, end.x, end.y],

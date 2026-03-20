@@ -7,6 +7,10 @@ import Konva from "konva";
 export interface ToolContext {
   engine: DrawingEngine;
   getPointerPosition(): Point | null;
+  viewport: {
+    width: number;
+    height: number;
+  };
 }
 
 // define an interface for drawing tools

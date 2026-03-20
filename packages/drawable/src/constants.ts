@@ -1,3 +1,7 @@
-export const STROKE_WIDTH_DEFAULT = 2;
+export const STROKE_WIDTH_DEFAULT = 0.008;
 export const STROKE_COLOR_DEFAULT = "#1d12e3";
-export const TWO_POINT_LINE_RADIUS_DEFAULT = 3;
+export const TWO_POINT_LINE_RADIUS_DEFAULT = 0.03;
+export const LABEL_WIDTH_DEFAULT = 0.1;
+export const LABEL_HEIGHT_DEFAULT = 0.03;
+export const LABEL_FONT_SIZE_DEFAULT = 0.025;
+export const LABEL_PADDING_DEFAULT = 0.008;
