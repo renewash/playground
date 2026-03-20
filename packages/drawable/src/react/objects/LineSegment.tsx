@@ -10,7 +10,6 @@ export const LineSegment = ({
 }) => {
   if (!model || model.type !== "lineSegment") return null;
   const { start, end, radius, style } = model;
-  console.log("model", model);
   return (
     <>
       <Line

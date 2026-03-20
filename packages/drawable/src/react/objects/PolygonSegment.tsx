@@ -11,13 +11,6 @@ const PolygonSegment = ({
   const { radius, points } = model;
   const { strokeColor, strokeWidth } = model.style;
 
-  console.log(
-    "Rendering PolygonSegment with points:",
-    points,
-    strokeWidth,
-    radius,
-  );
-
   return (
     <>
       <Line
