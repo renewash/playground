@@ -1,7 +1,7 @@
 // drawing/tools/freeDrawTool.ts
 
 import Konva from "konva";
-import { type DrawingTool } from "./types";
+import { ToolContext, type DrawingTool } from "./types";
 import { calculateDefaultPosition } from "../core/measure";
 import { Point } from "../geometry/types";
 import {
@@ -16,7 +16,7 @@ export function createPolygonSegmentTool(): DrawingTool {
   let lastClickPos: Point = { x: -10, y: -10 };
   let firstPoint: Point | null = null;
 
-  const handleSingleClick = (ctx: any) => {
+  const handleSingleClick = (ctx: ToolContext) => {
     const pos = ctx.getPointerPosition();
     if (!pos) return;
     const { x, y } = pos;
@@ -37,9 +37,9 @@ export function createPolygonSegmentTool(): DrawingTool {
 
     // check if click is same as last point, if so ignore (prevents creating duplicate points on click)
     const object = ctx.engine.getInProgressObject();
-    const n = object.points.length;
 
-    const invalidObject = !object || object.type !== "polygonSegment" || n < 2;
+    const invalidObject =
+      !object || object.type !== "polygonSegment" || object.points.length < 2;
 
     if (invalidObject) {
       console.warn(
@@ -48,7 +48,7 @@ export function createPolygonSegmentTool(): DrawingTool {
       return;
     }
 
-    const lastMarker = object.points[n - 2]!;
+    const lastMarker = object.points[object.points.length - 2]!;
     const currentPointSameAsLastMarker =
       lastMarker.x === x && lastMarker.y === y;
 
@@ -59,25 +59,34 @@ export function createPolygonSegmentTool(): DrawingTool {
     return;
   };
 
-  const handleDoubleClick = (ctx: any) => {
+  const handleDoubleClick = (ctx: ToolContext) => {
     if (!firstPoint) return;
 
     const pos = ctx.getPointerPosition();
     if (!pos) return;
 
     const object = ctx.engine.getInProgressObject();
-    const n = object.points.length;
 
-    if (!object || object.type !== "polygonSegment") return;
+    const invalidObject =
+      !object || object.type !== "polygonSegment" || object.points.length < 2;
 
-    const lastMarker = object.points[n - 2];
+    if (invalidObject) {
+      console.warn(
+        "Invalid object state in polygon segment tool. Expected a polygon segment with at least 2 points.",
+      );
+      return;
+    }
+
+    const lastMarker = object.points[object.points.length - 2];
+    if (!lastMarker) return;
+
     const { x, y } = pos;
 
     if (lastMarker.x !== x && lastMarker.y !== y) {
       return;
     }
 
-    if (n <= 3) return;
+    if (object.points.length <= 3) return;
     ctx.engine.removeLastPointOfPolygonSegment();
 
     ctx.engine.commitObject();
