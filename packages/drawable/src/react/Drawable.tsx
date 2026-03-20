@@ -88,11 +88,10 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
 
-  const handleDoubleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (!engine.getEditorState().editable) return;
-
-    toolRef.current?.onDoubleClick?.(e.evt, ctx);
-  };
+  // const handleDoubleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+  //   if (!engine.getEditorState().editable) return;
+  //   toolRef.current?.onDoubleClick?.(e.evt, ctx);
+  // };
 
   return (
     <Stage
@@ -102,7 +101,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       onMouseDown={handlePointerDown}
       onMouseMove={handlePointerMove}
       onMouseUp={handlePointerUp}
-      onDblClick={handleDoubleClick}
+      // onDblClick={handleDoubleClick}
     >
       <Layer ref={staticLayerRef} listening={false}>
         {/* Committed objects */}

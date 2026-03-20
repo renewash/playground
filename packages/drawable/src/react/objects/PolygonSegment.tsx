@@ -8,20 +8,20 @@ const PolygonSegment = ({
 }) => {
   if (!model || model.type !== "polygonSegment") return null;
 
-  const { radius } = model;
+  const { radius, points } = model;
   const { strokeColor, strokeWidth } = model.style;
 
   return (
     <>
       <Line
-        points={model.points.flatMap((point) => [point.x, point.y])}
+        points={points.flatMap((point) => [point.x, point.y])}
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         lineCap="round"
         lineJoin="round"
         closed={true}
       />
-      {model.points.map((point) => (
+      {points.map((point) => (
         <Circle
           key={`${point.x}-${point.y}`}
           x={point.x}
