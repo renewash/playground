@@ -4,6 +4,7 @@ import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../../constants";
 import { flattenPointsTo1DArray } from "../../utils";
 interface CreateFreeDrawModel {
   points: Points;
+  pixelPoints?: number[]; // Caches points as flat array for rendering optimization
   style?: ShapeStyle;
 }
 

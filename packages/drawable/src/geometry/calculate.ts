@@ -1,11 +1,23 @@
 import { Point, Points } from "./types";
 
 /**
+ * Round a number to n decimal places.
+ *
+ * @param num The number to be rounded
+ * @param n The number of decimal places to round to (default is 4)
+ * @returns The rounded number
+ */
+export const roundToNDecimalPlaces = (num: number, n: number = 4): number => {
+  const factor = Math.pow(10, n);
+  return Math.round(num * factor) / factor;
+};
+
+/**
  * Calculates the Euclidean distance between two points in 2D space.
  *
- * @param startPoint
- * @param endPoint
- * @returns the Euclidean distance between the two points
+ * @param startPoint The starting point
+ * @param endPoint The ending point
+ * @returns The Euclidean distance between the two points
  */
 export const calculateEuclideanDistance = (
   startPoint: Point,
@@ -13,7 +25,8 @@ export const calculateEuclideanDistance = (
 ): number => {
   const width = startPoint.x - endPoint.x;
   const height = startPoint.y - endPoint.y;
-  return Math.hypot(width, height);
+  const distance = Math.hypot(width, height);
+  return roundToNDecimalPlaces(distance);
 };
 
 /**
@@ -35,9 +48,11 @@ export const calculateArea = (points: Points): number => {
     const next = points[(i + 1) % n]!;
     area += curr.x * next.y - next.x * curr.y;
   }
-  return Math.abs(area) / 2;
+  area = Math.abs(area) / 2;
+  return roundToNDecimalPlaces(area); // Round to 4 decimal places
 };
 
 export const calculateAreaOfCircle = (radius: number): number => {
-  return Math.PI * radius * radius;
+  const area = Math.PI * radius * radius;
+  return roundToNDecimalPlaces(area);
 };

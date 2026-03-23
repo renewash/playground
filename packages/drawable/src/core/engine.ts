@@ -201,23 +201,6 @@ export function createDrawingEngine({
       return state.objects[nodeId] ?? null;
     },
 
-    createStraightline(point) {
-      inProgressObject = createLineModel({
-        start: point,
-        style: editorState.style,
-      });
-
-      this._startDrawing();
-      emitInProgressUpdates();
-    },
-
-    endStraightline(point) {
-      if (inProgressObject === null || inProgressObject.type !== "line") return;
-      inProgressObject.end = point;
-
-      emitInProgressUpdates();
-    },
-
     createLineSegment(start, radius) {
       inProgressObject = createLineSegmentModel({
         start,
@@ -237,26 +220,6 @@ export function createDrawingEngine({
       inProgressObject.radius = inProgressObject.radius ?? radius;
 
       inProgressObject.length = getLength(inProgressObject);
-
-      emitInProgressUpdates();
-    },
-
-    createCircle(center, radius) {
-      inProgressObject = createCircleModel({
-        center,
-        radius,
-        style: editorState.style,
-      });
-
-      this._startDrawing();
-      emitInProgressUpdates();
-    },
-
-    setCircle(center, radius) {
-      if (!inProgressObject || inProgressObject.type !== "circle") return;
-
-      inProgressObject.center = center;
-      inProgressObject.radius = radius;
 
       emitInProgressUpdates();
     },
@@ -377,6 +340,9 @@ export function createDrawingEngine({
       emit();
     },
 
+    _structuredCloneObject(object) {
+      
+    }
     _addObject(object) {
       if (!object) {
         console.warn("Attempting to add null object");

@@ -77,18 +77,11 @@ export interface DrawingEngine {
   getNode(nodeId: string): DrawableObject | null;
 
   commitObject(): void;
-  // addObject(object: DrawableObject): void;
   deleteObjectById(id: string): void;
 
   // mutations to inProgressObject
-  createStraightline(point: Point): void;
-  endStraightline(point: Point): void;
-
   createLineSegment(point: Point, radius?: number): void;
   endLineSegment(point: Point, radius?: number): void;
-
-  createCircle(center: Point, radius: number): void;
-  setCircle(center: Point, radius: number): void;
 
   createFreeFormLine(points: Points): void;
   appendPointToFreeFormLine(point: Point): void;
