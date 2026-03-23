@@ -65,7 +65,6 @@ describe("Tools", () => {
 
     const point1 = { x: 100, y: 100 };
     const point2 = { x: 150, y: 150 };
-    // const point3 = { x: 50, y: 75 };
 
     mockClickEvent(lineSegmentTool, engine, point1);
     mockClickEvent(lineSegmentTool, engine, point2);
@@ -117,14 +116,6 @@ describe("Tools", () => {
     ]);
   });
 });
-
-// describe("Drawable component", () => {
-//   it("renders without crashing", () => {
-//     const engine = createDrawingEngine();
-//     render(<Drawable engine={engine} width={500} height={500} />);
-//   });
-
-// });
 
 const mockClickEvent = (
   tool: DrawingTool,

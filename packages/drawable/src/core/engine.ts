@@ -239,7 +239,6 @@ export function createDrawingEngine({
       inProgressObject.area = getArea(inProgressObject);
 
       inProgressObject.points.push(point);
-      inProgressObject.pixelPoints.push(point.x, point.y);
 
       emitInProgressUpdates();
     },
@@ -247,10 +246,6 @@ export function createDrawingEngine({
     setFreeFormLine(points) {
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
       inProgressObject.points = points;
-      inProgressObject.pixelPoints = points.flatMap((point) => [
-        point.x,
-        point.y,
-      ]);
       inProgressObject.area = getArea(inProgressObject);
 
       emitInProgressUpdates();
@@ -340,9 +335,9 @@ export function createDrawingEngine({
       emit();
     },
 
-    _structuredCloneObject(object) {
-      
-    }
+    // _structuredCloneObject(object) {
+
+    // },
     _addObject(object) {
       if (!object) {
         console.warn("Attempting to add null object");

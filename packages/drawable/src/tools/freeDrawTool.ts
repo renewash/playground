@@ -56,7 +56,7 @@ export function createFreeDrawTool(): DrawingTool {
       const strokeWidth = style.strokeWidth || 0.002;
 
       const line = new Konva.Line({
-        points: obj.pixelPoints,
+        points: obj.points.flatMap((point) => [point.x, point.y]),
         stroke: strokeColor,
         strokeWidth: strokeWidth,
         lineCap: "round",

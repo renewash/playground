@@ -1,5 +1,7 @@
 import { Point, Points } from "./types";
 
+const DEFAULT_DECIMAL_PLACES = 6;
+
 /**
  * Round a number to n decimal places.
  *
@@ -7,7 +9,10 @@ import { Point, Points } from "./types";
  * @param n The number of decimal places to round to (default is 4)
  * @returns The rounded number
  */
-export const roundToNDecimalPlaces = (num: number, n: number = 4): number => {
+export const roundToNDecimalPlaces = (
+  num: number,
+  n: number = DEFAULT_DECIMAL_PLACES,
+): number => {
   const factor = Math.pow(10, n);
   return Math.round(num * factor) / factor;
 };
@@ -49,7 +54,7 @@ export const calculateArea = (points: Points): number => {
     area += curr.x * next.y - next.x * curr.y;
   }
   area = Math.abs(area) / 2;
-  return roundToNDecimalPlaces(area); // Round to 4 decimal places
+  return roundToNDecimalPlaces(area);
 };
 
 export const calculateAreaOfCircle = (radius: number): number => {

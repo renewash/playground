@@ -37,7 +37,6 @@ export interface LineSegmentModel extends BaseModel {
 export interface FreeDrawModel extends BaseModel {
   type: "freeDraw";
   points: Points;
-  pixelPoints: number[];
   area: number;
 }
 

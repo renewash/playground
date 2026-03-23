@@ -128,31 +128,8 @@ export function createPolygonSegmentTool(): DrawingTool {
       ctx.engine.replaceLastPointOfPolygonSegment({ x: pos.x, y: pos.y });
     },
 
-    // TODO: remove this once new implementation of double click is verified to work well
-    // onDoubleClick(_, ctx) {
-    //   if (!firstPoint) return;
-
-    //   const pos = ctx.getPointerPosition();
-    //   if (!pos) return;
-
-    //   const object = ctx.engine.getInProgressObject();
-    //   // if (?.type !== "polygonSegment") {
-
-    //   if (
-    //     !object ||
-    //     object.type !== "polygonSegment" ||
-    //     object.points.length < 3
-    //   )
-    //     return;
-
-    //   ctx.engine.replaceLastPointOfPolygonSegment({ x: pos.x, y: pos.y });
-    //   ctx.engine.commitObject();
-    //   firstPoint = null;
-    // },
-
     renderPreview(group, obj, ctx) {
       // TODO: use ctx to allow labels to be boundary aware
-
       if (obj.type !== "polygonSegment") return;
 
       const position = calculateDefaultPosition(obj);
@@ -181,8 +158,8 @@ export function createPolygonSegmentTool(): DrawingTool {
         lineJoin: "round",
       });
 
-      group.add(label).add(line);
-      // group.add(line);
+      group.add(line);
+      group.add(label);
     },
   };
 }

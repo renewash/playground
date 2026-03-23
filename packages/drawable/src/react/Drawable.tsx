@@ -41,10 +41,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
           y: y / height,
         };
       },
-      viewport: {
-        width,
-        height,
-      },
     }),
     [engine, width, height],
   );
@@ -99,11 +95,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };
 
-  // const handleDoubleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-  //   if (!engine.getEditorState().editable) return;
-  //   toolRef.current?.onDoubleClick?.(e.evt, ctx);
-  // };
-
   return (
     <Stage
       width={width}
@@ -112,7 +103,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       onMouseDown={handlePointerDown}
       onMouseMove={handlePointerMove}
       onMouseUp={handlePointerUp}
-      // onDblClick={handleDoubleClick}
     >
       <Layer
         scale={{ x: width, y: height }}

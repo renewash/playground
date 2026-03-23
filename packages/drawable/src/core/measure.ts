@@ -29,7 +29,7 @@ export const getArea = (obj: DrawableObject): number => {
     }
   }
 
-  return Math.round(area * 100) / 100; // 2 d.p.
+  return area;
 };
 
 export const getLength = (obj: DrawableObject): number => {
@@ -42,7 +42,7 @@ export const getLength = (obj: DrawableObject): number => {
     default:
       throw new Error(`Length calculation not supported for type ${obj.type}`);
   }
-  return Math.round(length * 100) / 100; // 2 d.p.
+  return length; // 2 d.p.
 };
 
 export const calculateDefaultPosition = (
