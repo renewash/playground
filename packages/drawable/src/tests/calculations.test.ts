@@ -97,7 +97,7 @@ describe("area calculations", () => {
     expect(calculateArea(points)).toBe(0);
   });
 
-  it("calculates the area of a polygon with overlapping areas", () => {
+  it("calculates the area of a polygon with multiple points", () => {
     const points = [
       { x: 0.22, y: 0.12 },
       { x: 0.33, y: 0.71 },
@@ -107,6 +107,16 @@ describe("area calculations", () => {
       { x: 0.31, y: 0.34 },
     ];
     expect(calculateArea(points)).toBe(0.1389);
+  });
+
+  it("calculates the area of a polygon with overlapping areas", () => {
+    const points = [
+      { x: 0.4, y: -0.3 },
+      { x: 0.33, y: 0.71 },
+      { x: 0.55, y: 0.31 },
+      { x: -0.3, y: 0.5 },
+    ];
+    expect(calculateArea(points)).toBe(0.1764);
   });
 });
 
