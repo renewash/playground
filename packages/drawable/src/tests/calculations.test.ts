@@ -106,7 +106,7 @@ describe("area calculations", () => {
       { x: 0.4, y: -0.3 },
       { x: 0.31, y: 0.34 },
     ];
-    expect(calculateArea(points)).toBe(0.0753);
+    expect(calculateArea(points)).toBe(0.1389);
   });
 });
 
@@ -155,7 +155,7 @@ describe("Area of different shapes", () => {
         { x: 0.2, y: 0.3 },
       ],
     });
-    expect(getArea(freeDraw)).toBe(6);
+    expect(getArea(freeDraw)).toBe(0.06);
   });
 
   it("calculates the area of a line segment (should be 0)", () => {

@@ -51,5 +51,4 @@ Engine (state)
 
 - Tools are tightly coupled to engine APIs
 - Tool registration is not fully externalized
-- Derived values (area/length) are stored instead of computed
-- Rendering is not optimized for large scenes
+- History for in progress objects

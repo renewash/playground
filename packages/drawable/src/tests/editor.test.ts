@@ -15,11 +15,11 @@ describe("useEditor", () => {
     const engine = createDrawingEngine();
     engine.pickTool("freeDraw");
     engine.setStrokeColor("red");
-    engine.setStrokeWidth(5);
+    engine.setStrokeWidth(0.05);
 
     const editorState = engine.getEditorState();
     expect(editorState.tool.type).toBe("freeDraw");
     expect(editorState.style.strokeColor).toBe("red");
-    expect(editorState.style.strokeWidth).toBe(5);
+    expect(editorState.style.strokeWidth).toBe(0.05);
   });
 });

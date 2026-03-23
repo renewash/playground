@@ -28,9 +28,9 @@ describe("Tools", () => {
     expect(editorState.tool).toBe(freeDrawTool);
     expect(editorState.tool.type).toBe("freeDraw");
 
-    const point1 = { x: 100, y: 100 };
-    const point2 = { x: 150, y: 150 };
-    const point3 = { x: 50, y: 75 };
+    const point1 = { x: 0.1, y: 0.1 };
+    const point2 = { x: 0.15, y: 0.15 };
+    const point3 = { x: 0.5, y: 0.75 };
 
     mockClickEvent(freeDrawTool, engine, point1);
     mockMoveEvent(freeDrawTool, engine, point2);
@@ -63,8 +63,8 @@ describe("Tools", () => {
     expect(editorState.tool).toBe(lineSegmentTool);
     expect(editorState.tool.type).toBe("lineSegment");
 
-    const point1 = { x: 100, y: 100 };
-    const point2 = { x: 150, y: 150 };
+    const point1 = { x: 0.1, y: 0.1 };
+    const point2 = { x: 0.15, y: 0.15 };
 
     mockClickEvent(lineSegmentTool, engine, point1);
     mockClickEvent(lineSegmentTool, engine, point2);
@@ -92,9 +92,9 @@ describe("Tools", () => {
     expect(editorState.tool).toBe(polygonSegmentTool);
     expect(editorState.tool.type).toBe("polygonSegment");
 
-    const point1 = { x: 100, y: 100 };
-    const point2 = { x: 150, y: 150 };
-    const point3 = { x: 50, y: 75 };
+    const point1 = { x: 0.1, y: 0.1 };
+    const point2 = { x: 0.15, y: 0.15 };
+    const point3 = { x: 0.5, y: 0.75 };
 
     mockClickEvent(polygonSegmentTool, engine, point1);
     mockClickEvent(polygonSegmentTool, engine, point2);

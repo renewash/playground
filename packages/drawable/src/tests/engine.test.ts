@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { createDrawingEngine } from "../core/engine";
 
 import { createLineSegmentModel } from "../geometry/domain/LineSegmentModel";
-import { createFreeDrawModel } from "../geometry/domain/FreeDrawModel";
 
 describe("DrawingEngine", () => {
   it("initializes with default state", () => {
@@ -16,7 +15,7 @@ describe("DrawingEngine", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({
       start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
+      end: { x: 0.1, y: 0.1 },
     });
 
     engine._addObject(line);
@@ -29,7 +28,7 @@ describe("DrawingEngine", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({
       start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
+      end: { x: 0.1, y: 0.1 },
     });
 
     engine._addObject(line);
@@ -43,8 +42,8 @@ describe("DrawingEngine", () => {
 
     engine.createFreeFormLine([
       { x: 0, y: 0 },
-      { x: 1, y: 1 },
-      { x: 20, y: 13 },
+      { x: 0.1, y: 0.1 },
+      { x: 0.2, y: 0.13 },
     ]);
     engine.commitObject();
     engine.undo();
@@ -79,14 +78,14 @@ describe("DrawingEngine - Complex Scenarios", () => {
   it("multiple actions and undos/redos", () => {
     const engine = createDrawingEngine();
     engine.createLineSegment({ x: 0, y: 0 });
-    engine.endLineSegment({ x: 1, y: 1 });
+    engine.endLineSegment({ x: 0.1, y: 0.1 });
     const lineSegment1 = engine.getInProgressObject();
     engine.commitObject();
 
     engine.createFreeFormLine([
       { x: 0, y: 0 },
       { x: 0.5, y: 0.5 },
-      { x: 1, y: 1 },
+      { x: 0.1, y: 0.1 },
     ]);
     const freeDraw1 = engine.getInProgressObject();
     engine.commitObject();
@@ -125,7 +124,7 @@ describe("DrawingEngine - State", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({
       start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
+      end: { x: 0.1, y: 0.1 },
     });
 
     engine._addObject(line);
@@ -139,7 +138,7 @@ describe("DrawingEngine - State", () => {
     const engine = createDrawingEngine();
     const line = createLineSegmentModel({
       start: { x: 0, y: 0 },
-      end: { x: 1, y: 1 },
+      end: { x: 0.1, y: 0.1 },
     });
     engine._addObject(line);
 
