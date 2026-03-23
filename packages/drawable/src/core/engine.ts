@@ -14,8 +14,7 @@ import type {
 } from "./types";
 
 import { DrawableObject } from "../geometry/types";
-import { createLineModel } from "../geometry/domain/LineModel";
-import { createCircleModel } from "../geometry/domain/CircleModel";
+
 import { createLineSegmentModel } from "../geometry/domain/LineSegmentModel";
 import { createFreeDrawModel } from "../geometry/domain/FreeDrawModel";
 import { createPolygonSegmentModel } from "../geometry/domain/PolygonSegment";
@@ -307,9 +306,11 @@ export function createDrawingEngine({
 
     commitObject() {
       if (!inProgressObject) return;
-      // TODO: deep clone inProgressObject to prevent future mutations from affecting the commited object
-      // can do something like const finalized = finalizeObject(inProgressObject);
-      history.execute(new AddObjectCommand(inProgressObject), this);
+
+      // Deep clone inProgressObject, reduces risks of mutations to commited objects
+      // ensuring history commands have immutable state
+      const clone = structuredClone(inProgressObject);
+      history.execute(new AddObjectCommand(clone), this);
       emit();
 
       inProgressObject = null;
@@ -335,9 +336,6 @@ export function createDrawingEngine({
       emit();
     },
 
-    // _structuredCloneObject(object) {
-
-    // },
     _addObject(object) {
       if (!object) {
         console.warn("Attempting to add null object");

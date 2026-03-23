@@ -9,7 +9,8 @@ export interface Command {
 }
 
 export class AddObjectCommand implements Command {
-  constructor(private object: DrawableObject) {}
+  // Object state should be immutable to ensure that undo/redo works correctly
+  constructor(private object: Readonly<DrawableObject>) {}
 
   undo(engine: DrawingEngine) {
     engine._removeObject(this.object.id);
@@ -21,7 +22,7 @@ export class AddObjectCommand implements Command {
 }
 
 export class DeleteObjectCommand implements Command {
-  constructor(private object: DrawableObject) {}
+  constructor(private object: Readonly<DrawableObject>) {}
 
   undo(engine: DrawingEngine) {
     engine._addObject(this.object);

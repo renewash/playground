@@ -17,7 +17,7 @@ export const createFreeDrawModel = ({
   return {
     id: crypto.randomUUID(),
     type: "freeDraw",
-    points: points ?? [],
+    points,
     area,
     style,
   };

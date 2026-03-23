@@ -1,133 +1,55 @@
-# Drawing Module Architecture
+# Drawable
 
-## Principles
-
-- Unidirectional data flow
-- Engine is framework-agnostic
-- Tools produce primitives
-- Renderer renders primitives only
-- React is a thin binding layer
-- Static and in progress objects are separated
-  - Static objects are declaratively drawn
-  - Objects being drawn (in progress) are impratively drawn
+A framework-agnostic drawing engine for building interactive canvas editors (lines, polygons, free draw, etc.). It separates **state**, **interaction**, and **rendering** so the core logic remains independent of any UI or rendering library.
 
 ---
 
-## Summary
+## Architecture
 
-1. (Core) Engine manages domain and objects / state, provides mutations and other features.
-2. (Tools) compose primative shapes + calls mutations.
-3. (Geometry) Pure functions to derive or transform geometry
-4. (React) Binds engine and tools to react.
-
-## 1. State
-
-**Single source of truth**
-
-- Normalized primitive objects
-- Relationships (optional)
-- History (undo/redo)
-- No React
-- No rendering logic
-
-```ts
-type ObjectStore = Record<string, DrawableObject>;
+```txt
+Engine (state)
+├── Tools (input → mutations)
+├── Geometry (models + calculations)
+├── History (undo/redo)
+└── UI (renderer, e.g. React/Konva)
 ```
 
----
-
-## 2. Domain (Primitives)
-
-Define only renderable shapes.
-
-```ts
-type Line = { id: string; type: "line"; start: Point; end: Point };
-type Circle = { id: string; type: "circle"; center: Point; radius: number };
-```
-
-Do not encode tool semantics here.
+- **Engine**: single source of truth and mutations
+- **Tools**: handle user input and call engine APIs
+- **UI**: reads state and renders
+- **History**: command-based undo/redo
 
 ---
 
-## 3. Engine (Creation & Mutation)
+## Key Concepts
 
-Pure business logic.
+- **Transient state** (`inProgressObject`)
+  - Mutable, used during drawing
 
-- Create objects
-- Mutate objects
-- Apply constraints
-- No UI dependencies
+- **Committed state** (`objects`)
+  - Immutable snapshots stored in history
 
-Fully testable without React.
+- **Unidirectional flow**
 
----
-
-## 4. Tools (Interaction Layer)
-
-Translate pointer events into engine mutations.
-
-Example lifecycle:
-
-```
-onPointerDown → create
-onPointerMove → mutate
-onPointerUp   → finalize
-```
-
-Tools compose primitives.
-
-A “line with markers” tool creates:
-
-- 1 Line
-- 2 Circles
-
-It does not create a special composite object.
+  ```
+  Tool → Engine → State → UI
+  ```
 
 ---
 
-## 5. Binding (React Adapter)
+## Features
 
-- Subscribes to engine state
-- Forwards pointer events to active tool
-- Triggers re-renders
-
-Thin layer only.
-
----
-
-## 6. Renderer
-
-Render primitives only.
-
-```tsx
-objects.map((obj) => {
-  switch (obj.type) {
-    case "line":
-      return <Line {...obj} />;
-    case "circle":
-      return <Circle {...obj} />;
-  }
-});
-```
-
-The renderer must not understand tools or semantic groupings.
+- Framework-agnostic core
+- Tool-based interaction system
+- Undo/redo via command pattern
+- Extensible shape models
+- Serializable state
 
 ---
 
-## Data Flow
+## Current Gaps
 
-```
-User Input
-   ↓
-Tool
-   ↓
-Engine (mutates domain objects in state)
-   ↓
-State
-   ↓
-React Binding
-   ↓
-Renderer
-```
-
----
+- Tools are tightly coupled to engine APIs
+- Tool registration is not fully externalized
+- Derived values (area/length) are stored instead of computed
+- Rendering is not optimized for large scenes

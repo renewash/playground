@@ -1,0 +1,46 @@
+ src
+ ┣ core
+ ┃ ┣ engine.ts
+ ┃ ┣ history.ts
+ ┃ ┣ measure.ts
+ ┃ ┗ types.ts
+ ┣ geometry
+ ┃ ┣ domain
+ ┃ ┃ ┣ CircleModel.ts
+ ┃ ┃ ┣ FreeDrawModel.ts
+ ┃ ┃ ┣ LineModel.ts
+ ┃ ┃ ┣ LineSegmentModel.ts
+ ┃ ┃ ┗ PolygonSegment.ts
+ ┃ ┣ calculate.ts
+ ┃ ┣ normalise.ts
+ ┃ ┗ types.ts
+ ┣ react
+ ┃ ┣ context
+ ┃ ┃ ┣ KonvaProvider.tsx
+ ┃ ┃ ┗ context.ts
+ ┃ ┣ helpers
+ ┃ ┃ ┣ keyShortcuts.ts
+ ┃ ┃ ┗ sync.ts
+ ┃ ┣ objects
+ ┃ ┃ ┣ Label.tsx
+ ┃ ┃ ┣ Line.tsx
+ ┃ ┃ ┣ LineSegment.tsx
+ ┃ ┃ ┗ PolygonSegment.tsx
+ ┃ ┣ Drawable.tsx
+ ┃ ┗ index.ts
+ ┣ tests
+ ┃ ┣ calculations.test.ts
+ ┃ ┣ editor.test.ts
+ ┃ ┣ engine.test.ts
+ ┃ ┣ tools.test.tsx
+ ┃ ┗ vitest.setup.ts
+ ┣ tools
+ ┃ ┣ freeDrawTool.ts
+ ┃ ┣ lineSegmentTool.ts
+ ┃ ┣ polygonSegmentTool.ts
+ ┃ ┗ types.ts
+ ┣ .DS_Store
+ ┣ constants.ts
+ ┣ index.ts
+ ┣ types.ts
+ ┗ utils.ts
