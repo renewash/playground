@@ -1,6 +1,6 @@
 export { createDrawingEngine } from "./core/engine";
 
-export { getArea, getLength, calculateDefaultPosition } from "./core/measure";
+export { getArea, getLength, deriveLabelPosition } from "./core/measure";
 
 // === Domain ===
 export { createCircleModel } from "./geometry/domain/CircleModel";

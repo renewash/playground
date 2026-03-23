@@ -1,6 +1,6 @@
 import { DrawableObject, Point } from "../../geometry/types";
 import { Label as KonvaLabel, Tag, Text } from "react-konva";
-import { calculateDefaultPosition } from "../../core/measure";
+import { deriveLabelPosition } from "../../core/measure";
 import {
   LABEL_FONT_SIZE_DEFAULT,
   LABEL_HEIGHT_DEFAULT,
@@ -36,8 +36,7 @@ export const Label = <T extends DrawableObject>({
   width = LABEL_WIDTH_DEFAULT,
   height = LABEL_HEIGHT_DEFAULT,
 }: LabelProps<T>) => {
-  const finalPosition =
-    position ?? calculateDefaultPosition(model, width, height);
+  const finalPosition = position ?? deriveLabelPosition(model, width, height);
   const text = typeof value === "function" ? value(model) : value;
 
   return (

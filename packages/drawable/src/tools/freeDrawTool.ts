@@ -2,7 +2,7 @@
 
 import Konva from "konva";
 import { type DrawingTool } from "./types";
-import { calculateDefaultPosition } from "../core/measure";
+import { deriveLabelPosition } from "../core/measure";
 import { LABEL_FONT_SIZE_DEFAULT, LABEL_PADDING_DEFAULT } from "../constants";
 
 export function createFreeDrawTool(): DrawingTool {
@@ -37,7 +37,7 @@ export function createFreeDrawTool(): DrawingTool {
 
       if (obj.type !== "freeDraw") return;
 
-      const { x, y } = calculateDefaultPosition(obj);
+      const { x, y } = deriveLabelPosition(obj);
       const value = String(obj["area"]);
 
       const label = new Konva.Label({ x, y });

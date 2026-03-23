@@ -4,7 +4,7 @@ import {
   calculateArea,
 } from "../geometry/calculate.js";
 
-import { getArea, calculateDefaultPosition } from "../core/measure.js";
+import { getArea, deriveLabelPosition } from "../core/measure.js";
 import {
   createCircleModel,
   createFreeDrawModel,
@@ -127,7 +127,7 @@ describe("default position calculations ", () => {
       start: { x: 0.3, y: 0.3 },
       end: { x: 0.1, y: 0.1 },
     });
-    const position = calculateDefaultPosition(lineSegment);
+    const position = deriveLabelPosition(lineSegment);
     expect(position).toEqual({ x: 0.3 - 0.1 / 4, y: 0.3 - 0.03 * 1.5 });
   });
 
@@ -139,7 +139,7 @@ describe("default position calculations ", () => {
         { x: 0.5, y: 0.5 },
       ],
     });
-    const position = calculateDefaultPosition(freeDraw);
+    const position = deriveLabelPosition(freeDraw);
     expect(position).toEqual({ x: 0.3 - 0.1 / 4, y: 0.3 - 0.03 * 1.5 });
   });
 });

@@ -45,7 +45,7 @@ export const getLength = (obj: DrawableObject): number => {
   return length; // 2 d.p.
 };
 
-export const calculateDefaultPosition = (
+export const deriveLabelPosition = (
   obj: DrawableObject,
   width: number = LABEL_WIDTH_DEFAULT,
   height: number = LABEL_HEIGHT_DEFAULT,

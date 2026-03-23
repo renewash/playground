@@ -25,6 +25,24 @@ import { createPolygonSegmentTool } from "../tools/polygonSegmentTool";
 
 import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../constants";
 
+// Architecture
+// Engine (single source of truth and mutations)
+// ├── Tools (handle user input and call engine APIs)
+// ├── Geometry (models + calculations)
+// ├── History (undo/redo)
+// └── UI (renderer, e.g. React/Konva)
+
+// Concepts
+
+// Transient state (`inProgressObject`)
+// Mutable, used during drawing
+
+// Committed state (`objects`)
+// Immutable snapshots stored in history
+
+// Unidirectional flow:
+// Tool → Engine → State → UI
+
 interface CreateDrawingEngineOptions {
   initialState?: Partial<DrawingState>;
   initialTool?: ToolType;

@@ -2,7 +2,7 @@
 
 import Konva from "konva";
 import { ToolContext, type DrawingTool } from "./types";
-import { calculateDefaultPosition } from "../core/measure";
+import { deriveLabelPosition } from "../core/measure";
 import { Point } from "../geometry/types";
 import {
   LABEL_PADDING_DEFAULT,
@@ -132,7 +132,7 @@ export function createPolygonSegmentTool(): DrawingTool {
       // TODO: use ctx to allow labels to be boundary aware
       if (obj.type !== "polygonSegment") return;
 
-      const position = calculateDefaultPosition(obj);
+      const position = deriveLabelPosition(obj);
       const value = String(obj["area"]);
 
       const label = new Konva.Label({ x: position.x, y: position.y });
