@@ -165,9 +165,6 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.4(jiti@2.6.1)
-      happy-dom:
-        specifier: ^20.8.3
-        version: 20.8.3
       typescript:
         specifier: 5.9.2
         version: 5.9.2
@@ -5856,11 +5853,13 @@ snapshots:
 
   '@types/use-sync-external-store@0.0.6': {}
 
-  '@types/whatwg-mimetype@3.0.2': {}
+  '@types/whatwg-mimetype@3.0.2':
+    optional: true
 
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 24.12.0
+    optional: true
 
   '@typescript-eslint/eslint-plugin@8.57.0(@typescript-eslint/parser@8.57.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
@@ -6343,7 +6342,8 @@ snapshots:
   entities@6.0.1:
     optional: true
 
-  entities@7.0.1: {}
+  entities@7.0.1:
+    optional: true
 
   es-abstract@1.24.1:
     dependencies:
@@ -6743,6 +6743,7 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    optional: true
 
   has-bigints@1.1.0: {}
 
@@ -8141,7 +8142,8 @@ snapshots:
   webidl-conversions@8.0.1:
     optional: true
 
-  whatwg-mimetype@3.0.0: {}
+  whatwg-mimetype@3.0.0:
+    optional: true
 
   whatwg-mimetype@5.0.0:
     optional: true
