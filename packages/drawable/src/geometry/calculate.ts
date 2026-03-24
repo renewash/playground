@@ -6,10 +6,10 @@ const DEFAULT_DECIMAL_PLACES = 6;
  * Round a number to n decimal places.
  *
  * @param num The number to be rounded
- * @param n The number of decimal places to round to (default is 4)
+ * @param n The number of decimal places to round
  * @returns The rounded number
  */
-export const roundToNDecimalPlaces = (
+export const _roundToNDecimalPlaces = (
   num: number,
   n: number = DEFAULT_DECIMAL_PLACES,
 ): number => {
@@ -31,7 +31,7 @@ export const calculateEuclideanDistance = (
   const width = startPoint.x - endPoint.x;
   const height = startPoint.y - endPoint.y;
   const distance = Math.hypot(width, height);
-  return roundToNDecimalPlaces(distance);
+  return _roundToNDecimalPlaces(distance);
 };
 
 /**
@@ -54,10 +54,10 @@ export const calculateArea = (points: Points): number => {
     area += curr.x * next.y - next.x * curr.y;
   }
   area = Math.abs(area) / 2;
-  return roundToNDecimalPlaces(area);
+  return _roundToNDecimalPlaces(area);
 };
 
 export const calculateAreaOfCircle = (radius: number): number => {
   const area = Math.PI * radius * radius;
-  return roundToNDecimalPlaces(area);
+  return _roundToNDecimalPlaces(area);
 };

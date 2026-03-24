@@ -6,7 +6,7 @@ export const FreeDraw = ({
 }: {
   model: DrawableObject | FreeDrawModel | null;
 }) => {
-  if (!model || model.type != "freeDraw") return null;
+  if (!model || model.type !== "freeDraw") return null;
   return (
     <Line
       points={model.points.flatMap((point) => [point.x, point.y])}

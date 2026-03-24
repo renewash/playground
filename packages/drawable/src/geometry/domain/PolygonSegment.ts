@@ -4,7 +4,7 @@ import {
   STROKE_WIDTH_DEFAULT,
   TWO_POINT_LINE_RADIUS_DEFAULT,
 } from "../../constants";
-import { calculateArea } from "../..";
+import { calculateArea } from "../calculate";
 
 interface CreatePolygonSegmentModel {
   points: Points;

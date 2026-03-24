@@ -1,12 +1,7 @@
 export type Point = { x: number; y: number };
 export type Points = Point[];
 
-export type ModelTypes =
-  | "line"
-  | "circle"
-  | "freeDraw"
-  | "lineSegment"
-  | "polygonSegment";
+export type ModelTypes = "freeDraw" | "lineSegment" | "polygonSegment";
 
 export type ShapeStyle = {
   strokeWidth: number;
@@ -17,13 +12,6 @@ interface BaseModel {
   id: string;
   type: ModelTypes;
   style: ShapeStyle;
-}
-
-export interface LineModel extends BaseModel {
-  type: "line";
-  start: Point;
-  end: Point;
-  length: number;
 }
 
 export interface LineSegmentModel extends BaseModel {
@@ -40,11 +28,6 @@ export interface FreeDrawModel extends BaseModel {
   area: number;
 }
 
-export interface CircleModel extends BaseModel {
-  type: "circle";
-  center: Point;
-  radius: number;
-}
 export interface PolygonSegmentModel extends BaseModel {
   type: "polygonSegment";
   points: Points;
@@ -53,8 +36,6 @@ export interface PolygonSegmentModel extends BaseModel {
 }
 
 export type DrawableObject =
-  | LineModel
   | FreeDrawModel
-  | CircleModel
   | LineSegmentModel
   | PolygonSegmentModel;

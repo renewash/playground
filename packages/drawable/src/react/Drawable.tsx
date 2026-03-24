@@ -100,9 +100,9 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       width={width}
       height={height}
       ref={stageRef}
-      onMouseDown={handlePointerDown}
-      onMouseMove={handlePointerMove}
-      onMouseUp={handlePointerUp}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
       <Layer
         scale={{ x: width, y: height }}

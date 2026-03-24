@@ -28,6 +28,10 @@ export type ToolSet = {
   [key in ToolType]: DrawingTool;
 };
 
+export interface AllEngineShapes {
+  committedObjects: DrawingState;
+  inProgressObject: DrawableObject | null;
+}
 export interface EditorState {
   mode: DrawingMode;
   tool: DrawingTool;
@@ -71,7 +75,7 @@ export interface DrawingEngine {
     version: number;
     inProgressObject: DrawableObject | null;
   };
-  getCommitedObjects(): DrawingState["objects"];
+  getCommittedObjects(): DrawingState["objects"];
 
   getParentId(nodeId: string): string | null;
   getNode(nodeId: string): DrawableObject | null;

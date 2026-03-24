@@ -21,9 +21,9 @@ const PolygonSegment = ({
         lineJoin="round"
         closed={true}
       />
-      {points.map((point) => (
+      {points.map((point, index) => (
         <Circle
-          key={`${point.x}-${point.y}`}
+          key={`${point.x}-${point.y}-${index}`}
           x={point.x}
           y={point.y}
           strokeWidth={strokeWidth}

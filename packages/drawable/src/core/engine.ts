@@ -167,12 +167,18 @@ export function createDrawingEngine({
     },
 
     _startDrawing() {
-      editorState.mode = "drawing";
+      editorState = {
+        ...editorState,
+        mode: "drawing",
+      };
       emitEditorUpdate();
     },
 
     _stopDrawing() {
-      editorState.mode = "idle";
+      editorState = {
+        ...editorState,
+        mode: "idle",
+      };
       emitEditorUpdate();
     },
 
@@ -199,7 +205,7 @@ export function createDrawingEngine({
       return transientSnapshot;
     },
 
-    getCommitedObjects() {
+    getCommittedObjects() {
       return state.objects;
     },
 
@@ -253,15 +259,16 @@ export function createDrawingEngine({
 
     appendPointToFreeFormLine(point) {
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
-      inProgressObject.area = getArea(inProgressObject);
 
       inProgressObject.points.push(point);
+      inProgressObject.area = getArea(inProgressObject);
 
       emitInProgressUpdates();
     },
 
     setFreeFormLine(points) {
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
+
       inProgressObject.points = points;
       inProgressObject.area = getArea(inProgressObject);
 
@@ -274,6 +281,8 @@ export function createDrawingEngine({
         radius,
         style: editorState.style,
       });
+
+      this._startDrawing();
       emitInProgressUpdates();
     },
 
@@ -351,7 +360,7 @@ export function createDrawingEngine({
     cancelDrawing() {
       inProgressObject = null;
       this._stopDrawing();
-      emit();
+      emitInProgressUpdates();
     },
 
     _addObject(object) {

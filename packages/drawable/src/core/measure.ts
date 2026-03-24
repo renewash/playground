@@ -1,19 +1,15 @@
+import { ObjectTable } from "./types";
 import { LABEL_HEIGHT_DEFAULT, LABEL_WIDTH_DEFAULT } from "../constants";
 import {
   calculateEuclideanDistance,
   calculateArea,
-  calculateAreaOfCircle,
 } from "../geometry/calculate";
 
-import { DrawableObject, Point } from "../geometry/types";
+import { DrawableObject, ModelTypes, Point } from "../geometry/types";
 
 export const getArea = (obj: DrawableObject): number => {
   let area: number = 0;
   switch (obj.type) {
-    case "circle":
-      area = calculateAreaOfCircle(obj.radius);
-      break;
-    case "line":
     case "lineSegment":
       area = calculateArea([obj.start, obj.end]);
       break;
@@ -32,17 +28,31 @@ export const getArea = (obj: DrawableObject): number => {
   return area;
 };
 
+export const getTotalArea = (
+  objects: ObjectTable,
+  targetTypes?: ModelTypes[],
+): number => {
+  const totalArea = Object.values(objects).reduce((total, obj) => {
+    if (targetTypes && !targetTypes.includes(obj.type)) {
+      return total; // Skip if the object's type is not in the targetTypes list
+    }
+
+    return total + getArea(obj);
+  }, 0);
+
+  return totalArea;
+};
+
 export const getLength = (obj: DrawableObject): number => {
   let length: number = 0;
   switch (obj.type) {
-    case "line":
     case "lineSegment":
       length = calculateEuclideanDistance(obj.start, obj.end);
       break;
     default:
       throw new Error(`Length calculation not supported for type ${obj.type}`);
   }
-  return length; // 2 d.p.
+  return length;
 };
 
 export const deriveLabelPosition = (
@@ -63,11 +73,10 @@ export const deriveLabelPosition = (
     case "polygonSegment":
       if (obj.points.length < 2) return originPoint;
       return { x: obj.points[0]!.x - offSetX, y: obj.points[0]!.y - offSetY };
-    case "circle":
-      return { x: obj.center.x, y: obj.center.y - obj.radius - offSetY };
+
     default:
       console.warn(
-        `Default position calculation not implemented for type ${obj.type}. Returning {x: 0, y: 0}.`,
+        `Default position calculation not implemented for type ${obj}. Returning {x: 0, y: 0}.`,
       );
       return originPoint;
   }

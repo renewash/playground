@@ -1,9 +1,13 @@
 export { createDrawingEngine } from "./core/engine";
 
-export { getArea, getLength, deriveLabelPosition } from "./core/measure";
+export {
+  getArea,
+  getTotalArea,
+  getLength,
+  deriveLabelPosition,
+} from "./core/measure";
 
 // === Domain ===
-export { createCircleModel } from "./geometry/domain/CircleModel";
 export { createLineSegmentModel } from "./geometry/domain/LineSegmentModel";
 export { createFreeDrawModel } from "./geometry/domain/FreeDrawModel";
 
@@ -39,9 +43,7 @@ export type {
   Point,
   DrawableObject,
   FreeDrawModel,
-  LineModel,
   LineSegmentModel,
-  CircleModel,
   PolygonSegmentModel,
 } from "./geometry/types";
 

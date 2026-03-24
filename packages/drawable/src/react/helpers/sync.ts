@@ -5,20 +5,21 @@ import type {
   DrawingState,
   DrawingEngine,
   EditorState,
+  AllEngineShapes,
 } from "../../core/types";
 import type { DrawableObject } from "../../geometry/types";
 
-export function useScene(engine: DrawingEngine): DrawingState {
+export const useScene = (engine: DrawingEngine): DrawingState => {
   return useSyncExternalStore(
     engine.subscribe,
     engine.getState,
     engine.getState,
   );
-}
+};
 
-export function useInProgressObject(
+export const useInProgressObject = (
   engine: DrawingEngine,
-): DrawableObject | null {
+): DrawableObject | null => {
   const snap = useSyncExternalStore(
     engine.subscribeTransient,
     engine.getTransientSnapshot,
@@ -26,12 +27,19 @@ export function useInProgressObject(
   );
 
   return snap.inProgressObject;
-}
+};
 
-export function useEditor(engine: DrawingEngine): EditorState {
+export const useAllEngineShapes = (engine: DrawingEngine): AllEngineShapes => {
+  return useSyncExternalStore(engine.subscribe, () => ({
+    committedObjects: engine.getState(),
+    inProgressObject: engine.getTransientSnapshot().inProgressObject,
+  }));
+};
+
+export const useEditor = (engine: DrawingEngine): EditorState => {
   return useSyncExternalStore(
     engine.subscribeEditor,
     engine.getEditorState,
     engine.getEditorState,
   );
-}
+};

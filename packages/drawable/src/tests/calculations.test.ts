@@ -5,12 +5,7 @@ import {
 } from "../geometry/calculate.js";
 
 import { getArea, deriveLabelPosition } from "../core/measure.js";
-import {
-  createCircleModel,
-  createFreeDrawModel,
-  createLineSegmentModel,
-  Point,
-} from "..";
+import { createFreeDrawModel, createLineSegmentModel, Point } from "..";
 
 describe("distance calculations", () => {
   it("calculates the distance between two points", () => {
@@ -145,18 +140,6 @@ describe("default position calculations ", () => {
 });
 
 describe("Area of different shapes", () => {
-  it("calculates the area of a circle with radius 1", () => {
-    expect(
-      getArea(createCircleModel({ center: { x: 0.0, y: 0.0 }, radius: 1 })),
-    ).toBeCloseTo(Math.PI);
-  });
-
-  it("calculates the area of a circle with radius 5", () => {
-    expect(
-      getArea(createCircleModel({ center: { x: 0.0, y: 0.0 }, radius: 5 })),
-    ).toBeCloseTo(25 * Math.PI);
-  });
-
   it("calculates the area of a free draw shape", () => {
     const freeDraw = createFreeDrawModel({
       points: [
