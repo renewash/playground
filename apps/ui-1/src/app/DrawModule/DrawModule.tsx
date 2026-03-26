@@ -74,6 +74,13 @@ const DrawModule = () => {
           <DrawnData engine={engine} />
         </div>
       </div>
+
+      <div>
+        <h1>Reflection</h1>
+        <SharpBorder className={`mb-4 max-h-137.5`}>
+          <Drawable engine={engine} width={width} height={height} />
+        </SharpBorder>
+      </div>
     </div>
   );
 };

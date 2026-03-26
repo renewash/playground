@@ -46,6 +46,8 @@ export interface DrawingEngine {
   getEditorState(): EditorState;
   setStrokeColor(color: string): void;
   setStrokeWidth(width: number): void;
+
+  setEditable(editable: boolean): void;
   toggleEditable(): void;
 
   getTool(): DrawingTool;

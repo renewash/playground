@@ -5,7 +5,7 @@ import { Stage, Layer, Group } from "react-konva";
 import Konva from "konva";
 
 import type { DrawingEngine, ToolContext } from "..";
-import { useScene, LineSegment, FreeDraw, Label } from "./";
+import { useScene, LineSegment, FreeDraw, Label, useEditor } from "./";
 
 import { undoRedoShortcut } from "./helpers/keyShortcuts";
 import PolygonSegment from "./objects/PolygonSegment";
@@ -19,6 +19,7 @@ interface Props {
 // this component binds engine and tools to Konva.
 export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   const state = useScene(engine);
+  const editorState = useEditor(engine);
 
   const stageRef = useRef<Konva.Stage>(null);
   const staticLayerRef = useRef<Konva.Layer>(null);
@@ -77,20 +78,29 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
   }, [ctx, engine]);
 
   const handlePointerDown = (e: Konva.KonvaEventObject<PointerEvent>) => {
-    if (!engine.getEditorState().editable) return;
+    if (!editorState.editable) {
+      toolRef.current = null;
+      return;
+    }
 
     toolRef.current = engine.getTool();
     toolRef.current?.onPointerDown?.(e.evt, ctx);
   };
 
   const handlePointerMove = (e: Konva.KonvaEventObject<PointerEvent>) => {
-    if (!engine.getEditorState().editable) return;
+    if (!editorState.editable) {
+      toolRef.current = null;
+      return;
+    }
 
     toolRef.current?.onPointerMove?.(e.evt, ctx);
   };
 
   const handlePointerUp = (e: Konva.KonvaEventObject<PointerEvent>) => {
-    if (!engine.getEditorState().editable) return;
+    if (!editorState.editable) {
+      toolRef.current = null;
+      return;
+    }
 
     toolRef.current?.onPointerUp?.(e.evt, ctx);
   };

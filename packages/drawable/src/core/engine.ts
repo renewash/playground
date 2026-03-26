@@ -140,6 +140,14 @@ export function createDrawingEngine({
       emitEditorUpdate();
     },
 
+    setEditable(editable) {
+      editorState = {
+        ...editorState,
+        editable,
+      };
+      emitEditorUpdate();
+    },
+
     toggleEditable() {
       editorState = {
         ...editorState,

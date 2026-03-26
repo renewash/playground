@@ -5,6 +5,7 @@ import Home from "./Home/Home";
 import About from "./About";
 import DrawModule from "./DrawModule/DrawModule";
 import Tld from "./Tld/Tld";
+import Storage from "./Storage/Storage";
 import TanS from "./Table/MainTable";
 
 export default createBrowserRouter([
@@ -16,6 +17,7 @@ export default createBrowserRouter([
       { path: "about", Component: About },
       { path: "DrawModule", Component: DrawModule },
       { path: "table", Component: TanS },
+      { path: "Storage", Component: Storage },
       { path: "Tld", Component: Tld },
     ],
   },
