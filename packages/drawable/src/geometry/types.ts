@@ -6,6 +6,8 @@ export type ModelTypes = "freeDraw" | "lineSegment" | "polygonSegment";
 export type ShapeStyle = {
   strokeWidth: number;
   strokeColor: string;
+  strokeOpacity: number;
+  fillColor: string;
 };
 
 interface BaseModel {

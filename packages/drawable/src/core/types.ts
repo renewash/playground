@@ -35,6 +35,7 @@ export interface AllEngineShapes {
 export interface EditorState {
   mode: DrawingMode;
   tool: DrawingTool;
+  showLabels: boolean;
   style: ShapeStyle;
   editable: boolean;
 }
@@ -43,12 +44,18 @@ export type Listener = () => void;
 
 export interface DrawingEngine {
   getState(): DrawingState;
+  setState(state: DrawingState): void;
+  _verifyState(state: DrawingState): boolean;
   getEditorState(): EditorState;
   setStrokeColor(color: string): void;
+  setStrokeOpacity(opacity: number): void;
+  setFillColor(color: string): void;
   setStrokeWidth(width: number): void;
 
   setEditable(editable: boolean): void;
   toggleEditable(): void;
+
+  setShowLabels(show: boolean): void;
 
   getTool(): DrawingTool;
   pickTool(tool: ToolType): void;

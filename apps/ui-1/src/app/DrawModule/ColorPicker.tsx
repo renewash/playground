@@ -266,6 +266,7 @@ const ColorPicker = ({
   });
 
   engine.setStrokeColor(`#${color.hex}`);
+  engine.setFillColor(`#${color.hex}`);
 
   // Update from hex input
   const handleHexInputChange = (newVal: string) => {

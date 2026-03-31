@@ -1,6 +1,6 @@
 import { calculateArea } from "../calculate";
 import type { FreeDrawModel, Points, ShapeStyle } from "../types";
-import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../../constants";
+import config from "../../config";
 interface CreateFreeDrawModel {
   points: Points;
   style?: ShapeStyle;
@@ -8,10 +8,7 @@ interface CreateFreeDrawModel {
 
 export const createFreeDrawModel = ({
   points,
-  style = {
-    strokeWidth: STROKE_WIDTH_DEFAULT,
-    strokeColor: STROKE_COLOR_DEFAULT,
-  },
+  style = config.defaultDrawableObjectStyle,
 }: CreateFreeDrawModel): FreeDrawModel => {
   const area = calculateArea(points);
   return {

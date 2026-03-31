@@ -1,5 +1,8 @@
 export const STROKE_WIDTH_DEFAULT = 0.003;
 export const STROKE_COLOR_DEFAULT = "#1d12e3";
+export const STROKE_COLOR_OPACITY_DEFAULT = 1;
+export const FILL_COLOR_DEFAULT = "#1d12e3";
+export const FILL_COLOR_OPACITY_DEFAULT = 1;
 export const TWO_POINT_LINE_RADIUS_DEFAULT = 0.005;
 export const LABEL_WIDTH_DEFAULT = 0.1;
 export const LABEL_HEIGHT_DEFAULT = 0.03;

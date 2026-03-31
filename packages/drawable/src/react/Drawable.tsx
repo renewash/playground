@@ -50,6 +50,11 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     const keyShortcut = undoRedoShortcut(engine);
     window.addEventListener("keydown", keyShortcut);
 
+    if (!editorState.editable) {
+      toolRef.current = null;
+      engine.cancelDrawing();
+    }
+
     const redraw = () => {
       if (!groupRef) return;
 
@@ -75,7 +80,7 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
       window.removeEventListener("keydown", keyShortcut);
       unsubscribe();
     };
-  }, [ctx, engine]);
+  }, [ctx, editorState.editable, engine]);
 
   const handlePointerDown = (e: Konva.KonvaEventObject<PointerEvent>) => {
     if (!editorState.editable) {
@@ -136,16 +141,17 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
           }
         })}
 
-        {Object.values(state.objects).map((object) => {
-          if ("area" in object)
-            return (
-              <Label
-                key={object.id}
-                model={object}
-                value={(obj) => `${obj.area}`}
-              />
-            );
-        })}
+        {editorState.showLabels &&
+          Object.values(state.objects).map((object) => {
+            if ("area" in object)
+              return (
+                <Label
+                  key={object.id}
+                  model={object}
+                  value={(obj) => `${obj.area}`}
+                />
+              );
+          })}
       </Layer>
 
       <Layer scale={{ x: width, y: height }} ref={inProgressLayerRef}>

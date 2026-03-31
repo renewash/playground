@@ -10,6 +10,8 @@ import type {
 import type { DrawableObject } from "../../geometry/types";
 
 export const useScene = (engine: DrawingEngine): DrawingState => {
+  // console.log("i added an object");
+
   return useSyncExternalStore(
     engine.subscribe,
     engine.getState,
@@ -20,6 +22,7 @@ export const useScene = (engine: DrawingEngine): DrawingState => {
 export const useInProgressObject = (
   engine: DrawingEngine,
 ): DrawableObject | null => {
+  // console.log("i am drawing");
   const snap = useSyncExternalStore(
     engine.subscribeTransient,
     engine.getTransientSnapshot,
@@ -37,6 +40,8 @@ export const useAllEngineShapes = (engine: DrawingEngine): AllEngineShapes => {
 };
 
 export const useEditor = (engine: DrawingEngine): EditorState => {
+  // console.log("i changed an editor setting");
+
   return useSyncExternalStore(
     engine.subscribeEditor,
     engine.getEditorState,

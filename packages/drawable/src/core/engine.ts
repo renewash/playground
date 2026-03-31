@@ -23,7 +23,7 @@ import { createLineSegmentTool } from "../tools/lineSegmentTool";
 import { createFreeDrawTool } from "../tools/freeDrawTool";
 import { createPolygonSegmentTool } from "../tools/polygonSegmentTool";
 
-import { STROKE_COLOR_DEFAULT, STROKE_WIDTH_DEFAULT } from "../constants";
+import config from "../config";
 
 // Architecture
 // Engine (single source of truth and mutations)
@@ -79,10 +79,8 @@ export function createDrawingEngine({
   let editorState: EditorState = {
     mode: "idle",
     tool: toolSet[initialTool] || createLineSegmentTool(),
-    style: {
-      strokeWidth: STROKE_WIDTH_DEFAULT,
-      strokeColor: STROKE_COLOR_DEFAULT,
-    },
+    showLabels: false,
+    style: { ...config.defaultDrawableObjectStyle },
     editable,
   };
 
@@ -114,6 +112,34 @@ export function createDrawingEngine({
       return state;
     },
 
+    setState(newState) {
+      const validNewState = this._verifyState(newState);
+
+      if (!validNewState) {
+        console.error("Attempted to set invalid state:", newState);
+        return;
+      }
+
+      // TODO: clear engine history in setState to prevent undoing to old state
+      history.clear();
+      state = { ...newState };
+
+      emit();
+    },
+
+    _verifyState(newState) {
+      // Basic verification to prevent setting malformed state
+      if (
+        typeof newState !== "object" ||
+        newState === null ||
+        !("objects" in newState) ||
+        !("childToParentMap" in newState)
+      ) {
+        return false;
+      }
+      return true;
+    },
+
     getEditorState() {
       return editorState;
     },
@@ -129,12 +155,34 @@ export function createDrawingEngine({
       emitEditorUpdate();
     },
 
+    setStrokeOpacity(opacity) {
+      editorState = {
+        ...editorState,
+        style: {
+          ...editorState.style,
+          strokeOpacity: opacity,
+        },
+      };
+      emitEditorUpdate();
+    },
+
     setStrokeWidth(width) {
       editorState = {
         ...editorState,
         style: {
           ...editorState.style,
           strokeWidth: width,
+        },
+      };
+      emitEditorUpdate();
+    },
+
+    setFillColor(color) {
+      editorState = {
+        ...editorState,
+        style: {
+          ...editorState.style,
+          fillColor: color,
         },
       };
       emitEditorUpdate();
@@ -155,7 +203,16 @@ export function createDrawingEngine({
       };
       emitEditorUpdate();
     },
-
+    setShowLabels(show) {
+      editorState = {
+        ...editorState,
+        showLabels: show,
+        style: {
+          ...editorState.style,
+        },
+      };
+      emitEditorUpdate();
+    },
     getTool() {
       return editorState.tool;
     },
@@ -233,6 +290,8 @@ export function createDrawingEngine({
     },
 
     createLineSegment(start, radius) {
+      if (editorState.editable === false) return;
+
       inProgressObject = createLineSegmentModel({
         start,
         radius,
@@ -244,6 +303,8 @@ export function createDrawingEngine({
     },
 
     endLineSegment(point, radius) {
+      if (editorState.editable === false) return;
+
       if (inProgressObject === null || inProgressObject.type !== "lineSegment")
         return;
 
@@ -256,6 +317,8 @@ export function createDrawingEngine({
     },
 
     createFreeFormLine(points) {
+      if (editorState.editable === false) return;
+
       inProgressObject = createFreeDrawModel({
         points,
         style: editorState.style,
@@ -266,6 +329,8 @@ export function createDrawingEngine({
     },
 
     appendPointToFreeFormLine(point) {
+      if (editorState.editable === false) return;
+
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
 
       inProgressObject.points.push(point);
@@ -275,6 +340,8 @@ export function createDrawingEngine({
     },
 
     setFreeFormLine(points) {
+      if (editorState.editable === false) return;
+
       if (!inProgressObject || inProgressObject.type !== "freeDraw") return;
 
       inProgressObject.points = points;
@@ -284,6 +351,8 @@ export function createDrawingEngine({
     },
 
     createPolygonSegment(points, radius) {
+      if (editorState.editable === false) return;
+
       inProgressObject = createPolygonSegmentModel({
         points,
         radius,
@@ -295,6 +364,8 @@ export function createDrawingEngine({
     },
 
     appendPointToPolygonSegment(point) {
+      if (editorState.editable === false) return;
+
       if (!inProgressObject || inProgressObject.type !== "polygonSegment")
         return;
 
@@ -305,6 +376,8 @@ export function createDrawingEngine({
     },
 
     setPolygonSegment(points, radius) {
+      if (editorState.editable === false) return;
+
       if (!inProgressObject || inProgressObject.type !== "polygonSegment")
         return;
 
@@ -316,6 +389,8 @@ export function createDrawingEngine({
     },
 
     replaceLastPointOfPolygonSegment(point) {
+      if (editorState.editable === false) return;
+
       if (!inProgressObject || inProgressObject.type !== "polygonSegment")
         return;
 
@@ -328,6 +403,8 @@ export function createDrawingEngine({
     },
 
     removeLastPointOfPolygonSegment() {
+      if (editorState.editable === false) return;
+
       if (!inProgressObject || inProgressObject.type !== "polygonSegment")
         return;
 

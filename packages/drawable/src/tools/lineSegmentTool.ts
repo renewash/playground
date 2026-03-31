@@ -50,6 +50,7 @@ export function createLineSegmentTool(): DrawingTool {
       const { start, end, radius } = obj;
 
       const { style } = ctx.engine.getEditorState();
+
       const strokeColor = style.strokeColor || "black";
       const strokeWidth = style.strokeWidth || 0.003;
 

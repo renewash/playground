@@ -1,10 +1,7 @@
 import { Points, PolygonSegmentModel, ShapeStyle } from "../types";
-import {
-  STROKE_COLOR_DEFAULT,
-  STROKE_WIDTH_DEFAULT,
-  TWO_POINT_LINE_RADIUS_DEFAULT,
-} from "../../constants";
+import { TWO_POINT_LINE_RADIUS_DEFAULT } from "../../constants";
 import { calculateArea } from "../calculate";
+import config from "../../config";
 
 interface CreatePolygonSegmentModel {
   points: Points;
@@ -14,10 +11,7 @@ interface CreatePolygonSegmentModel {
 export const createPolygonSegmentModel = ({
   points,
   radius = TWO_POINT_LINE_RADIUS_DEFAULT,
-  style = {
-    strokeWidth: STROKE_WIDTH_DEFAULT,
-    strokeColor: STROKE_COLOR_DEFAULT,
-  },
+  style = config.defaultDrawableObjectStyle,
 }: CreatePolygonSegmentModel): PolygonSegmentModel => {
   const area = calculateArea(points);
 

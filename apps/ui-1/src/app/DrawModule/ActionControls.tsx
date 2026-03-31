@@ -42,6 +42,15 @@ const EditorControls = ({ engine }: { engine: DrawingEngine }) => {
           {editorState.editable ? "Edit On" : "Edit Off"}
         </button>
       </Tooltip>
+
+      <Tooltip content={"Toggle Labels"}>
+        <button
+          className={`cursor-pointer rounded-sm border p-2 hover:bg-gray-300 ${editorState.showLabels ? "bg-gray-300" : ""}`}
+          onClick={() => engine.setShowLabels(!editorState.showLabels)}
+        >
+          {editorState.showLabels ? "Labels On" : "Labels Off"}
+        </button>
+      </Tooltip>
     </>
   );
 };

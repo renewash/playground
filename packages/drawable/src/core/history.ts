@@ -57,4 +57,9 @@ export default class History {
     command.do(engine);
     this.undoStack.push(command);
   }
+
+  clear() {
+    this.undoStack = [];
+    this.redoStack = [];
+  }
 }

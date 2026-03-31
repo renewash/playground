@@ -132,6 +132,22 @@ export function createPolygonSegmentTool(): DrawingTool {
       // TODO: use ctx to allow labels to be boundary aware
       if (obj.type !== "polygonSegment") return;
 
+      const { style, showLabels } = ctx.engine.getEditorState();
+      const strokeColor = style.strokeColor || "black";
+      const strokeWidth = style.strokeWidth || 0.003;
+
+      const line = new Konva.Line({
+        points: obj.points.flatMap((point) => [point.x, point.y]),
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+
+      group.add(line);
+
+      if (!showLabels) return;
+
       const position = deriveLabelPosition(obj);
       const value = String(obj["area"]);
 
@@ -145,20 +161,6 @@ export function createPolygonSegmentTool(): DrawingTool {
 
       label.add(tag);
       label.add(text);
-
-      const { style } = ctx.engine.getEditorState();
-      const strokeColor = style.strokeColor || "black";
-      const strokeWidth = style.strokeWidth || 0.003;
-
-      const line = new Konva.Line({
-        points: obj.points.flatMap((point) => [point.x, point.y]),
-        stroke: strokeColor,
-        strokeWidth: strokeWidth,
-        lineCap: "round",
-        lineJoin: "round",
-      });
-
-      group.add(line);
       group.add(label);
     },
   };
