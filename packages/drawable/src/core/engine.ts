@@ -120,8 +120,8 @@ export function createDrawingEngine({
         return;
       }
 
-      // TODO: clear engine history in setState to prevent undoing to old state
       history.clear();
+      this.cancelDrawing();
       state = { ...newState };
 
       emit();

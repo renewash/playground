@@ -1,9 +1,4 @@
-export {
-  useScene,
-  useInProgressObject,
-  useAllEngineShapes,
-  useEditor,
-} from "./helpers/sync";
+export { useScene, useInProgressObject, useEditor } from "./helpers/sync";
 export { useKonvaContext } from "./context/context";
 export { KonvaProvider } from "./context/KonvaProvider";
 export { LineSegment } from "./objects/LineSegment";

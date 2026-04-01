@@ -5,7 +5,6 @@ import type {
   DrawingState,
   DrawingEngine,
   EditorState,
-  AllEngineShapes,
 } from "../../core/types";
 import type { DrawableObject } from "../../geometry/types";
 
@@ -30,13 +29,6 @@ export const useInProgressObject = (
   );
 
   return snap.inProgressObject;
-};
-
-export const useAllEngineShapes = (engine: DrawingEngine): AllEngineShapes => {
-  return useSyncExternalStore(engine.subscribe, () => ({
-    committedObjects: engine.getState(),
-    inProgressObject: engine.getTransientSnapshot().inProgressObject,
-  }));
 };
 
 export const useEditor = (engine: DrawingEngine): EditorState => {

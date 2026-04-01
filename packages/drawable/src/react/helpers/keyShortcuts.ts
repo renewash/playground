@@ -9,6 +9,7 @@ export const undoRedoShortcut =
     if (modifier && e.key.toLowerCase() === "z" && !e.shiftKey) {
       e.preventDefault();
       engine.undo();
+      return;
     }
 
     // Redo: Ctrl/Cmd + Y OR Ctrl/Cmd + Shift + Z

@@ -46,10 +46,29 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     [engine, width, height],
   );
 
-  useEffect(() => {
-    const keyShortcut = undoRedoShortcut(engine);
-    window.addEventListener("keydown", keyShortcut);
+  // While unlikely, guarantees stable handler reference for adding/removing event listeners
+  const handlerRef = useRef<(e: KeyboardEvent) => void>(null);
+  if (!handlerRef.current) {
+    handlerRef.current = undoRedoShortcut(engine);
+  }
 
+  useEffect(() => {
+    const container = stageRef.current?.container();
+    if (!container) return;
+
+    const handler = handlerRef.current!;
+
+    container.tabIndex = 0;
+    container.focus();
+
+    container.addEventListener("keydown", handler);
+
+    return () => {
+      container.removeEventListener("keydown", handler);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!editorState.editable) {
       toolRef.current = null;
       engine.cancelDrawing();
@@ -77,7 +96,6 @@ export const Drawable: React.FC<Props> = ({ engine, width, height }) => {
     const unsubscribe = engine.subscribeTransient(redraw);
 
     return () => {
-      window.removeEventListener("keydown", keyShortcut);
       unsubscribe();
     };
   }, [ctx, editorState.editable, engine]);

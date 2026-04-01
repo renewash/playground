@@ -40,11 +40,14 @@ export function createFreeDrawTool(): DrawingTool {
       const { style, showLabels } = ctx.engine.getEditorState();
       const strokeColor = style.strokeColor || "black";
       const strokeWidth = style.strokeWidth || 0.002;
+      const fillColor = style.fillColor || "black";
 
       const line = new Konva.Line({
         points: obj.points.flatMap((point) => [point.x, point.y]),
         stroke: strokeColor,
         strokeWidth: strokeWidth,
+        closed: true,
+        fill: fillColor,
         lineCap: "round",
         lineJoin: "round",
       });
